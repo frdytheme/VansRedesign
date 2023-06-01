@@ -13,7 +13,10 @@ function Home() {
 }
 
 const HomeSection = styled.div`
+  width:100%;
+  max-height:100vh;
   position: relative;
+  overflow: hidden;
 `;
 
 export default Home;

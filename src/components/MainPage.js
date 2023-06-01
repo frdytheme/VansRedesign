@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import EventPage from "./pages/EventPage";
+import EventSwiper from "./pages/EventSwiper";
 
 function MainPage() {
   return (
     <MainGrid>
       <div className="grid_test">내비게이션 빈 영역</div>
-      <EventPage />
+      <EventSwiper />
       <div className="grid_test">2</div>
       <div className="grid_test">3</div>
       <div className="grid_test">4</div>
