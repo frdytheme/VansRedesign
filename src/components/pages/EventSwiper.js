@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -22,7 +22,7 @@ function EventSwiper() {
     setNewsNum(e.currentTarget.dataset.num);
   };
   return (
-    <EventStyle onMouseEnter={infoUp} onMouseLeave={infoDown}>
+    <EventStyle onMouseEnter={infoUp} onMouseLeave={infoDown} onClick={infoDown}>
       <Swiper
         pagination={{
           dynamicBullets: true,
@@ -38,12 +38,14 @@ function EventSwiper() {
                 {news.title}
                 <em>{news.sub}</em>
               </p>
-              <img src={process.env.PUBLIC_URL + `./images/news/${news.img[0]}`} alt="반스 뉴스 이미지" />
+              <img src={process.env.PUBLIC_URL + `./images/news/${news.cover}`} alt="반스 뉴스 이미지" />
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
-      {newsToggle && <EventModal setNewsToggle={setNewsToggle} newsDB={newsDB} newsNum={newsNum} />}
+      {newsToggle && (
+        <EventModal setNewsToggle={setNewsToggle} newsDB={newsDB} newsNum={newsNum} setNewsNum={setNewsNum} />
+      )}
     </EventStyle>
   );
 }
@@ -67,17 +69,18 @@ const EventStyle = styled.div`
       position: relative;
       .event_title {
         position: absolute;
-        font-size: 17px;
+        font-size: 15px;
         font-weight: bold;
         color: white;
         bottom: 0;
         left: 0;
         width: 100%;
         background-color: rgba(0, 0, 0, 0.7);
-        padding: 30px 0 40px;
+        padding: 30px 10px 40px;
         text-align: center;
         transform: translateY(100%);
         transition: 0.4s;
+        box-sizing: border-box;
         em {
           display: block;
           font-size: 14px;

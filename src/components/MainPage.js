@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import EventSwiper from "./pages/EventSwiper";
+import MainBanner from "./pages/MainBanner";
 
 function MainPage() {
   return (
@@ -10,9 +11,9 @@ function MainPage() {
       <div className="grid_test">2</div>
       <div className="grid_test">3</div>
       <div className="grid_test">4</div>
-      <div className="grid_test">5</div>
-      <div className="grid_test">6</div>
-      <div className="grid_test">7</div>
+      <MainBanner />
+      {/* <div className="grid_test">5</div> */}
+      {/* <div className="grid_test">6</div> */}
     </MainGrid>
   );
 }
@@ -27,7 +28,7 @@ const MainGrid = styled.main`
   padding: 15px;
   box-sizing: border-box;
   .grid_test {
-    background-color: orange;
+    background-color: #999;
     border-radius: 20px;
   }
 `;

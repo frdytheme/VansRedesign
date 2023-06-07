@@ -5,54 +5,61 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./BlackBoard.woff2") format("woff2");
+  src: local('BlackBoard'), url("./BlackBoard.woff2") format("woff2");
 }
 @font-face {
   font-family: "GoAround";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./Goaroundthebooks2022.woff2") format("woff2");
+  src: local('Goaroundtheebooks2022'), url("./Goaroundthebooks2022.woff2") format("woff2");
 }
 @font-face {
   font-family: "BoredSB";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./BOREDSB.woff2") format("woff2");
+  src: local('BOREDSB'),url("./BOREDSB.woff2") format("woff2");
 }
 @font-face {
   font-family: "Bright";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./BrightMelodyPersonalUseOnly.woff2") format("woff2");
+  src: local('BrightMelodyPersonalUseOnly'), url("./BrightMelodyPersonalUseOnly.woff2") format("woff2");
 }
 @font-face {
   font-family: "Fuego";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./FuegoFatuo.woff2") format("woff2");
+  src: local('FuegoFatuo'), url("./FuegoFatuo.woff2") format("woff2");
 }
 @font-face {
   font-family: "Johnny";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./johnnytorch.woff2") format("woff2");
+  src: local('johnnytorch'), url("./johnnytorch.woff2") format("woff2");
 }
 @font-face {
   font-family: "Kampung";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./KampungOrange.woff2") format("woff2");
+  src: local('KampungOrange'),url("./KampungOrange.woff2") format("woff2");
 }
 @font-face {
   font-family: "Keepon";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./KeeponTruckin.woff2") format("woff2");
+  src: local('KeeponTruckin'), url("./KeeponTruckin.woff2") format("woff2");
+}
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 45 920;
+	font-style: normal;
+	font-display: swap;
+	src: local('Pretendard Variable'), url('./PretendardVariable.woff2') format('woff2-variations');
 }
