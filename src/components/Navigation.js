@@ -172,10 +172,10 @@ const Nav = styled.header`
       .gnb_item {
         width: 100%;
         font-size: 16px;
-        margin-right: 30px;
-        cursor: pointer;
+        padding-right: 30px;
+        cursor: default;
         &.checked {
-          color: #d51920;
+          color: var(--color-pink);
           & .lnb {
             display: flex;
             gap: 30px;
@@ -184,16 +184,14 @@ const Nav = styled.header`
         }
         .lnb {
           width: 100%;
-          /* height:0; */
           color: #fff;
           position: absolute;
-          left: 50%;
+          left: 0;
           top: 100%;
-          transform: translateX(-50%);
           background-color: #111;
           z-index: 99;
           line-height: 1;
-          padding: 30px 50px;
+          padding: 30px 100px;
           box-sizing: border-box;
           border-radius: 20px;
           display: none;
@@ -210,6 +208,7 @@ const Nav = styled.header`
             .lnb_item {
               margin: 20px 0;
               font-size: 15px;
+              cursor:pointer;
               &:hover {
                 color: var(--color-red);
               }

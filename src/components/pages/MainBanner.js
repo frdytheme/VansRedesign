@@ -32,11 +32,14 @@ function MainBanner() {
 }
 
 const BannerStyle = styled.div`
-  grid-column: span 2;
+  width: 100%;
+  grid-column: span 3;
   overflow: hidden;
   border-radius: 20px;
+  display: flex;
   .bannerImg {
     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 `;

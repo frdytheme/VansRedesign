@@ -11,18 +11,13 @@ import EventModal from "./EventModal";
 function EventSwiper() {
   const [newsToggle, setNewsToggle] = useState(false);
   const [newsNum, setNewsNum] = useState(0);
-  const infoUp = (e) => {
-    e.currentTarget.classList.add("hover");
-  };
-  const infoDown = (e) => {
-    e.currentTarget.classList.remove("hover");
-  };
+
   const handleNewsModal = (e) => {
     setNewsToggle(!newsToggle);
     setNewsNum(e.currentTarget.dataset.num);
   };
   return (
-    <EventStyle onMouseEnter={infoUp} onMouseLeave={infoDown} onClick={infoDown}>
+    <EventStyle>
       <Swiper
         pagination={{
           dynamicBullets: true,
@@ -78,7 +73,7 @@ const EventStyle = styled.div`
         background-color: rgba(0, 0, 0, 0.7);
         padding: 30px 10px 40px;
         text-align: center;
-        transform: translateY(100%);
+        /* transform: translateY(100%); */
         transition: 0.4s;
         box-sizing: border-box;
         em {
@@ -93,11 +88,6 @@ const EventStyle = styled.div`
         object-fit: cover;
         width: 100%;
       }
-    }
-  }
-  &.hover .swiper-slide .event_box {
-    .event_title {
-      transform: translateY(0);
     }
   }
 `;

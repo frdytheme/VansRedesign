@@ -1,0 +1,53 @@
+{
+  "data": {
+    "shoes": [
+      {
+        "no": "",
+        "color": "",
+        "name": "",
+        "price": "",
+        "img": []
+      }
+    ],
+    "clothes": {
+      "men": [
+        {
+          "no": "",
+          "color": "",
+          "name": "",
+          "price": "",
+          "img": []
+        }
+      ],
+      "women": [
+        {
+          "no": "",
+          "color": "",
+          "name": "",
+          "price": "",
+          "img": []
+        }
+      ]
+    },
+    "accessory": {
+      "men": [
+        {
+          "no": "",
+          "color": "",
+          "name": "",
+          "price": "",
+          "img": []
+        }
+      ],
+      "women": [
+        {
+          "no": "",
+          "color": "",
+          "name": "",
+          "price": "",
+          "img": []
+        }
+      ]
+    }
+  }
+}
