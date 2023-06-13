@@ -8,10 +8,10 @@ function MainPage() {
     <MainGrid>
       <MainBanner />
       <EventSwiper />
-      <div className="grid_test" style={{ "grid-column": "span 2" }}>
+      <div className="grid_test" style={{ gridColumn: "span 2" }}>
         내비게이션 빈 영역
       </div>
-      <div className="grid_test" style={{ "grid-column": "span 2" }}></div>
+      <div className="grid_test" style={{ gridColumn: "span 2" }}></div>
       <div className="grid_test"></div>
       <div className="grid_test"></div>
       <div className="grid_test"></div>
