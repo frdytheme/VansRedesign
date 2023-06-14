@@ -169,6 +169,7 @@ const Nav = styled.header`
       color: #fff;
       display: flex;
       margin-right: 50px;
+      z-index: 9999;
       .gnb_item {
         width: 100%;
         font-size: 16px;
