@@ -2,27 +2,32 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 function ProductFilter({ product }) {
-  const [loadedColor, setloadedColor] = useState([]);
+  const [loadedColor, setLoadedColor] = useState([]);
+  const [loadedSize, setLoadedSize] = useState([]);
+  const [loadedPrice, setLoadedPrice] = useState([]);
+  const [colorFilter, setColorFilter] = useState([]);
+  const [sizeFilter, setSizeFilter] = useState([]);
+  const [priceFilter, setPriceFilter] = useState([]);
 
   const colorList = [
-    { name: "블루", code: "#2F58CD" },
-    { name: "화이트", code: "#fff" },
-    { name: "블랙", code: "#000" },
-    { name: "옐로우", code: "#FFE569" },
-    { name: "차콜", code: "#454545" },
-    { name: "그레이", code: "#B2B2B2" },
-    { name: "샌드", code: "#D8C4B6" },
-    { name: "그린", code: "#54B435" },
-    { name: "네이비", code: "#0E2954" },
-    { name: "브라운", code: "#884A39" },
-    { name: "크림화이트", code: "#F9FBE7" },
-    { name: "레드", code: "#B31312" },
-    { name: "올리브", code: "#898121" },
-    { name: "핑크", code: "#FFAAC9" },
-    { name: "퍼플", code: "#8B1874" },
-    { name: "카키", code: "#83764F" },
-    { name: "오렌지", code: "#FF8551" },
-    { name: "스카이블루", code: "#9AC5F4" },
+    { no: 0, name: "블루", code: "#2F58CD" },
+    { no: 1, name: "화이트", code: "#fff" },
+    { no: 2, name: "블랙", code: "#000" },
+    { no: 3, name: "옐로우", code: "#FFE569" },
+    { no: 4, name: "차콜", code: "#454545" },
+    { no: 5, name: "그레이", code: "#B2B2B2" },
+    { no: 6, name: "샌드", code: "#D8C4B6" },
+    { no: 7, name: "그린", code: "#54B435" },
+    { no: 8, name: "네이비", code: "#0E2954" },
+    { no: 9, name: "브라운", code: "#884A39" },
+    { no: 10, name: "크림화이트", code: "#F9FBE7" },
+    { no: 11, name: "레드", code: "#B31312" },
+    { no: 12, name: "올리브", code: "#898121" },
+    { no: 13, name: "핑크", code: "#FFAAC9" },
+    { no: 14, name: "퍼플", code: "#8B1874" },
+    { no: 15, name: "카키", code: "#83764F" },
+    { no: 16, name: "오렌지", code: "#FF8551" },
+    { no: 17, name: "스카이블루", code: "#9AC5F4" },
   ];
 
   const sizeList = {
@@ -33,7 +38,13 @@ function ProductFilter({ product }) {
     free: "FREE",
   };
 
-  const allSizeList = Object.values(sizeList).flat();
+  const priceList = [
+    { min: 0, max: 50000 },
+    { min: 50000, max: 80000 },
+    { min: 80000, max: 100000 },
+    { min: 100000, max: 150000 },
+    { min: 150000, max: 300000 },
+  ];
 
   const getColor = () => {
     const color = [];
@@ -46,58 +57,142 @@ function ProductFilter({ product }) {
         return item;
       }
     });
-    setloadedColor(currentColor);
+    setLoadedColor(currentColor);
   };
 
+  const getSize = () => {
+    setLoadedSize(Object.values(sizeList).flat());
+  };
+
+  const getPrice = () => {
+    const priceInfo = priceList.map(
+      (item) =>
+        (item = {
+          ...item,
+          txt: item.min.toLocaleString("kr-KR") + "원" + "~" + item.max.toLocaleString("kr-KR") + "원",
+          checked: false,
+        })
+    );
+    setLoadedPrice(priceInfo);
+  };
   useEffect(() => {
     getColor();
+    getSize();
+    getPrice();
   }, [product]);
+
+  const selectColor = (color) => {
+    const newData = [...colorFilter, color];
+    const remainingColor = loadedColor.filter((item) => item !== color);
+    setColorFilter(newData);
+    setLoadedColor(remainingColor);
+  };
+  const removeColor = (color) => {
+    const remainingColor = colorFilter.filter((item) => item !== color);
+    const returnColor = [...loadedColor, color].sort((a, b) => a.no - b.no);
+    setLoadedColor(returnColor);
+    setColorFilter(remainingColor);
+  };
+  const selectSize = (e) => {
+    e.target.classList.add("disabled");
+    const size = e.target.textContent;
+    const newSize = [...sizeFilter, size];
+    setSizeFilter(newSize);
+  };
+  const removeSize = (e) => {
+    const size = e.target.textContent;
+    const remainingSize = sizeFilter.filter((item) => item !== size);
+    setSizeFilter(remainingSize);
+    const sizeList = document.querySelectorAll(".filter_list.size .filter_snb li");
+    sizeList.forEach((item) => (item.textContent === size ? item.classList.remove("disabled") : false));
+  };
+
+  const handlePrice = (e, price) => {
+    price.checked = !price.checked;
+    if (e.target.checked) {
+      setPriceFilter((prev) => [...prev, price]);
+    } else {
+      const removePrice = priceFilter.filter((item) => item !== price);
+      setPriceFilter(removePrice);
+    }
+  };
+  const removePrice = (price) => {
+    const removePrice = priceFilter.filter((item) => item !== price);
+    const checkPrice = loadedPrice.map((item) => (item.txt === price.txt ? { ...item, checked: false } : item));
+    setPriceFilter(removePrice);
+    setLoadedPrice(checkPrice);
+  };
   return (
     <ProductFilterStyle>
-      <ul className="product_filter">
+      <ul className="filter_container">
         <li className="filter_title">FILTER</li>
-        <li className="filter_category color">
-          <p className="category_title">
-            COLOR
-            <span className="material-symbols-outlined expand_btn">expand_more</span>
-          </p>
-          <ul className="filter_item">
+        <li className="filter_list color">
+          <p className="list_name">COLOR</p>
+          <ul className="filter_item filter_selected">
+            {colorFilter.map((color, idx) => (
+              <li key={`selectedColor${idx}`} onClick={() => removeColor(color)}>
+                <div className="color_circle" style={{ backgroundColor: `${color.code}` }}></div>
+                <p className="color_name">{color.name}</p>
+              </li>
+            ))}
+          </ul>
+          <ul className="filter_item filter_snb">
             {loadedColor.map((color, idx) => (
-              <li key={idx}>
-                <div className="color_circle" style={{ backgroundColor: `${color.code}` }} colorName={color.name}></div>
-                {/* <p className="color_name">{color.name}</p> */}
+              <li key={idx} onClick={() => selectColor(color)}>
+                <div className="color_circle" style={{ backgroundColor: `${color.code}` }}></div>
+                <p className="color_name">{color.name}</p>
               </li>
             ))}
           </ul>
         </li>
-        <li className="filter_category size">
-          <p className="category_title">
-            SIZE
-            <span className="material-symbols-outlined expand_btn">expand_more</span>
-          </p>
-          <ul className="filter_item">
-            {allSizeList.map((size, idx) => (
-              <li key={idx}>{size}</li>
+        <li className="filter_list size">
+          <p className="list_name">SIZE</p>
+          <ul className="filter_item filter_selected">
+            {sizeFilter.map((size, idx) => (
+              <li key={idx} onClick={removeSize}>
+                {size}
+              </li>
+            ))}
+          </ul>
+          <ul className="filter_item filter_snb">
+            {loadedSize.map((size, idx) => (
+              <li key={idx} onClick={selectSize}>
+                {size}
+              </li>
             ))}
           </ul>
         </li>
-        <li className="filter_category">
-          <p className="category_title">
-            PRICE
-            <span className="material-symbols-outlined expand_btn">expand_more</span>
-          </p>
+        <li className="filter_list price">
+          <p className="list_name">PRICE</p>
+          <ul className="filter_item filter_selected">
+            {priceFilter.map((price, idx) => (
+              <li key={`selected_price_li${idx}`} onClick={() => removePrice(price)}>
+                {price.txt}
+              </li>
+            ))}
+          </ul>
+          <ul className="filter_item filter_snb">
+            {loadedPrice.map((price, idx) => (
+              <li key={`price_li${idx}`}>
+                <label htmlFor={`price${idx}`}>
+                  <input
+                    type="checkbox"
+                    name={`price_checkbox`}
+                    id={`price${idx}`}
+                    onChange={(e) => handlePrice(e, price)}
+                    checked={price.checked}
+                  />
+                  {price.txt}
+                </label>
+              </li>
+            ))}
+          </ul>
         </li>
-        <li className="filter_category">
-          <p className="category_title">
-            CATEGORY
-            <span className="material-symbols-outlined expand_btn">expand_more</span>
-          </p>
+        <li className="filter_list">
+          <p className="list_name">CATEGORY</p>
         </li>
-        <li className="filter_category">
-          <p className="category_title">
-            SHOES MODEL
-            <span className="material-symbols-outlined expand_btn">expand_more</span>
-          </p>
+        <li className="filter_list">
+          <p className="list_name">SHOES MODEL</p>
         </li>
       </ul>
     </ProductFilterStyle>
@@ -111,70 +206,98 @@ const ProductFilterStyle = styled.div`
   width: 15vw;
   height: 90vh;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-  border-radius: 20px;
+  margin-top: 1vw;
   z-index: 9999;
-  .product_filter {
+  .filter_container {
     margin-top: 20px;
     height: 100%;
     font-weight: 700;
     text-align: center;
-    font-family: "GoAround", serif;
-    padding: 1vw;
     .filter_title {
       font-size: 2vw;
       margin-bottom: 40px;
     }
-    .filter_category {
+    .filter_list {
+      width: 100%;
       font-size: 1vw;
       border-bottom: 1px solid #000;
-      padding: 10px 0;
-      overflow: hidden;
-      .category_title {
+      position: relative;
+      .list_name {
         cursor: pointer;
         position: relative;
-        .expand_btn {
-          position: absolute;
-          top: 0;
-          right: 0;
+        padding: 1vw 1vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+        &:hover {
+          color: var(--color-red);
         }
       }
-      .more_btn {
-        font-size: 13px;
-        cursor: pointer;
+      .filter_item {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: 1fr;
+        place-content: center;
+        background-color: #fff;
+        font-weight: 500;
+        &.filter_selected {
+          li {
+            position: relative;
+            cursor: pointer;
+            &:hover {
+              opacity: 0.5;
+            }
+          }
+        }
+        &.filter_snb {
+          position: absolute;
+          top: 0;
+          left: 100%;
+          border: 1px solid #000;
+          border-radius: 10px;
+          padding: 20px 10px;
+          visibility: hidden;
+        }
       }
-      &.color .filter_item {
-        li {
-          margin: 0.3vw;
-          cursor: pointer;
-          position: relative;
-          .color_circle {
-            width: 2vw;
-            height: 2vw;
-            border: 1px solid #ddd;
-            border-radius: 50%;
+      &:hover {
+        .filter_item {
+          visibility: visible;
+        }
+      }
+      &.color {
+        .filter_item {
+          li {
+            margin: 0.3vw;
+            cursor: pointer;
+            position: relative;
           }
-          &:hover .color_name {
-            display: block;
-          }
-          .color_name {
-            font-size: 0.7vw;
-            padding: 10px 5px;
-            position: absolute;
-            top: -2vw;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #222;
-            color: #fff;
-            font-weight: 300;
-            display: none;
-            transition: 0.4s;
-            user-select: none;
-          }
+        }
+        .color_circle {
+          width: 2vw;
+          height: 2vw;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          margin: 0.2vw;
+        }
+        &:hover .color_name {
+          display: block;
+        }
+        .color_name {
+          font-size: 0.7vw;
+          color: #000;
+          font-weight: 400;
         }
       }
       &.size {
-        .filter_item {
+        .filter_selected {
+          grid-template-columns: repeat(5, 1fr);
+          li {
+            font-size: 13px;
+            padding: 0.7vw 0;
+          }
+        }
+        .filter_snb {
           li {
             overflow: hidden;
             font-family: "Pretendard", sans-serif;
@@ -185,15 +308,33 @@ const ProductFilterStyle = styled.div`
             line-height: 2vw;
             border: 1px solid #d6d6d6;
             margin: 0.2vw;
+            cursor: pointer;
+            &:hover {
+              background-color: var(--color-red);
+              color: #fff;
+              border: 1px solid #000;
+            }
+            &.disabled {
+              opacity: 0.5;
+              background-color: #d6d6d6;
+              user-select: none;
+              cursor: default;
+            }
           }
         }
       }
-    }
-    .filter_item {
-      margin: 1vw;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      &.price {
+        .filter_item {
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+          li {
+            width: 10vw;
+            padding: 0.7vw 0.7vw;
+            font-size: 14px;
+          }
+        }
+      }
     }
   }
 `;
