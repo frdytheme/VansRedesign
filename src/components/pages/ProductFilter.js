@@ -5,9 +5,12 @@ function ProductFilter({ product }) {
   const [loadedColor, setLoadedColor] = useState([]);
   const [loadedSize, setLoadedSize] = useState([]);
   const [loadedPrice, setLoadedPrice] = useState([]);
+  const [loadedCategory, setLoadedCategory] = useState([]);
   const [colorFilter, setColorFilter] = useState([]);
   const [sizeFilter, setSizeFilter] = useState([]);
   const [priceFilter, setPriceFilter] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState([]);
+  const [filterToggle, setFilterToggle] = useState([]);
 
   const colorList = [
     { no: 0, name: "블루", code: "#2F58CD" },
@@ -75,10 +78,25 @@ function ProductFilter({ product }) {
     );
     setLoadedPrice(priceInfo);
   };
+
+  const getCategory = () => {
+    const categoryList = [];
+    product.forEach((item) => {
+      if (categoryList.includes(item.category)) return;
+      categoryList.push(item.category);
+    });
+    const addCheck = categoryList.map((item) => {
+      return { name: item, checked: false };
+    });
+    setLoadedCategory(addCheck);
+  };
+
   useEffect(() => {
     getColor();
     getSize();
     getPrice();
+    getCategory();
+    console.log(product);
   }, [product]);
 
   const selectColor = (color) => {
@@ -86,6 +104,7 @@ function ProductFilter({ product }) {
     const remainingColor = loadedColor.filter((item) => item !== color);
     setColorFilter(newData);
     setLoadedColor(remainingColor);
+    setFilterToggle(prev => [...prev, color]);
   };
   const removeColor = (color) => {
     const remainingColor = colorFilter.filter((item) => item !== color);
@@ -96,6 +115,7 @@ function ProductFilter({ product }) {
   const selectSize = (e) => {
     e.target.classList.add("disabled");
     const size = e.target.textContent;
+    if (sizeFilter.includes(size)) return;
     const newSize = [...sizeFilter, size];
     setSizeFilter(newSize);
   };
@@ -118,10 +138,36 @@ function ProductFilter({ product }) {
   };
   const removePrice = (price) => {
     const removePrice = priceFilter.filter((item) => item !== price);
-    const checkPrice = loadedPrice.map((item) => (item.txt === price.txt ? { ...item, checked: false } : item));
+    loadedPrice.forEach((item) => (item.txt === price.txt ? (item.checked = false) : false));
     setPriceFilter(removePrice);
-    setLoadedPrice(checkPrice);
   };
+  const handleCategory = (e, category) => {
+    category.checked = !category.checked;
+    if (e.target.checked) {
+      setCategoryFilter((prev) => [...prev, category]);
+    } else {
+      const removeCategory = categoryFilter.filter((item) => item !== category);
+      setCategoryFilter(removeCategory);
+    }
+  };
+  const removeCategory = (category) => {
+    const removeCategory = categoryFilter.filter((item) => item !== category);
+    loadedCategory.forEach((item) => (category.name === item.name ? (item.checked = false) : false));
+    setCategoryFilter(removeCategory);
+  };
+  const removeFilter = () => {
+    const returnColor = [...loadedColor, ...colorFilter].sort((a, b) => a.no - b.no);
+    setLoadedColor(returnColor);
+    const sizeList = document.querySelectorAll(".filter_list.size .filter_snb li");
+    sizeList.forEach((item) => item.classList.remove("disabled"));
+    loadedPrice.forEach((item) => (item.checked = false));
+    loadedCategory.forEach((item) => (item.checked = false));
+    setColorFilter([]);
+    setSizeFilter([]);
+    setPriceFilter([]);
+    setCategoryFilter([]);
+  };
+
   return (
     <ProductFilterStyle>
       <ul className="filter_container">
@@ -188,19 +234,44 @@ function ProductFilter({ product }) {
             ))}
           </ul>
         </li>
-        <li className="filter_list">
+        <li className="filter_list category">
           <p className="list_name">CATEGORY</p>
+          <ul className="filter_item filter_selected">
+            {categoryFilter.map((category, idx) => (
+              <li key={`category${idx}`} onClick={() => removeCategory(category)}>
+                {category.name}
+              </li>
+            ))}
+          </ul>
+          <ul className="filter_item filter_snb">
+            {loadedCategory.map((category, idx) => (
+              <li key={`category${idx}`}>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="category_checkbox"
+                    id={`category${idx}`}
+                    onChange={(e) => handleCategory(e, category)}
+                    checked={category.checked}
+                  />
+                  {category.name}
+                </label>
+              </li>
+            ))}
+          </ul>
         </li>
-        <li className="filter_list">
-          <p className="list_name">SHOES MODEL</p>
-        </li>
+        {filterToggle.legnth && (
+          <li className="filter_reset" onClick={removeFilter}>
+            필터 초기화
+          </li>
+        )}
       </ul>
     </ProductFilterStyle>
   );
 }
 
 const ProductFilterStyle = styled.div`
-  position: fixed;
+  position: absolute;
   top: left;
   left: 1vw;
   width: 15vw;
@@ -222,8 +293,8 @@ const ProductFilterStyle = styled.div`
       font-size: 1vw;
       border-bottom: 1px solid #000;
       position: relative;
+      cursor: pointer;
       .list_name {
-        cursor: pointer;
         position: relative;
         padding: 1vw 1vw;
         display: flex;
@@ -241,10 +312,11 @@ const ProductFilterStyle = styled.div`
         place-content: center;
         background-color: #fff;
         font-weight: 500;
+        font-size: 0.7vw;
         &.filter_selected {
           li {
             position: relative;
-            cursor: pointer;
+            padding: 0.7vw 0;
             &:hover {
               opacity: 0.5;
             }
@@ -256,7 +328,7 @@ const ProductFilterStyle = styled.div`
           left: 100%;
           border: 1px solid #000;
           border-radius: 10px;
-          padding: 20px 10px;
+          padding: 1vw 0.7vw;
           visibility: hidden;
         }
       }
@@ -269,7 +341,6 @@ const ProductFilterStyle = styled.div`
         .filter_item {
           li {
             margin: 0.3vw;
-            cursor: pointer;
             position: relative;
           }
         }
@@ -284,7 +355,6 @@ const ProductFilterStyle = styled.div`
           display: block;
         }
         .color_name {
-          font-size: 0.7vw;
           color: #000;
           font-weight: 400;
         }
@@ -292,23 +362,17 @@ const ProductFilterStyle = styled.div`
       &.size {
         .filter_selected {
           grid-template-columns: repeat(5, 1fr);
-          li {
-            font-size: 13px;
-            padding: 0.7vw 0;
-          }
         }
         .filter_snb {
           li {
             overflow: hidden;
             font-family: "Pretendard", sans-serif;
-            font-size: 14px;
             width: 3vw;
             height: 2vw;
             border-radius: 7px;
             line-height: 2vw;
             border: 1px solid #d6d6d6;
             margin: 0.2vw;
-            cursor: pointer;
             &:hover {
               background-color: var(--color-red);
               color: #fff;
@@ -330,10 +394,45 @@ const ProductFilterStyle = styled.div`
           text-align: left;
           li {
             width: 10vw;
-            padding: 0.7vw 0.7vw;
-            font-size: 14px;
+            padding: 0.7vw;
+            label {
+              display: flex;
+              align-items: center;
+            }
           }
         }
+        .filter_snb {
+          li {
+            cursor: default;
+          }
+        }
+      }
+      &.category {
+        .filter_item {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .filter_snb {
+          li {
+            width: 6vw;
+            text-align: left;
+            padding: 0.3vw 0;
+            cursor: default;
+            label {
+              display: flex;
+              align-items: center;
+            }
+          }
+        }
+      }
+    }
+    .filter_reset {
+      border: 1px solid #000;
+      padding: 1vw 0.5vw;
+      margin-top: 1vw;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--color-red);
+        color: #fff;
       }
     }
   }

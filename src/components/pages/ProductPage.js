@@ -14,7 +14,7 @@ function ProductPage() {
 const ProductPageStyle = styled.div`
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 80px);
   margin-top: 80px;
   top: 0;
   left: 0;

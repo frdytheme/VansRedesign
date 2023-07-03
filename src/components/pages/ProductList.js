@@ -68,6 +68,7 @@ const ProductListStyle = styled.div`
   .flex_container {
     width: 79vw;
     margin-left: 17.5vw;
+    padding-bottom: 80px;
     display: flex;
     flex-wrap: wrap;
     gap: 1vw;
