@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import axios from "axios";
 
 function ProductList() {
   const [product, setProduct] = useState([]);
+  const allProduct = useRef([]);
+  const [filterList, setFilterList] = useState({ color: [], size: [], price: [], category: [] });
+  const [filterToggle, setFilterToggle] = useState(false);
   const PUBLIC = process.env.PUBLIC_URL;
   const newArrivalDate = new Date("2023/06/08").getTime();
 
@@ -12,6 +15,7 @@ function ProductList() {
     try {
       const response = await axios.get("http://localhost:5000/api/product");
       setProduct(response.data);
+      allProduct.current = response.data;
     } catch (error) {
       console.error(error);
     }
@@ -21,9 +25,32 @@ function ProductList() {
     getProduct();
   }, []);
 
+  /*
+
+  */
+  useEffect(() => {
+    if (filterToggle) {
+      setProduct(
+        allProduct.current.filter(
+          (item) => filterList.color.includes(item.color) || filterList.category.includes(item.category)
+        )
+      );
+    } else {
+      setProduct(allProduct.current);
+    }
+    console.log(filterList);
+    console.log(product);
+    console.log(filterToggle);
+  }, [filterList, filterToggle]);
   return (
     <ProductListStyle>
-      <ProductFilter product={product} />
+      <ProductFilter
+        product={allProduct.current}
+        filterList={filterList}
+        setFilterList={setFilterList}
+        filterToggle={filterToggle}
+        setFilterToggle={setFilterToggle}
+      />
       <div className="flex_container">
         {product.map((item) => (
           <figure className="product_box" key={item.model}>

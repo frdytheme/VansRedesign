@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function ProductFilter({ product }) {
+function ProductFilter({ product, filterList, setFilterList, filterToggle, setFilterToggle }) {
   const [loadedColor, setLoadedColor] = useState([]);
   const [loadedSize, setLoadedSize] = useState([]);
   const [loadedPrice, setLoadedPrice] = useState([]);
@@ -10,7 +10,6 @@ function ProductFilter({ product }) {
   const [sizeFilter, setSizeFilter] = useState([]);
   const [priceFilter, setPriceFilter] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState([]);
-  const [filterToggle, setFilterToggle] = useState([]);
 
   const colorList = [
     { no: 0, name: "블루", code: "#2F58CD" },
@@ -96,7 +95,6 @@ function ProductFilter({ product }) {
     getSize();
     getPrice();
     getCategory();
-    console.log(product);
   }, [product]);
 
   const selectColor = (color) => {
@@ -104,13 +102,14 @@ function ProductFilter({ product }) {
     const remainingColor = loadedColor.filter((item) => item !== color);
     setColorFilter(newData);
     setLoadedColor(remainingColor);
-    setFilterToggle(prev => [...prev, color]);
+    setFilterList((prev) => ({ ...prev, color: [...prev.color, color.name] }));
   };
   const removeColor = (color) => {
     const remainingColor = colorFilter.filter((item) => item !== color);
     const returnColor = [...loadedColor, color].sort((a, b) => a.no - b.no);
     setLoadedColor(returnColor);
     setColorFilter(remainingColor);
+    setFilterList((prev) => ({ ...prev, color: prev.color.filter((item) => item !== color.name) }));
   };
   const selectSize = (e) => {
     e.target.classList.add("disabled");
@@ -118,11 +117,13 @@ function ProductFilter({ product }) {
     if (sizeFilter.includes(size)) return;
     const newSize = [...sizeFilter, size];
     setSizeFilter(newSize);
+    setFilterList((prev) => ({ ...prev, size: [...prev.size, size] }));
   };
   const removeSize = (e) => {
     const size = e.target.textContent;
     const remainingSize = sizeFilter.filter((item) => item !== size);
     setSizeFilter(remainingSize);
+    setFilterList((prev) => ({ ...prev, size: prev.size.filter((item) => item !== size) }));
     const sizeList = document.querySelectorAll(".filter_list.size .filter_snb li");
     sizeList.forEach((item) => (item.textContent === size ? item.classList.remove("disabled") : false));
   };
@@ -131,29 +132,31 @@ function ProductFilter({ product }) {
     price.checked = !price.checked;
     if (e.target.checked) {
       setPriceFilter((prev) => [...prev, price]);
+      setFilterList((prev) => ({ ...prev, price: [...prev.price, price] }));
     } else {
-      const removePrice = priceFilter.filter((item) => item !== price);
-      setPriceFilter(removePrice);
+      setPriceFilter((prev) => prev.filter((item) => item !== price));
+      setFilterList((prev) => ({ ...prev, price: prev.price.filter((item) => item !== price) }));
     }
   };
   const removePrice = (price) => {
-    const removePrice = priceFilter.filter((item) => item !== price);
     loadedPrice.forEach((item) => (item.txt === price.txt ? (item.checked = false) : false));
-    setPriceFilter(removePrice);
+    setPriceFilter((prev) => prev.filter((item) => item !== price));
+    setFilterList((prev) => ({ ...prev, price: prev.price.filter((item) => item !== price) }));
   };
   const handleCategory = (e, category) => {
     category.checked = !category.checked;
     if (e.target.checked) {
       setCategoryFilter((prev) => [...prev, category]);
+      setFilterList((prev) => ({ ...prev, category: [...prev.category, category.name] }));
     } else {
-      const removeCategory = categoryFilter.filter((item) => item !== category);
-      setCategoryFilter(removeCategory);
+      setCategoryFilter((prev) => prev.filter((item) => item !== category));
+      setFilterList((prev) => ({ ...prev, category: prev.category.filter((item) => item !== category.name) }));
     }
   };
   const removeCategory = (category) => {
-    const removeCategory = categoryFilter.filter((item) => item !== category);
     loadedCategory.forEach((item) => (category.name === item.name ? (item.checked = false) : false));
-    setCategoryFilter(removeCategory);
+    setCategoryFilter((prev) => prev.filter((item) => item !== category));
+    setFilterList((prev) => ({ ...prev, category: prev.category.filter((item) => item !== category.name) }));
   };
   const removeFilter = () => {
     const returnColor = [...loadedColor, ...colorFilter].sort((a, b) => a.no - b.no);
@@ -166,7 +169,15 @@ function ProductFilter({ product }) {
     setSizeFilter([]);
     setPriceFilter([]);
     setCategoryFilter([]);
+    setFilterList({ color: [], size: [], price: [], category: [] });
   };
+
+  useEffect(() => {
+    const isChange = Object.values(filterList)
+      .filter((item) => item !== false && item.length > 0)
+      .some(Boolean);
+    setFilterToggle(isChange);
+  }, [filterList]);
 
   return (
     <ProductFilterStyle>
@@ -260,7 +271,7 @@ function ProductFilter({ product }) {
             ))}
           </ul>
         </li>
-        {filterToggle.legnth && (
+        {filterToggle && (
           <li className="filter_reset" onClick={removeFilter}>
             필터 초기화
           </li>
