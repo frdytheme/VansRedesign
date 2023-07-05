@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import MainBanner from "./pages/MainBanner";
+import { useNavigate } from "react-router-dom";
 
 function Navigation() {
   let id = 0;
@@ -96,6 +97,7 @@ function Navigation() {
       ],
     },
   ];
+  const navigate = useNavigate();
 
   const handleGnb = (e) => {
     const btns = document.querySelectorAll(".gnb_item");
@@ -107,12 +109,12 @@ function Navigation() {
   return (
     <Nav>
       <div className="nav_box">
-        <div className="logo">
+        <div className="logo" onClick={() => navigate("/home")}>
           <img src={process.env.PUBLIC_URL + "./images/official/vans_logo.svg"} alt="반스 로고" />
         </div>
         <ul className="gnb">
           {gnbList.map((li) => (
-            <li key={li.id} className="gnb_item" onMouseEnter={handleGnb} onMouseLeave={handleGnb}>
+            <li key={li.id} className="gnb_item" onMouseEnter={handleGnb} onMouseLeave={handleGnb} onClick={() => navigate('./product')}>
               {li.name}
               {li.lnb && (
                 <div className="lnb">
@@ -164,6 +166,7 @@ const Nav = styled.header`
     position: relative;
     .logo {
       padding: 10px 40px;
+      cursor: pointer;
     }
     .gnb {
       color: #fff;
@@ -174,13 +177,14 @@ const Nav = styled.header`
         width: 100%;
         font-size: 16px;
         padding-right: 30px;
-        cursor: default;
+        cursor: pointer;
         &.checked {
           color: var(--color-pink);
           & .lnb {
             display: flex;
             gap: 30px;
             animation-play-state: running;
+            cursor: default;
           }
         }
         .lnb {
@@ -209,7 +213,7 @@ const Nav = styled.header`
             .lnb_item {
               margin: 20px 0;
               font-size: 15px;
-              cursor:pointer;
+              cursor: pointer;
               &:hover {
                 color: var(--color-red);
               }

@@ -71,7 +71,7 @@ const ModalStyle = styled.article`
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,7 +81,7 @@ const ModalStyle = styled.article`
       position: absolute;
       width: 100%;
       height: 95vh;
-      border-radius: 20px;
+      border-radius: 20px 20px 0 0;
       bottom: 0;
       border-top: 30px solid #d51920;
       background-color: white;
@@ -96,7 +96,13 @@ const ModalStyle = styled.article`
         margin: 60px 0;
       }
       &::-webkit-scrollbar {
-        width: 0px;
+        width: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--color-red);
+        background-clip: padding-box;
+        border-radius: 10px;
+        border: 2px solid transparent;
       }
       h2 {
         font-size: 24px;

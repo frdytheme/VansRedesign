@@ -1,7 +1,6 @@
 import React from "react";
 import ProductList from "./ProductList";
-import styled from "styled-components";
-import ProductFilter from "./ProductFilter";
+import styled, { keyframes } from "styled-components";
 
 function ProductPage() {
   return (
