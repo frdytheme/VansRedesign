@@ -6,7 +6,16 @@ import axios from "axios";
 function ProductList() {
   const [product, setProduct] = useState([]);
   const allProduct = useRef([]);
-  const [filterList, setFilterList] = useState({ color: [], size: [], price: [], category: [] });
+  const [filterList, setFilterList] = useState({
+    color: [],
+    colorFilter: false,
+    size: [],
+    sizeFilter: false,
+    price: [],
+    priceFilter: false,
+    category: [],
+    categoryFilter: false,
+  });
   const [filterToggle, setFilterToggle] = useState(false);
   const PUBLIC = process.env.PUBLIC_URL;
   const newArrivalDate = new Date("2023/06/08").getTime();
@@ -25,22 +34,49 @@ function ProductList() {
     getProduct();
   }, []);
 
-  /*
-
-  */
   useEffect(() => {
-    if (filterToggle) {
+    filterList.colorFilter = filterList.color.length > 0 ? true : false;
+    filterList.sizeFilter = filterList.size.length > 0 ? true : false;
+    filterList.priceFilter = filterList.price.length > 0 ? true : false;
+    filterList.categoryFilter = filterList.category.length > 0 ? true : false;
+
+    const isChange =
+      filterList.colorFilter || filterList.sizeFilter || filterList.priceFilter || filterList.categoryFilter;
+    setFilterToggle(isChange);
+
+    const filterSingle = Object.values(filterList).filter((item) => item === true).length === 1;
+
+    let min = Math.min(...filterList.price.map((item) => item.min));
+    let max = Math.max(...filterList.price.map((item) => item.max));
+
+    if (filterSingle) {
       setProduct(
         allProduct.current.filter(
-          (item) => filterList.color.includes(item.color) || filterList.category.includes(item.category)
+          (item) =>
+            filterList.color.includes(item.color) ||
+            filterList.category.includes(item.category) ||
+            filterList.size.includes(item.size) ||
+            (item.price * 1 >= min && item.price * 1 <= max)
         )
       );
-    } else {
+    } else if (!filterToggle) {
       setProduct(allProduct.current);
+    } else {
+      let filtered = [...allProduct.current];
+      if (filterList.colorFilter) {
+        filtered = filtered.filter((item) => filterList.color.includes(item.color));
+      }
+      if (filterList.sizeFilter) {
+        filtered = filtered.filter((item) => filterList.size.includes(item.size));
+      }
+      if (filterList.priceFilter) {
+        filtered = filtered.filter((item) => min <= item.price * 1 && item.price * 1 <= max);
+      }
+      if (filterList.categoryFilter) {
+        filtered = filtered.filter((item) => filterList.category.includes(item.category));
+      }
+      setProduct(filtered);
     }
-    console.log(filterList);
-    console.log(product);
-    console.log(filterToggle);
   }, [filterList, filterToggle]);
   return (
     <ProductListStyle>

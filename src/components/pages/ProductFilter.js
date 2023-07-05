@@ -169,15 +169,17 @@ function ProductFilter({ product, filterList, setFilterList, filterToggle, setFi
     setSizeFilter([]);
     setPriceFilter([]);
     setCategoryFilter([]);
-    setFilterList({ color: [], size: [], price: [], category: [] });
+    setFilterList({
+      color: [],
+      colorFilter: false,
+      size: [],
+      sizeFilter: false,
+      price: [],
+      priceFilter: false,
+      category: [],
+      categoryFilter: false,
+    });
   };
-
-  useEffect(() => {
-    const isChange = Object.values(filterList)
-      .filter((item) => item !== false && item.length > 0)
-      .some(Boolean);
-    setFilterToggle(isChange);
-  }, [filterList]);
 
   return (
     <ProductFilterStyle>
