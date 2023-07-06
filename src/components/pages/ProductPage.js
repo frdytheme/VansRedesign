@@ -2,13 +2,20 @@ import React from "react";
 import ProductList from "./ProductList";
 import styled, { keyframes } from "styled-components";
 
-function ProductPage() {
+function ProductPage({ listName }) {
   return (
     <ProductPageStyle>
-      <ProductList />
+      <ProductList listName={listName} />
     </ProductPageStyle>
   );
 }
+
+const slideUp = keyframes`
+100% {
+  opacity: 1;
+  transform: translateY(0);
+}
+`;
 
 const ProductPageStyle = styled.div`
   position: absolute;
@@ -19,6 +26,9 @@ const ProductPageStyle = styled.div`
   left: 0;
   z-index: 999;
   display: grid;
+  transform: translateY(120%);
+  opacity: 0;
+  animation: ${slideUp} 0.7s forwards;
 `;
 
 export default ProductPage;

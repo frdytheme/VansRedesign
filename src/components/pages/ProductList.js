@@ -3,8 +3,10 @@ import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import axios from "axios";
 
-function ProductList() {
+function ProductList({ listName }) {
   const [product, setProduct] = useState([]);
+  const [lastPage, setLastPage] = useState(0);
+  const nowPage = useRef(1);
   const allProduct = useRef([]);
   const [filterList, setFilterList] = useState({
     color: [],
@@ -22,9 +24,12 @@ function ProductList() {
 
   const getProduct = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/product");
-      setProduct(response.data);
-      allProduct.current = response.data;
+      const response = await axios.get(`http://localhost:5000/api/product`);
+      const { products, totalPages } = response.data;
+      setLastPage(totalPages);
+      setProduct(products);
+      allProduct.current = products;
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -77,11 +82,33 @@ function ProductList() {
       }
       setProduct(filtered);
     }
+    console.log(product);
   }, [filterList, filterToggle]);
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    const boxHeight = scrollHeight - clientHeight;
+    const truncScrollTop = Math.trunc(scrollTop);
+    const addProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/product?page=${nowPage.current}`);
+        const { products } = await response.data;
+        const updateProduct = [...product, ...products];
+        setProduct(updateProduct);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (truncScrollTop >= boxHeight - 1 && nowPage.current <= lastPage && product.length === nowPage.current * 25) {
+      nowPage.current = nowPage.current + 1;
+      addProduct();
+    }
+  };
+
   return (
-    <ProductListStyle>
+    <ProductListStyle onScroll={handleScroll}>
       <ProductFilter
-        product={allProduct.current}
+        product={product}
         filterList={filterList}
         setFilterList={setFilterList}
         filterToggle={filterToggle}

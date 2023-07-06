@@ -7,12 +7,13 @@ import { Route, Routes } from "react-router-dom";
 
 function Home() {
   const [productToggle, setProductToggle] = useState(false);
+  const [listName, setListName] = useState("");
   return (
     <HomeSection>
-      <Navigation />
+      <Navigation setListName={setListName}/>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="./product" element={<ProductPage />} />
+        <Route path="/product" element={<ProductPage listName={listName} />} />
       </Routes>
     </HomeSection>
   );

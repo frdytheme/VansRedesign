@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import MainBanner from "./pages/MainBanner";
 import { useNavigate } from "react-router-dom";
 
-function Navigation() {
+function Navigation({setListName}) {
   let id = 0;
   const gnbList = [
     {
@@ -98,13 +98,20 @@ function Navigation() {
     },
   ];
   const navigate = useNavigate();
+  const btns = document.querySelectorAll(".gnb_item");
 
   const handleGnb = (e) => {
-    const btns = document.querySelectorAll(".gnb_item");
     btns.forEach((btn) => {
       btn.classList.remove("checked");
     });
     e.target.classList.add("checked");
+  };
+
+  const clickMenu = () => {
+    navigate("./product");
+    btns.forEach((btn) => {
+      btn.classList.remove("checked");
+    });
   };
   return (
     <Nav>
@@ -114,7 +121,12 @@ function Navigation() {
         </div>
         <ul className="gnb">
           {gnbList.map((li) => (
-            <li key={li.id} className="gnb_item" onMouseEnter={handleGnb} onMouseLeave={handleGnb} onClick={() => navigate('./product')}>
+            <li
+              key={li.id}
+              className="gnb_item"
+              onMouseEnter={handleGnb}
+              onMouseLeave={handleGnb}
+              onClick={() => clickMenu()}>
               {li.name}
               {li.lnb && (
                 <div className="lnb">
