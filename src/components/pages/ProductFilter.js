@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function ProductFilter({ product, filterList, setFilterList, filterToggle, setFilterToggle }) {
+function ProductFilter({ product, setFilterList, filterToggle }) {
   const [loadedColor, setLoadedColor] = useState([]);
   const [loadedSize, setLoadedSize] = useState([]);
   const [loadedPrice, setLoadedPrice] = useState([]);
