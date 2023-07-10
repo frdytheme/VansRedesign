@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import MainBanner from "./pages/MainBanner";
 import { useNavigate } from "react-router-dom";
 
-function Navigation({setListName}) {
+function Navigation({ setListName }) {
   let id = 0;
   const gnbList = [
     {
@@ -98,20 +98,11 @@ function Navigation({setListName}) {
     },
   ];
   const navigate = useNavigate();
-  const btns = document.querySelectorAll(".gnb_item");
-
-  const handleGnb = (e) => {
-    btns.forEach((btn) => {
-      btn.classList.remove("checked");
-    });
-    e.target.classList.add("checked");
-  };
 
   const clickMenu = () => {
     navigate("./product");
-    btns.forEach((btn) => {
-      btn.classList.remove("checked");
-    });
+    const lnbs = document.querySelectorAll(".lnb");
+    // lnbs.forEach((lnb) => (lnb.style.display = "none"));
   };
   return (
     <Nav>
@@ -121,12 +112,7 @@ function Navigation({setListName}) {
         </div>
         <ul className="gnb">
           {gnbList.map((li) => (
-            <li
-              key={li.id}
-              className="gnb_item"
-              onMouseEnter={handleGnb}
-              onMouseLeave={handleGnb}
-              onClick={() => clickMenu()}>
+            <li key={li.id} className="gnb_item" onClick={() => clickMenu()}>
               {li.name}
               {li.lnb && (
                 <div className="lnb">
@@ -190,7 +176,7 @@ const Nav = styled.header`
         font-size: 16px;
         padding-right: 30px;
         cursor: pointer;
-        &.checked {
+        &:hover {
           color: var(--color-pink);
           & .lnb {
             display: flex;

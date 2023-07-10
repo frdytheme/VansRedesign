@@ -6,8 +6,10 @@ import axios from "axios";
 function ProductList({ listName }) {
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
+  const filteredUrl = useRef("");
   const [lastPage, setLastPage] = useState(0);
   const nowPage = useRef(1);
+  const search = useRef([]);
   const [filterList, setFilterList] = useState({
     color: [],
     colorFilter: false,
@@ -28,7 +30,6 @@ function ProductList({ listName }) {
       const { products, totalPages } = response.data;
       setLastPage(totalPages);
       setProduct(products);
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -38,51 +39,10 @@ function ProductList({ listName }) {
     getProduct();
   }, []);
 
-  // useEffect(() => {
-  //   filterList.colorFilter = filterList.color.length > 0 ? true : false;
-  //   filterList.sizeFilter = filterList.size.length > 0 ? true : false;
-  //   filterList.priceFilter = filterList.price.length > 0 ? true : false;
-  //   filterList.categoryFilter = filterList.category.length > 0 ? true : false;
-
-  //   const isChange =
-  //     filterList.colorFilter || filterList.sizeFilter || filterList.priceFilter || filterList.categoryFilter;
-  //   setFilterToggle(isChange);
-
-  //   const filterSingle = Object.values(filterList).filter((item) => item === true).length === 1;
-
-  //   let min = Math.min(...filterList.price.map((item) => item.min));
-  //   let max = Math.max(...filterList.price.map((item) => item.max));
-
-  //   if (filterSingle) {
-  //     setFilteredProduct(
-  //       product.filter(
-  //         (item) =>
-  //           filterList.color.includes(item.color) ||
-  //           filterList.category.includes(item.category) ||
-  //           filterList.size.includes(item.size) ||
-  //           (item.price * 1 >= min && item.price * 1 <= max)
-  //       )
-  //     );
-  //   } else {
-  //     let filtered = [...product];
-  //     if (filterList.colorFilter) {
-  //       filtered = filtered.filter((item) => filterList.color.includes(item.color));
-  //     }
-  //     if (filterList.sizeFilter) {
-  //       filtered = filtered.filter((item) => filterList.size.includes(item.size));
-  //     }
-  //     if (filterList.priceFilter) {
-  //       filtered = filtered.filter((item) => min <= item.price * 1 && item.price * 1 <= max);
-  //     }
-  //     if (filterList.categoryFilter) {
-  //       filtered = filtered.filter((item) => filterList.category.includes(item.category));
-  //     }
-  //     setFilteredProduct(filtered);
-  //   }
-  //   console.log(product);
-  // }, [filterList, filterToggle]);
-
   useEffect(() => {
+    search.current = [];
+    nowPage.current = 1;
+
     filterList.colorFilter = filterList.color.length > 0 ? true : false;
     filterList.sizeFilter = filterList.size.length > 0 ? true : false;
     filterList.priceFilter = filterList.price.length > 0 ? true : false;
@@ -90,20 +50,38 @@ function ProductList({ listName }) {
 
     const isChange =
       filterList.colorFilter || filterList.sizeFilter || filterList.priceFilter || filterList.categoryFilter;
+
     setFilterToggle(isChange);
+
     const { color, price, size, category, colorFilter, sizeFilter, priceFilter, categoryFilter } = filterList;
-    const search = [];
-    if (colorFilter) search.push(`color=${color.join(",")}`);
-    if (sizeFilter) search.push(`size=${size.join(",")}`);
+
+    if (colorFilter) {
+      search.current.push(`color=${color.join(",")}`);
+    }
+    if (sizeFilter) search.current.push(`size=${size.join(",")}`);
     if (priceFilter) {
       let min = Math.min(...price.map((item) => item.min));
       let max = Math.max(...price.map((item) => item.max));
-      search.push(`price=${min + "," + max}`);
+      search.current.push(`price=${min + "," + max}`);
     }
-    if (categoryFilter) search.push(`category=${category.join(",")}`);
-    const url = `http://localhost:5000/api/product?${search.join("&")}`;
-    console.log(url);
+    if (categoryFilter) search.current.current.push(`category=${category.join(",")}`);
+    filteredUrl.current = `http://localhost:5000/api/product?${search.current.join("&")}`;
+    const fetchFilteredProduct = async () => {
+      try {
+        const response = await axios.get(filteredUrl.current);
+        const { products, totalPages } = response.data;
+        setFilteredProduct(products);
+        setLastPage(totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
+    fetchFilteredProduct();
+
+    if (!filterToggle) {
+      nowPage.current = product.length / 25;
+    }
   }, [filterList, filterToggle]);
 
   const handleScroll = (e) => {
@@ -120,9 +98,25 @@ function ProductList({ listName }) {
         console.error(error);
       }
     };
-    if (truncScrollTop >= boxHeight - 1 && nowPage.current <= lastPage && product.length === nowPage.current * 25) {
+    const addFilteredProduct = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/product?${search.current.join("&")}&page=${nowPage.current}`
+        );
+        const { products } = await response.data;
+        const updateProduct = [...filteredProduct, ...products];
+        setFilteredProduct(updateProduct);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (
+      truncScrollTop >= boxHeight - 1 &&
+      nowPage.current <= lastPage &&
+      (product.length === nowPage.current * 25 || filteredProduct.length === nowPage.current * 25)
+    ) {
       nowPage.current = nowPage.current + 1;
-      addProduct();
+      filterToggle ? addFilteredProduct() : addProduct();
     }
   };
 
