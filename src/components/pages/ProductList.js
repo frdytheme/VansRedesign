@@ -58,14 +58,19 @@ function ProductList({ listName }) {
     if (colorFilter) {
       search.current.push(`color=${color.join(",")}`);
     }
+
     if (sizeFilter) search.current.push(`size=${size.join(",")}`);
+
     if (priceFilter) {
       let min = Math.min(...price.map((item) => item.min));
       let max = Math.max(...price.map((item) => item.max));
       search.current.push(`price=${min + "," + max}`);
     }
+
     if (categoryFilter) search.current.current.push(`category=${category.join(",")}`);
+
     filteredUrl.current = `http://localhost:5000/api/product?${search.current.join("&")}`;
+
     const fetchFilteredProduct = async () => {
       try {
         const response = await axios.get(filteredUrl.current);
@@ -80,7 +85,7 @@ function ProductList({ listName }) {
     fetchFilteredProduct();
 
     if (!filterToggle) {
-      nowPage.current = product.length / 25;
+      nowPage.current = (product.length === 0) ? 1 : product.length / 25;
     }
   }, [filterList, filterToggle]);
 
@@ -119,6 +124,8 @@ function ProductList({ listName }) {
       filterToggle ? addFilteredProduct() : addProduct();
     }
   };
+
+  console.log(product);
 
   return (
     <ProductListStyle onScroll={handleScroll}>

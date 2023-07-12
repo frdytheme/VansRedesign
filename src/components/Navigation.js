@@ -98,11 +98,17 @@ function Navigation({ setListName }) {
     },
   ];
   const navigate = useNavigate();
+  const gnbs = document.querySelectorAll(".gnb_item");
 
-  const clickMenu = () => {
+  const clickMenu = (e) => {
     navigate("./product");
-    const lnbs = document.querySelectorAll(".lnb");
-    // lnbs.forEach((lnb) => (lnb.style.display = "none"));
+    gnbs.forEach((gnb) => gnb.classList.remove("active"));
+  };
+  const activeGnb = (e) => {
+    e.currentTarget.classList.add("active");
+  };
+  const disableGnb = (e) => {
+    e.currentTarget.classList.remove("active");
   };
   return (
     <Nav>
@@ -110,9 +116,9 @@ function Navigation({ setListName }) {
         <div className="logo" onClick={() => navigate("/home")}>
           <img src={process.env.PUBLIC_URL + "./images/official/vans_logo.svg"} alt="반스 로고" />
         </div>
-        <ul className="gnb">
+        <ul className="gnb" onClick={clickMenu}>
           {gnbList.map((li) => (
-            <li key={li.id} className="gnb_item" onClick={() => clickMenu()}>
+            <li key={li.id} className="gnb_item" onMouseEnter={activeGnb} onMouseLeave={disableGnb}>
               {li.name}
               {li.lnb && (
                 <div className="lnb">
@@ -176,7 +182,7 @@ const Nav = styled.header`
         font-size: 16px;
         padding-right: 30px;
         cursor: pointer;
-        &:hover {
+        &.active {
           color: var(--color-pink);
           & .lnb {
             display: flex;

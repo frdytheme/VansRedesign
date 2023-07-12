@@ -35,8 +35,8 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
   const sizeList = {
     shoes: [210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 310],
     clothes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-    kids: [4, 5, 6, 7],
-    inches: [29, 30, 31, 32, 33, 34, 36],
+    kids: [4, 5, 6, 7, 8, 9, 10],
+    inches: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36],
     free: "FREE",
   };
 
