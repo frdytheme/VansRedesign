@@ -10,7 +10,7 @@ function Home() {
   const [listName, setListName] = useState("");
   return (
     <HomeSection>
-      <Navigation setListName={setListName}/>
+      <Navigation setListName={setListName} listName={listName}/>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/product" element={<ProductPage listName={listName} />} />

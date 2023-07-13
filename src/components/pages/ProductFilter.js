@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -35,8 +36,21 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
   const sizeList = {
     shoes: [210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 310],
     clothes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-    kids: [4, 5, 6, 7, 8, 9, 10],
-    inches: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36],
+    kids: [4, 5, 6, 7],
+    toddler: [105, 110, 115, 120, 130, 135, 140, 145, 150, 155, 160],
+    inches: [
+      "25Inch",
+      "26Inch",
+      "27Inch",
+      "28Inch",
+      "29Inch",
+      "30Inch",
+      "31Inch",
+      "32Inch",
+      "33Inch",
+      "34Inch",
+      "36Inch",
+    ],
     free: "FREE",
   };
 
@@ -49,17 +63,7 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
   ];
 
   const getColor = () => {
-    const color = [];
-    product.forEach((item) => {
-      if (color.includes(item.color)) return;
-      color.push(item.color);
-    });
-    const currentColor = colorList.filter((item) => {
-      if (color.includes(item.name)) {
-        return item;
-      }
-    });
-    setLoadedColor(currentColor);
+    setLoadedColor(colorList);
   };
 
   const getSize = () => {
@@ -111,21 +115,33 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
     setColorFilter(remainingColor);
     setFilterList((prev) => ({ ...prev, color: prev.color.filter((item) => item !== color.name) }));
   };
-  const selectSize = (e) => {
-    e.target.classList.add("disabled");
-    const size = e.target.textContent;
-    if (sizeFilter.includes(size)) return;
-    const newSize = [...sizeFilter, size];
-    setSizeFilter(newSize);
-    setFilterList((prev) => ({ ...prev, size: [...prev.size, size] }));
-  };
+
+  const sizeSnb = document.querySelectorAll(".filter_list.size .filter_snb li");
+
   const removeSize = (e) => {
     const size = e.target.textContent;
     const remainingSize = sizeFilter.filter((item) => item !== size);
     setSizeFilter(remainingSize);
     setFilterList((prev) => ({ ...prev, size: prev.size.filter((item) => item !== size) }));
-    const sizeList = document.querySelectorAll(".filter_list.size .filter_snb li");
-    sizeList.forEach((item) => (item.textContent === size ? item.classList.remove("disabled") : false));
+    sizeSnb.forEach((item) => (item.textContent === size ? item.classList.remove("disabled") : false));
+  };
+
+  const selectSize = (e) => {
+    e.target.classList.add("disabled");
+    const size = e.target.textContent;
+    if (sizeFilter.includes(size)) {
+      removeSize(e);
+    } else {
+      const newSize = [...sizeFilter, size];
+      setSizeFilter(newSize);
+      setFilterList((prev) => ({ ...prev, size: [...prev.size, size] }));
+    }
+  };
+
+  const removePrice = (price) => {
+    loadedPrice.forEach((item) => item.txt === price.txt && (item.checked = false));
+    setPriceFilter((prev) => prev.filter((item) => item !== price));
+    setFilterList((prev) => ({ ...prev, price: prev.price.filter((item) => item !== price) }));
   };
 
   const handlePrice = (e, price) => {
@@ -134,30 +150,26 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
       setPriceFilter((prev) => [...prev, price]);
       setFilterList((prev) => ({ ...prev, price: [...prev.price, price] }));
     } else {
-      setPriceFilter((prev) => prev.filter((item) => item !== price));
-      setFilterList((prev) => ({ ...prev, price: prev.price.filter((item) => item !== price) }));
+      removePrice(price);
     }
   };
-  const removePrice = (price) => {
-    loadedPrice.forEach((item) => (item.txt === price.txt ? (item.checked = false) : false));
-    setPriceFilter((prev) => prev.filter((item) => item !== price));
-    setFilterList((prev) => ({ ...prev, price: prev.price.filter((item) => item !== price) }));
+
+  const removeCategory = (category) => {
+    loadedCategory.forEach((item) => category.name === item.name && (item.checked = false));
+    setCategoryFilter((prev) => prev.filter((item) => item !== category));
+    setFilterList((prev) => ({ ...prev, category: prev.category.filter((item) => item !== category.name) }));
   };
+
   const handleCategory = (e, category) => {
     category.checked = !category.checked;
     if (e.target.checked) {
       setCategoryFilter((prev) => [...prev, category]);
       setFilterList((prev) => ({ ...prev, category: [...prev.category, category.name] }));
     } else {
-      setCategoryFilter((prev) => prev.filter((item) => item !== category));
-      setFilterList((prev) => ({ ...prev, category: prev.category.filter((item) => item !== category.name) }));
+      removeCategory(category);
     }
   };
-  const removeCategory = (category) => {
-    loadedCategory.forEach((item) => (category.name === item.name ? (item.checked = false) : false));
-    setCategoryFilter((prev) => prev.filter((item) => item !== category));
-    setFilterList((prev) => ({ ...prev, category: prev.category.filter((item) => item !== category.name) }));
-  };
+
   const removeFilter = () => {
     const returnColor = [...loadedColor, ...colorFilter].sort((a, b) => a.no - b.no);
     setLoadedColor(returnColor);
@@ -394,8 +406,7 @@ const ProductFilterStyle = styled.div`
             &.disabled {
               opacity: 0.5;
               background-color: #d6d6d6;
-              user-select: none;
-              cursor: default;
+              cursor: pointer;
             }
           }
         }

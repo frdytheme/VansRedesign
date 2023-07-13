@@ -26,7 +26,7 @@ function ProductList({ listName }) {
 
   const getProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/product`);
+      const response = await axios.get(`http://localhost:5000/api/product?page=1`);
       const { products, totalPages } = response.data;
       setLastPage(totalPages);
       setProduct(products);
@@ -67,7 +67,10 @@ function ProductList({ listName }) {
       search.current.push(`price=${min + "," + max}`);
     }
 
-    if (categoryFilter) search.current.current.push(`category=${category.join(",")}`);
+    if (categoryFilter) {
+      const replaceCategory = category.map(category => category.split("&")).flat();
+      search.current.push(`category=${replaceCategory.join(",")}`);
+    }
 
     filteredUrl.current = `http://localhost:5000/api/product?${search.current.join("&")}`;
 
@@ -85,7 +88,7 @@ function ProductList({ listName }) {
     fetchFilteredProduct();
 
     if (!filterToggle) {
-      nowPage.current = (product.length === 0) ? 1 : product.length / 25;
+      nowPage.current = product.length === 0 ? 1 : product.length / 25;
     }
   }, [filterList, filterToggle]);
 
@@ -124,8 +127,6 @@ function ProductList({ listName }) {
       filterToggle ? addFilteredProduct() : addProduct();
     }
   };
-
-  console.log(product);
 
   return (
     <ProductListStyle onScroll={handleScroll}>

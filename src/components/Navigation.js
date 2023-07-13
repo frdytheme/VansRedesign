@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import MainBanner from "./pages/MainBanner";
 import { useNavigate } from "react-router-dom";
 
-function Navigation({ setListName }) {
+function Navigation({ setListName, listName }) {
   let id = 0;
   const gnbList = [
     {
@@ -110,15 +110,22 @@ function Navigation({ setListName }) {
   const disableGnb = (e) => {
     e.currentTarget.classList.remove("active");
   };
+  console.log(listName);
+  
   return (
     <Nav>
       <div className="nav_box">
         <div className="logo" onClick={() => navigate("/home")}>
           <img src={process.env.PUBLIC_URL + "./images/official/vans_logo.svg"} alt="반스 로고" />
         </div>
-        <ul className="gnb" onClick={clickMenu}>
+        <ul
+          className="gnb"
+          onClick={(e) => {
+            clickMenu();
+            setListName(e.target.getAttribute("gnb-name"));
+          }}>
           {gnbList.map((li) => (
-            <li key={li.id} className="gnb_item" onMouseEnter={activeGnb} onMouseLeave={disableGnb}>
+            <li key={li.id} className="gnb_item" gnb-name={li.name} onMouseEnter={activeGnb} onMouseLeave={disableGnb}>
               {li.name}
               {li.lnb && (
                 <div className="lnb">
@@ -126,11 +133,13 @@ function Navigation({ setListName }) {
                   {li.lnb.map((lnb, idx) => {
                     return (
                       <ul key={idx} className="lnb_group">
-                        <li className="lnb_title">{lnb.title}</li>
+                        <li className="lnb_title" gnb-name={lnb.title}>
+                          {lnb.title}
+                        </li>
                         {lnb.menu &&
                           lnb.menu.map((menu, idx) => {
                             return (
-                              <li key={idx} className="lnb_item">
+                              <li key={idx} className="lnb_item" gnb-name={menu}>
                                 {menu}
                               </li>
                             );
