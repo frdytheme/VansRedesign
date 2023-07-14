@@ -100,10 +100,6 @@ function Navigation({ setListName, listName }) {
   const navigate = useNavigate();
   const gnbs = document.querySelectorAll(".gnb_item");
 
-  const clickMenu = (e) => {
-    navigate("./product");
-    gnbs.forEach((gnb) => gnb.classList.remove("active"));
-  };
   const activeGnb = (e) => {
     e.currentTarget.classList.add("active");
   };
@@ -111,7 +107,24 @@ function Navigation({ setListName, listName }) {
     e.currentTarget.classList.remove("active");
   };
   console.log(listName);
-  
+
+  const selectMenu = (e) => {
+    const clickMenu = () => {
+      navigate("./product");
+      gnbs.forEach((gnb) => gnb.classList.remove("active"));
+    };
+
+    let name = e.target.getAttribute("gnb-name")
+    if(name === "신발") name = "SHOES"
+    if(name === "의류") name = "CLOTHES"
+    if(name === "악세서리") name = "ACCESSORY"
+    if(name === "모자") name = "CAP"
+    if(name === "가방") name = "BAG"
+    if(name === "양말") name = "SOCKS"
+    if(name === "기타") name = "ETC"
+    clickMenu();
+    setListName(name);
+  };
   return (
     <Nav>
       <div className="nav_box">
@@ -121,8 +134,7 @@ function Navigation({ setListName, listName }) {
         <ul
           className="gnb"
           onClick={(e) => {
-            clickMenu();
-            setListName(e.target.getAttribute("gnb-name"));
+            selectMenu(e);
           }}>
           {gnbList.map((li) => (
             <li key={li.id} className="gnb_item" gnb-name={li.name} onMouseEnter={activeGnb} onMouseLeave={disableGnb}>
@@ -139,7 +151,7 @@ function Navigation({ setListName, listName }) {
                         {lnb.menu &&
                           lnb.menu.map((menu, idx) => {
                             return (
-                              <li key={idx} className="lnb_item" gnb-name={menu}>
+                              <li key={idx} className="lnb_item" gnb-name={menu !== "전체보기" ? menu : lnb.title}>
                                 {menu}
                               </li>
                             );

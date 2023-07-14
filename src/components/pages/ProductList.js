@@ -26,7 +26,7 @@ function ProductList({ listName }) {
 
   const getProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/product?page=1`);
+      const response = await axios.get(`http://localhost:5000/api/product?page=1&mainCategory=${listName}`);
       const { products, totalPages } = response.data;
       setLastPage(totalPages);
       setProduct(products);
@@ -34,10 +34,16 @@ function ProductList({ listName }) {
       console.error(error);
     }
   };
+  const resetScroll = () => {
+    const container = document.querySelector("#product_container");
+    container.scroll(0, 0);
+  };
 
   useEffect(() => {
     getProduct();
-  }, []);
+    nowPage.current = 1;
+    resetScroll();
+  }, [listName]);
 
   useEffect(() => {
     search.current = [];
@@ -68,11 +74,11 @@ function ProductList({ listName }) {
     }
 
     if (categoryFilter) {
-      const replaceCategory = category.map(category => category.split("&")).flat();
+      const replaceCategory = category.map((category) => category.split("&")).flat();
       search.current.push(`category=${replaceCategory.join(",")}`);
     }
 
-    filteredUrl.current = `http://localhost:5000/api/product?${search.current.join("&")}`;
+    filteredUrl.current = `http://localhost:5000/api/product?${search.current.join("&")}&mainCategory=${listName}`;
 
     const fetchFilteredProduct = async () => {
       try {
@@ -88,7 +94,7 @@ function ProductList({ listName }) {
     fetchFilteredProduct();
 
     if (!filterToggle) {
-      nowPage.current = product.length === 0 ? 1 : product.length / 25;
+      nowPage.current = product.length === 0 ? 1 : product.length / 25 < 1 ? 1 : product.length / 25;
     }
   }, [filterList, filterToggle]);
 
@@ -98,7 +104,9 @@ function ProductList({ listName }) {
     const truncScrollTop = Math.trunc(scrollTop);
     const addProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/product?page=${nowPage.current}`);
+        const response = await axios.get(
+          `http://localhost:5000/api/product?page=${nowPage.current}&mainCategory=${listName}`
+        );
         const { products } = await response.data;
         const updateProduct = [...product, ...products];
         setProduct(updateProduct);
@@ -109,7 +117,9 @@ function ProductList({ listName }) {
     const addFilteredProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/product?${search.current.join("&")}&page=${nowPage.current}`
+          `http://localhost:5000/api/product?${search.current.join("&")}&page=${
+            nowPage.current
+          }&mainCategory=${listName}`
         );
         const { products } = await response.data;
         const updateProduct = [...filteredProduct, ...products];
@@ -128,8 +138,11 @@ function ProductList({ listName }) {
     }
   };
 
+  console.log(product);
+  console.log(nowPage.current);
+
   return (
-    <ProductListStyle onScroll={handleScroll}>
+    <ProductListStyle onScroll={handleScroll} id="product_container">
       <ProductFilter
         product={product}
         filterList={filterList}

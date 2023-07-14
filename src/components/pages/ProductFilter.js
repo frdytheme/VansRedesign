@@ -83,11 +83,24 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
   };
 
   const getCategory = () => {
-    const categoryList = [];
-    product.forEach((item) => {
-      if (categoryList.includes(item.category)) return;
-      categoryList.push(item.category);
-    });
+    const categoryList = [
+      "클래식플러스",
+      "클래식",
+      "스케이트 슈즈",
+      "키즈",
+      "토들러",
+      "탑&티셔츠",
+      "플리스",
+      "하의",
+      "가방",
+      "모자",
+      "양말",
+      "서프",
+      "아우터",
+      "기타",
+      "원피스&하의",
+      "보이즈",
+    ];
     const addCheck = categoryList.map((item) => {
       return { name: item, checked: false };
     });
