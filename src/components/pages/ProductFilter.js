@@ -1,8 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function ProductFilter({ product, setFilterList, filterToggle }) {
+function ProductFilter({ product, setFilterList, filterToggle, listName }) {
   const [loadedColor, setLoadedColor] = useState([]);
   const [loadedSize, setLoadedSize] = useState([]);
   const [loadedPrice, setLoadedPrice] = useState([]);
@@ -205,6 +204,10 @@ function ProductFilter({ product, setFilterList, filterToggle }) {
       categoryFilter: false,
     });
   };
+
+  useEffect(()=>{
+    removeFilter();
+  },[listName])
 
   return (
     <ProductFilterStyle>

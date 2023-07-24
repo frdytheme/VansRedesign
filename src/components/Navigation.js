@@ -3,21 +3,20 @@ import styled, { keyframes } from "styled-components";
 import MainBanner from "./pages/MainBanner";
 import { useNavigate } from "react-router-dom";
 
-function Navigation({ setListName, listName }) {
+function Navigation({ setListName, listName}) {
   let id = 0;
   const gnbList = [
     {
       id: id++,
       name: "NEW",
       lnb: [
-        { title: "NEW", menu: ["NEW", "신발 신상품", "의류 신상품", "액세서리 신상품", "키즈 신상품"] },
+        { title: "NEW", menu: ["NEW", "신발 신상품", "의류 신상품", "악세서리 신상품", "키즈 신상품"] },
         {
           title: "COLLECTION",
           menu: [
             "KNU 컬렉션",
             "리컨스트럭트 팩",
             "각 도시를 담은 시티팩 컬렉션",
-            "JUN 클래식 캠페인",
             "썸머 티셔츠 컬렉션",
             "썸머 풋웨어 컬렉션",
           ],
@@ -30,7 +29,7 @@ function Navigation({ setListName, listName }) {
       name: "MEN",
       lnb: [
         { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
-        { title: "의류", menu: ["전체보기", "탑 & 티셔츠", "플리스", "아우터", "하의"] },
+        { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의"] },
         { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
         { title: "WHAT'S HOT", menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "울트라레인지"] },
       ],
@@ -40,7 +39,7 @@ function Navigation({ setListName, listName }) {
       name: "WOMEN",
       lnb: [
         { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
-        { title: "의류", menu: ["전체보기", "탑 & 티셔츠", "플리스", "아우터", "원피스 & 하의"] },
+        { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의", "원피스&스커트"] },
         { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
         {
           title: "WHAT'S HOT",
@@ -52,8 +51,8 @@ function Navigation({ setListName, listName }) {
       id: id++,
       name: "KIDS",
       lnb: [
-        { title: "신발", menu: ["전체보기", "토들러", "키즈", "베스트 셀러"] },
-        { title: "의류", menu: ["전체보기", "보이즈", "키즈"] },
+        { title: "신발", menu: ["전체보기", "토들러", "키즈 신발", "베스트 셀러"] },
+        { title: "의류", menu: ["전체보기", "보이즈", "키즈 의류"] },
         { title: "악세서리", menu: ["전체보기", "모자", "양말"] },
         {
           title: "CUSTOMS",
@@ -114,44 +113,55 @@ function Navigation({ setListName, listName }) {
       gnbs.forEach((gnb) => gnb.classList.remove("active"));
     };
 
-    let name = e.target.getAttribute("gnb-name")
-    if(name === "신발") name = "SHOES"
-    if(name === "의류") name = "CLOTHES"
-    if(name === "악세서리") name = "ACCESSORY"
-    if(name === "모자") name = "CAP"
-    if(name === "가방") name = "BAG"
-    if(name === "양말") name = "SOCKS"
-    if(name === "기타") name = "ETC"
+    const translateName = (e) => {
+      e.stopPropagation();
+
+      const mainCategory = e.target.parentNode.parentNode.parentNode.getAttribute("gnb-name");
+      let name = e.target.getAttribute("gnb-name");
+      if (name === "신발" || name === "신발 신상품" || name === "키즈 신발") name = "SHOES";
+      if (name === "의류" || name === "의류 신상품" || name === "키즈 의류") name = "CLOTHES";
+      if (name === "악세서리" || name === "악세서리 신상품") name = "ACCESSORY";
+      if (name === "키즈 신상품") name = "KIDS";
+
+      setListName([mainCategory || "ALL", name]);
+    };
+
+    translateName(e);
     clickMenu();
-    setListName(name);
   };
+
   return (
     <Nav>
       <div className="nav_box">
         <div className="logo" onClick={() => navigate("/home")}>
           <img src={process.env.PUBLIC_URL + "./images/official/vans_logo.svg"} alt="반스 로고" />
         </div>
-        <ul
-          className="gnb"
-          onClick={(e) => {
-            selectMenu(e);
-          }}>
+        <ul className="gnb">
           {gnbList.map((li) => (
-            <li key={li.id} className="gnb_item" gnb-name={li.name} onMouseEnter={activeGnb} onMouseLeave={disableGnb}>
+            <li
+              key={li.id}
+              className="gnb_item"
+              gnb-name={li.name}
+              name="mainCategory"
+              onMouseEnter={activeGnb}
+              onMouseLeave={disableGnb}
+              onClick={(e) => {
+                selectMenu(e);
+              }}>
               {li.name}
               {li.lnb && (
-                <div className="lnb">
+                <div className="lnb" onClick={(e) => e.stopPropagation()}>
                   {li.name === "NEW" && <MainBanner />}
                   {li.lnb.map((lnb, idx) => {
                     return (
                       <ul key={idx} className="lnb_group">
-                        <li className="lnb_title" gnb-name={lnb.title}>
+                        <li className="lnb_title" onClick={(e) => e.stopPropagation()}>
                           {lnb.title}
                         </li>
                         {lnb.menu &&
                           lnb.menu.map((menu, idx) => {
                             return (
-                              <li key={idx} className="lnb_item" gnb-name={menu !== "전체보기" ? menu : lnb.title}>
+                              <li key={idx} className="lnb_item" gnb-name={menu === "전체보기" ? lnb.title : menu} onClick={e => selectMenu(e)}>
                                 {menu}
                               </li>
                             );

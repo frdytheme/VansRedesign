@@ -3,7 +3,8 @@ import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import axios from "axios";
 
-function ProductList({ listName }) {
+function ProductList({ listName, setListName }) {
+  const encodeListName = encodeURIComponent(listName);
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
   const filteredUrl = useRef("");
@@ -22,11 +23,10 @@ function ProductList({ listName }) {
   });
   const [filterToggle, setFilterToggle] = useState(false);
   const PUBLIC = process.env.PUBLIC_URL;
-  const newArrivalDate = new Date("2023/06/08").getTime();
 
   const getProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/product?page=1&mainCategory=${listName}`);
+      const response = await axios.get(`http://localhost:5000/api/product?page=1&mainCategory=${encodeListName}`);
       const { products, totalPages } = response.data;
       setLastPage(totalPages);
       setProduct(products);
@@ -78,8 +78,10 @@ function ProductList({ listName }) {
       search.current.push(`category=${replaceCategory.join(",")}`);
     }
 
-    filteredUrl.current = `http://localhost:5000/api/product?${search.current.join("&")}&mainCategory=${listName}`;
-
+    filteredUrl.current = `http://localhost:5000/api/product?${search.current.join(
+      "&"
+    )}&mainCategory=${encodeListName}`;
+    console.log(filteredUrl.current);
     const fetchFilteredProduct = async () => {
       try {
         const response = await axios.get(filteredUrl.current);
@@ -105,7 +107,7 @@ function ProductList({ listName }) {
     const addProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/product?page=${nowPage.current}&mainCategory=${listName}`
+          `http://localhost:5000/api/product?page=${nowPage.current}&mainCategory=${encodeListName}`
         );
         const { products } = await response.data;
         const updateProduct = [...product, ...products];
@@ -119,7 +121,7 @@ function ProductList({ listName }) {
         const response = await axios.get(
           `http://localhost:5000/api/product?${search.current.join("&")}&page=${
             nowPage.current
-          }&mainCategory=${listName}`
+          }&mainCategory=${encodeListName}`
         );
         const { products } = await response.data;
         const updateProduct = [...filteredProduct, ...products];
@@ -138,9 +140,6 @@ function ProductList({ listName }) {
     }
   };
 
-  console.log(product);
-  console.log(nowPage.current);
-
   return (
     <ProductListStyle onScroll={handleScroll} id="product_container">
       <ProductFilter
@@ -149,51 +148,61 @@ function ProductList({ listName }) {
         setFilterList={setFilterList}
         filterToggle={filterToggle}
         setFilterToggle={setFilterToggle}
+        listName={listName}
       />
       <div className="flex_container">
-        {filterToggle
-          ? filteredProduct.map((item) => (
-              <figure className="product_box" key={item.model}>
-                <div className="img_wrapper">
-                  <img
-                    src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                    alt="제품 대표 사진"
-                    className="product_img"
-                  />
-                  <img
-                    src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
-                    alt="제품 대표 사진"
-                    className="product_img hover"
-                  />
-                </div>
-                <figcaption className="product_caption">
-                  {new Date(item.date).getTime() > newArrivalDate && <p className="new_arrival">NEW ARRIVAL</p>}
-                  <p className="product_name">{item.name}</p>
-                  <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
-                </figcaption>
-              </figure>
-            ))
-          : product.map((item) => (
-              <figure className="product_box" key={item.model}>
-                <div className="img_wrapper">
-                  <img
-                    src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                    alt="제품 대표 사진"
-                    className="product_img"
-                  />
-                  <img
-                    src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
-                    alt="제품 대표 사진"
-                    className="product_img hover"
-                  />
-                </div>
-                <figcaption className="product_caption">
-                  {new Date(item.date).getTime() > newArrivalDate && <p className="new_arrival">NEW ARRIVAL</p>}
-                  <p className="product_name">{item.name}</p>
-                  <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
-                </figcaption>
-              </figure>
-            ))}
+        {product.length === 0 || filteredProduct.length === 0 ? (
+          <div className="empty_alert">
+            <p>찾으시는 상품 정보가 존재하지 않습니다.</p>
+            <div className="viewAll" onClick={() => setListName("")}>
+              전체 상품 보기
+            </div>
+          </div>
+        ) : filterToggle ? (
+          filteredProduct.map((item) => (
+            <figure className="product_box" key={item.model}>
+              <div className="img_wrapper">
+                <img
+                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                  alt="제품 대표 사진"
+                  className="product_img"
+                />
+                <img
+                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
+                  alt="제품 대표 사진"
+                  className="product_img hover"
+                />
+              </div>
+              <figcaption className="product_caption">
+                {item.mainCategory.includes("NEW") && <p className="new_arrival">NEW ARRIVAL</p>}
+                <p className="product_name">{item.name}</p>
+                <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
+              </figcaption>
+            </figure>
+          ))
+        ) : (
+          product.map((item) => (
+            <figure className="product_box" key={item.model}>
+              <div className="img_wrapper">
+                <img
+                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                  alt="제품 대표 사진"
+                  className="product_img"
+                />
+                <img
+                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
+                  alt="제품 대표 사진"
+                  className="product_img hover"
+                />
+              </div>
+              <figcaption className="product_caption">
+                {item.mainCategory.includes("NEW") && <p className="new_arrival">NEW ARRIVAL</p>}
+                <p className="product_name">{item.name}</p>
+                <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
+              </figcaption>
+            </figure>
+          ))
+        )}
       </div>
     </ProductListStyle>
   );
@@ -263,6 +272,30 @@ const ProductListStyle = styled.div`
       color: var(--color-red);
       font-weight: 800;
       margin-bottom: 15px;
+    }
+    .empty_alert {
+      width: 100%;
+      padding-top: 5vw;
+      font-size: 1vw;
+      color: #444;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      .viewAll {
+        margin: 2vw;
+        text-align: center;
+        font-size: 1.3vw;
+        border-radius: 0.5vw;
+        font-weight: bold;
+        color: #fff;
+        width: 10vw;
+        padding: 2vw 0;
+        background-color: var(--color-red);
+        &:hover {
+          background-color: black;
+          cursor: pointer;
+        }
+      }
     }
   }
 `;

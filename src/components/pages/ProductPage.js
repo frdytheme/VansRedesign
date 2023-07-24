@@ -2,10 +2,10 @@ import React from "react";
 import ProductList from "./ProductList";
 import styled, { keyframes } from "styled-components";
 
-function ProductPage({ listName }) {
+function ProductPage({ listName, setListName }) {
   return (
     <ProductPageStyle>
-      <ProductList listName={listName} />
+      <ProductList listName={listName} setListName={setListName}/>
     </ProductPageStyle>
   );
 }
