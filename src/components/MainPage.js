@@ -1,14 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import EventSwiper from "./pages/EventSwiper";
-import MainBanner from "./pages/MainBanner";
+import EventSwiper from "./pages/grids/EventSwiper";
+import MainBanner from "./pages/grids/MainBanner";
+import NewArrival from "./pages/grids/NewArrival";
 
-function MainPage() {
+function MainPage({ setListName }) {
   return (
     <MainGrid>
-      <MainBanner />
+      <MainBanner setListName={setListName} />
       <EventSwiper />
-      <div className="grid_test" style={{ gridColumn: "span 2" }}></div>
+      <NewArrival />
       <div className="grid_test" style={{ gridColumn: "span 2" }}></div>
       <div className="grid_test"></div>
       <div className="grid_test"></div>

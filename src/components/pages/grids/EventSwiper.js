@@ -5,8 +5,8 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import { Autoplay, Pagination } from "swiper";
 import styled from "styled-components";
-import newsDB from "../../assets/DB/NewsData.json";
-import EventModal from "./EventModal";
+import newsDB from "../../../assets/DB/NewsData.json";
+import EventModal from "../EventModal";
 
 function EventSwiper() {
   const [newsToggle, setNewsToggle] = useState(false);

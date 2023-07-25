@@ -1,9 +1,10 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import MainBanner from "./pages/MainBanner";
+import MainBanner from "./pages/grids/MainBanner";
 import { useNavigate } from "react-router-dom";
+import NavBanner from "./pages/NavBanner";
 
-function Navigation({ setListName, listName}) {
+function Navigation({ setListName, listName }) {
   let id = 0;
   const gnbList = [
     {
@@ -21,7 +22,7 @@ function Navigation({ setListName, listName}) {
             "썸머 풋웨어 컬렉션",
           ],
         },
-        { title: "CUSTOM", menu: ["VANS X HARIBO", "PINK VIBE", "NEW SEASON, NEW SWATCH"] },
+        // { title: "CUSTOM", menu: ["VANS X HARIBO", "PINK VIBE", "NEW SEASON, NEW SWATCH"] },
       ],
     },
     {
@@ -31,7 +32,7 @@ function Navigation({ setListName, listName}) {
         { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
         { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의"] },
         { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
-        { title: "WHAT'S HOT", menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "울트라레인지"] },
+        // { title: "WHAT'S HOT", menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "울트라레인지"] },
       ],
     },
     {
@@ -41,10 +42,10 @@ function Navigation({ setListName, listName}) {
         { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
         { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의", "원피스&스커트"] },
         { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
-        {
-          title: "WHAT'S HOT",
-          menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "플랫폼", "뮬 패밀리"],
-        },
+        // {
+        //   title: "WHAT'S HOT",
+        //   menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "플랫폼", "뮬 패밀리"],
+        // },
       ],
     },
     {
@@ -54,47 +55,47 @@ function Navigation({ setListName, listName}) {
         { title: "신발", menu: ["전체보기", "토들러", "키즈 신발", "베스트 셀러"] },
         { title: "의류", menu: ["전체보기", "보이즈", "키즈 의류"] },
         { title: "악세서리", menu: ["전체보기", "모자", "양말"] },
-        {
-          title: "CUSTOMS",
-          menu: ["커스텀 하기", "강아지&고양이 패턴"],
-        },
+        // {
+        //   title: "CUSTOMS",
+        //   menu: ["커스텀 하기", "강아지&고양이 패턴"],
+        // },
       ],
     },
     {
       id: id++,
       name: "VAULT",
     },
-    {
-      id: id++,
-      name: "CUSTOM",
-      lnb: [
-        {
-          title: "CUSTOMS",
-          menu: [
-            "나만의 신발 만들기",
-            "어센틱 커스텀",
-            "슬립온 커스텀",
-            "올드스쿨 커스텀",
-            "에라 커스텀",
-            "스케이트-하이 커스텀",
-          ],
-        },
-        {
-          title: "FEATURED",
-          menu: ["VANS X HARIBO", "PINK VIBE", "NEW SEASON, NEW SWATCH"],
-        },
-      ],
-    },
-    { id: id++, name: "SKATEBOARDING" },
-    { id: id++, name: "SALE" },
-    {
-      id: id++,
-      name: "MORE",
-      lnb: [
-        { title: "MORE FUN", menu: ["SURF", "SUSTAINABILITY", "ABOUT VANS", "VANS NEWS", "THIS IS OFF THE WALL"] },
-        { title: "SNOW" },
-      ],
-    },
+    // {
+    //   id: id++,
+    //   name: "CUSTOM",
+    //   lnb: [
+    //     {
+    //       title: "CUSTOMS",
+    //       menu: [
+    //         "나만의 신발 만들기",
+    //         "어센틱 커스텀",
+    //         "슬립온 커스텀",
+    //         "올드스쿨 커스텀",
+    //         "에라 커스텀",
+    //         "스케이트-하이 커스텀",
+    //       ],
+    //     },
+    //     {
+    //       title: "FEATURED",
+    //       menu: ["VANS X HARIBO", "PINK VIBE", "NEW SEASON, NEW SWATCH"],
+    //     },
+    //   ],
+    // },
+    // { id: id++, name: "SKATEBOARDING" },
+    // { id: id++, name: "SALE" },
+    // {
+    //   id: id++,
+    //   name: "MORE",
+    //   lnb: [
+    //     { title: "MORE FUN", menu: ["SURF", "SUSTAINABILITY", "ABOUT VANS", "VANS NEWS", "THIS IS OFF THE WALL"] },
+    //     { title: "SNOW" },
+    //   ],
+    // },
   ];
   const navigate = useNavigate();
   const gnbs = document.querySelectorAll(".gnb_item");
@@ -105,7 +106,6 @@ function Navigation({ setListName, listName}) {
   const disableGnb = (e) => {
     e.currentTarget.classList.remove("active");
   };
-  console.log(listName);
 
   const selectMenu = (e) => {
     const clickMenu = () => {
@@ -151,7 +151,7 @@ function Navigation({ setListName, listName}) {
               {li.name}
               {li.lnb && (
                 <div className="lnb" onClick={(e) => e.stopPropagation()}>
-                  {li.name === "NEW" && <MainBanner />}
+                  {li.name === "NEW" && <NavBanner setListName={setListName} gnbs={gnbs} />}
                   {li.lnb.map((lnb, idx) => {
                     return (
                       <ul key={idx} className="lnb_group">
@@ -161,7 +161,11 @@ function Navigation({ setListName, listName}) {
                         {lnb.menu &&
                           lnb.menu.map((menu, idx) => {
                             return (
-                              <li key={idx} className="lnb_item" gnb-name={menu === "전체보기" ? lnb.title : menu} onClick={e => selectMenu(e)}>
+                              <li
+                                key={idx}
+                                className="lnb_item"
+                                gnb-name={menu === "전체보기" ? lnb.title : menu}
+                                onClick={(e) => selectMenu(e)}>
                                 {menu}
                               </li>
                             );
@@ -173,6 +177,10 @@ function Navigation({ setListName, listName}) {
               )}
             </li>
           ))}
+          <li className="gnb_item disabled">CUSTOM</li>
+          <li className="gnb_item disabled">SKATEBOARDING</li>
+          <li className="gnb_item disabled">SALE</li>
+          <li className="gnb_item disabled">MORE</li>
         </ul>
       </div>
     </Nav>
@@ -221,6 +229,10 @@ const Nav = styled.header`
             animation-play-state: running;
             cursor: default;
           }
+        }
+        &.disabled {
+          color: #888;
+          cursor: default;
         }
         .lnb {
           width: 100%;

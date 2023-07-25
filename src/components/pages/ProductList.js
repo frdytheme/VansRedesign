@@ -196,6 +196,7 @@ function ProductList({ listName, setListName }) {
                 />
               </div>
               <figcaption className="product_caption">
+                {item.mainCategory.includes("HOT") && <p className="new_arrival">HOT</p>}
                 {item.mainCategory.includes("NEW") && <p className="new_arrival">NEW ARRIVAL</p>}
                 <p className="product_name">{item.name}</p>
                 <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>

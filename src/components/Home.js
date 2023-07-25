@@ -11,7 +11,7 @@ function Home() {
     <HomeSection>
       <Navigation setListName={setListName} listName={listName} />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<MainPage setListName={setListName} />} />
         <Route path="/product" element={<ProductPage listName={listName} setListName={setListName} />} />
       </Routes>
     </HomeSection>

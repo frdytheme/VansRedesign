@@ -7,12 +7,26 @@ import "swiper/css/scrollbar";
 import "swiper/css/autoplay";
 
 import { Autoplay, Scrollbar } from "swiper";
+import { useNavigate } from "react-router-dom";
 
-function MainBanner() {
-  const bannerImg = ["banner_0.jpg", "banner_1.jpg", "banner_2.jpg"];
+function NavBanner({ setListName, gnbs }) {
+  const bannerImg = [
+    { img: "banner_0.jpg", name: "KNU 컬렉션" },
+    { img: "banner_1.jpg", name: "Authentic" },
+    { img: "banner_2.jpg", name: "리컨스트럭트 팩" },
+  ];
   const PUBLIC = process.env.PUBLIC_URL;
+  const navigate = useNavigate();
+
+  const selectBanner = (e) => {
+    const name = e.target.getAttribute("banner-name");
+    setListName(["ALL", name]);
+    navigate("./product");
+    gnbs.forEach(gnb => gnb.classList.remove("active"));
+  };
+
   return (
-    <BannerStyle>
+    <BannerStyle onClick={selectBanner}>
       <Swiper
         scrollbar={{
           hide: true,
@@ -23,7 +37,12 @@ function MainBanner() {
         loop={true}>
         {bannerImg.map((img, idx) => (
           <SwiperSlide key={idx}>
-            <img src={PUBLIC + `images/banner/${img}`} alt="배너 이미지" className={`bannerImg banner${idx}`} />
+            <img
+              src={PUBLIC + `images/banner/${img.img}`}
+              alt="배너 이미지"
+              className={`bannerImg banner${idx}`}
+              banner-name={img.name}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -37,10 +56,14 @@ const BannerStyle = styled.div`
   overflow: hidden;
   border-radius: 20px;
   display: flex;
+  cursor: pointer;
+  &:active {
+    cursor: grab;
+  }
   .bannerImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 `;
-export default MainBanner;
+export default NavBanner;
