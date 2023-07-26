@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import MainBanner from "./pages/grids/MainBanner";
 import { useNavigate } from "react-router-dom";
 import NavBanner from "./pages/NavBanner";
 
-function Navigation({ setListName, listName }) {
+function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubmitBtn }) {
   let id = 0;
   const gnbList = [
     {
@@ -130,11 +129,21 @@ function Navigation({ setListName, listName }) {
     clickMenu();
   };
 
+  const submitSearch = (e) => {
+    e.preventDefault();
+    setSubmitBtn((prev) => !prev);
+    navigate("./product");
+  };
+
+  useEffect(() => {
+    setSearchName("");
+  }, [submitBtn, setSearchName]);
+
   return (
     <Nav>
       <div className="nav_box">
         <div className="logo" onClick={() => navigate("/home")}>
-          <img src={process.env.PUBLIC_URL + "./images/official/vans_logo.svg"} alt="반스 로고" />
+          <img src={process.env.PUBLIC_URL + "./images/official/vans_logo_wht.svg"} alt="반스 로고" />
         </div>
         <ul className="gnb">
           {gnbList.map((li) => (
@@ -182,6 +191,18 @@ function Navigation({ setListName, listName }) {
           <li className="gnb_item disabled">SALE</li>
           <li className="gnb_item disabled">MORE</li>
         </ul>
+        <form onSubmit={submitSearch}>
+          <label className="searchContainer">
+            <input
+              type="text"
+              className="searchBox"
+              placeholder="Search..."
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
+            <span className="material-symbols-outlined searchIcon">search</span>
+          </label>
+        </form>
       </div>
     </Nav>
   );
@@ -198,7 +219,7 @@ const Nav = styled.header`
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
   .nav_box {
-    background-color: #000;
+    background-color: var(--color-red);
     width: 100%;
     height: 70px;
     line-height: 70px;
@@ -208,21 +229,46 @@ const Nav = styled.header`
     text-align: center;
     position: relative;
     .logo {
-      padding: 10px 40px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      margin-left: 40px;
       cursor: pointer;
+    }
+    .searchContainer {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      position: relative;
+      margin-right: 30px;
+      input {
+        width: 10vw;
+        border: none;
+        border-bottom: 1px solid #fff;
+        outline: none;
+        border-radius: 20px;
+        padding: 10px 10px;
+        text-indent: 5px;
+      }
+      .searchIcon {
+        position: absolute;
+        right: 12px;
+        color: var(--color-red);
+      }
     }
     .gnb {
       color: #fff;
       display: flex;
-      margin-right: 50px;
       z-index: 9999;
+      margin-left: auto;
       .gnb_item {
         width: 100%;
         font-size: 16px;
         padding-right: 30px;
         cursor: pointer;
         &.active {
-          color: var(--color-pink);
+          color: #000;
           & .lnb {
             display: flex;
             gap: 30px;
@@ -231,7 +277,8 @@ const Nav = styled.header`
           }
         }
         &.disabled {
-          color: #888;
+          color: #fff;
+          opacity: 0.4;
           cursor: default;
         }
         .lnb {

@@ -4,16 +4,32 @@ import Navigation from "./Navigation";
 import MainPage from "./MainPage";
 import ProductPage from "./pages/ProductPage";
 import { Route, Routes } from "react-router-dom";
+import Footer from "./Footer";
 
 function Home() {
   const [listName, setListName] = useState([]);
+  const [searchName, setSearchName] = useState("");
+  const [submitBtn, setSubmitBtn] = useState(false);
   return (
     <HomeSection>
-      <Navigation setListName={setListName} listName={listName} />
+      <Navigation
+        setListName={setListName}
+        listName={listName}
+        setSearchName={setSearchName}
+        searchName={searchName}
+        setSubmitBtn={setSubmitBtn}
+        submitBtn={submitBtn}
+      />
       <Routes>
         <Route path="/" element={<MainPage setListName={setListName} />} />
-        <Route path="/product" element={<ProductPage listName={listName} setListName={setListName} />} />
+        <Route
+          path="/product"
+          element={
+            <ProductPage listName={listName} setListName={setListName} searchName={searchName} submitBtn={submitBtn} />
+          }
+        />
       </Routes>
+      <Footer />
     </HomeSection>
   );
 }

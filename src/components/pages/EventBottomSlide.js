@@ -3,10 +3,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import newsDB from "../../assets/DB/NewsData.json";
 
 import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/autoplay";
 
-import { Autoplay, Pagination } from "swiper";
+import { Autoplay } from "swiper";
 import styled from "styled-components";
 
 function EventBottomSlide({ setNewsNum }) {
@@ -17,7 +16,6 @@ function EventBottomSlide({ setNewsNum }) {
   };
   return (
     <BottomSlide>
-      <p className="news_list">- VANS NEWS -</p>
       <Swiper
         slidesPerView={4}
         spaceBetween={5}
@@ -43,13 +41,7 @@ function EventBottomSlide({ setNewsNum }) {
 }
 
 const BottomSlide = styled.div`
-  margin: 50px 0;
-  .news_list {
-    font-family: "Kampung", serif;
-    font-size: 50px;
-    margin: 30px 0;
-    color: #d51920;
-  }
+  margin: 100px 5px 50px;
   .news_bottom_slide_box {
     width: 100%;
     height: 100%;

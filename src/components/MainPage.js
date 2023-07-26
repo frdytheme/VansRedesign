@@ -10,10 +10,6 @@ function MainPage({ setListName }) {
       <MainBanner setListName={setListName} />
       <EventSwiper />
       <NewArrival />
-      <div className="grid_test" style={{ gridColumn: "span 2" }}></div>
-      <div className="grid_test"></div>
-      <div className="grid_test"></div>
-      <div className="grid_test"></div>
       <div className="grid_test"></div>
     </MainGrid>
   );
@@ -24,9 +20,10 @@ const MainGrid = styled.main`
   height: calc(100% - 80px);
   display: grid;
   grid-template-columns: 2fr 3fr 2fr 3fr;
-  grid-template-rows: 4fr 3fr 3fr;
+  grid-template-rows: 4fr 2fr 3fr 1fr;
   gap: 10px;
   padding: 10px;
+  padding-bottom: 0;
   box-sizing: border-box;
   .grid_test {
     width: 100%;

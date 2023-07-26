@@ -13,9 +13,13 @@ function NewArrival() {
   const PUBLIC = process.env.PUBLIC_URL;
 
   const getNewArrival = async () => {
-    const response = await axios.get("http://localhost:5000/api/product?all=1&mainCategory=NEW,SHOES");
-    const data = response.data.products;
-    setNewItems(data);
+    try {
+      const response = await axios.get("http://localhost:5000/api/product?all=1&mainCategory=NEW");
+      const data = response.data.products;
+      setNewItems(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -27,14 +31,14 @@ function NewArrival() {
       <Swiper
         slidesPerView={4}
         slidesPerGroup={4}
-        spaceBetween={30}
+        spaceBetween={15}
         navigation={true}
         modules={[Navigation]}
         className="mySwiper">
-        {newItems.map((item) => {
+        {newItems.map((item, idx) => {
           return (
-            <SwiperSlide>
-              <figure key={item.model} className="product_box">
+            <SwiperSlide key={idx}>
+              <figure className="product_box">
                 <div className="img_wrapper">
                   <img
                     src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
@@ -50,7 +54,7 @@ function NewArrival() {
                 <figcaption className="product_caption">
                   <em className="new_arrival">NEW</em>
                   <p className="product_name">{item.name}</p>
-                  {/* <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p> */}
+                  <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
                 </figcaption>
               </figure>
             </SwiperSlide>
@@ -62,7 +66,8 @@ function NewArrival() {
 }
 
 const NewArrivalStyle = styled.div`
-  grid-column: span 2;
+  grid-column: span 3;
+  grid-row: span 2;
   .swiper,
   .swiper-container {
     height: 100%;
@@ -75,13 +80,14 @@ const NewArrivalStyle = styled.div`
   }
   .product_box {
     width: 100%;
+    height: 100%;
     text-align: center;
     position: relative;
     cursor: pointer;
     user-select: none;
   }
   .img_wrapper {
-    height: 11.2vw;
+    height: 78%;
     position: relative;
     &:hover .product_img.hover {
       opacity: 1;
@@ -92,6 +98,7 @@ const NewArrivalStyle = styled.div`
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 20px;
     cursor: pointer;
@@ -104,7 +111,7 @@ const NewArrivalStyle = styled.div`
   .product_caption {
     .new_arrival {
       color: var(--color-red);
-      font-weight: 800;
+      font-weight: 700;
       font-size: 0.7vw;
     }
     .product_name {
@@ -114,6 +121,7 @@ const NewArrivalStyle = styled.div`
     }
     .product_price {
       font-size: 0.7vw;
+      font-weight: bold;
     }
   }
 `;

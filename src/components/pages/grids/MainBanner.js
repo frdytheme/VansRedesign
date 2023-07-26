@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/autoplay";
 
-import { Autoplay, Scrollbar } from "swiper";
+import { Scrollbar } from "swiper";
 import { useNavigate } from "react-router-dom";
 
 function MainBanner({ setListName, gnbs }) {
@@ -30,8 +30,7 @@ function MainBanner({ setListName, gnbs }) {
         scrollbar={{
           hide: true,
         }}
-        modules={[Scrollbar, Autoplay]}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        modules={[Scrollbar]}
         className="mySwiper"
         loop={true}>
         {bannerImg.map((img, idx) => (

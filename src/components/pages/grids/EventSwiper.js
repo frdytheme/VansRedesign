@@ -46,6 +46,7 @@ function EventSwiper() {
 }
 
 const EventStyle = styled.div`
+  grid-row: span 2;
   .swiper-pagination-bullet {
     background: #d51920;
   }

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import axios from "axios";
 
-function ProductList({ listName, setListName }) {
+function ProductList({ listName, setListName, searchName, submitBtn }) {
   const encodeListName = encodeURIComponent(listName);
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
@@ -26,7 +26,9 @@ function ProductList({ listName, setListName }) {
 
   const getProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/product?page=1&mainCategory=${encodeListName}`);
+      const response = await axios.get(
+        `http://localhost:5000/api/product?page=1&mainCategory=${encodeListName}&name=${searchName}`
+      );
       const { products, totalPages } = response.data;
       setLastPage(totalPages);
       setProduct(products);
@@ -43,7 +45,7 @@ function ProductList({ listName, setListName }) {
     getProduct();
     nowPage.current = 1;
     resetScroll();
-  }, [listName]);
+  }, [listName, submitBtn]);
 
   useEffect(() => {
     search.current = [];
@@ -80,7 +82,7 @@ function ProductList({ listName, setListName }) {
 
     filteredUrl.current = `http://localhost:5000/api/product?${search.current.join(
       "&"
-    )}&mainCategory=${encodeListName}`;
+    )}&mainCategory=${encodeListName}&name=${searchName}`;
     console.log(filteredUrl.current);
     const fetchFilteredProduct = async () => {
       try {
@@ -107,7 +109,7 @@ function ProductList({ listName, setListName }) {
     const addProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/product?page=${nowPage.current}&mainCategory=${encodeListName}`
+          `http://localhost:5000/api/product?page=${nowPage.current}&mainCategory=${encodeListName}&name=${searchName}`
         );
         const { products } = await response.data;
         const updateProduct = [...product, ...products];
@@ -121,7 +123,7 @@ function ProductList({ listName, setListName }) {
         const response = await axios.get(
           `http://localhost:5000/api/product?${search.current.join("&")}&page=${
             nowPage.current
-          }&mainCategory=${encodeListName}`
+          }&mainCategory=${encodeListName}&name=${searchName}`
         );
         const { products } = await response.data;
         const updateProduct = [...filteredProduct, ...products];
