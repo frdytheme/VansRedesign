@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import axios from "axios";
+import ProductBox from "./ProductBox";
 
-function ProductList({ listName, setListName, searchName, submitBtn }) {
+function ProductList({ listName, setListName, searchName, submitBtn, setProductInfo, setDetailBtn }) {
   const encodeListName = encodeURIComponent(listName);
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
@@ -22,7 +23,6 @@ function ProductList({ listName, setListName, searchName, submitBtn }) {
     categoryFilter: false,
   });
   const [filterToggle, setFilterToggle] = useState(false);
-  const PUBLIC = process.env.PUBLIC_URL;
 
   const getProduct = async () => {
     try {
@@ -142,6 +142,11 @@ function ProductList({ listName, setListName, searchName, submitBtn }) {
     }
   };
 
+  const selectProduct = (item) => {
+    setProductInfo(item);
+    setDetailBtn(true);
+  };
+
   return (
     <ProductListStyle onScroll={handleScroll} id="product_container">
       <ProductFilter
@@ -161,50 +166,9 @@ function ProductList({ listName, setListName, searchName, submitBtn }) {
             </div>
           </div>
         ) : filterToggle ? (
-          filteredProduct.map((item) => (
-            <figure className="product_box" key={item.model}>
-              <div className="img_wrapper">
-                <img
-                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                  alt="제품 대표 사진"
-                  className="product_img"
-                />
-                <img
-                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
-                  alt="제품 대표 사진"
-                  className="product_img hover"
-                />
-              </div>
-              <figcaption className="product_caption">
-                {item.mainCategory.includes("NEW") && <p className="new_arrival">NEW ARRIVAL</p>}
-                <p className="product_name">{item.name}</p>
-                <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
-              </figcaption>
-            </figure>
-          ))
+          filteredProduct.map((item) => <ProductBox item={item} key={item.model} onClick={() => selectProduct(item)} />)
         ) : (
-          product.map((item) => (
-            <figure className="product_box" key={item.model}>
-              <div className="img_wrapper">
-                <img
-                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                  alt="제품 대표 사진"
-                  className="product_img"
-                />
-                <img
-                  src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
-                  alt="제품 대표 사진"
-                  className="product_img hover"
-                />
-              </div>
-              <figcaption className="product_caption">
-                {item.mainCategory.includes("HOT") && <p className="new_arrival">HOT</p>}
-                {item.mainCategory.includes("NEW") && <p className="new_arrival">NEW ARRIVAL</p>}
-                <p className="product_name">{item.name}</p>
-                <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
-              </figcaption>
-            </figure>
-          ))
+          product.map((item) => <ProductBox item={item} key={item.model} onClick={() => selectProduct(item)} />)
         )}
       </div>
     </ProductListStyle>
@@ -232,50 +196,6 @@ const ProductListStyle = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 1vw;
-    .product_box {
-      width: 15vw;
-      text-align: center;
-      margin-top: 30px;
-      position: relative;
-    }
-    .img_wrapper {
-      height: 15vw;
-      position: relative;
-      &:hover .product_img.hover {
-        opacity: 1;
-      }
-    }
-    .product_img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      object-fit: cover;
-      border-radius: 20px;
-      cursor: pointer;
-      vertical-align: bottom;
-      &.hover {
-        opacity: 0;
-        transition: 0.3s;
-      }
-    }
-    .product_caption {
-      margin-top: 20px;
-      font-size: 14px;
-    }
-    .product_name {
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .product_price {
-      margin-top: 15px;
-      color: #555;
-    }
-    .new_arrival {
-      color: var(--color-red);
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
     .empty_alert {
       width: 100%;
       padding-top: 5vw;

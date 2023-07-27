@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navigation from "./Navigation";
 import MainPage from "./MainPage";
 import ProductPage from "./pages/ProductPage";
 import { Route, Routes } from "react-router-dom";
 import Footer from "./Footer";
+import ProductDetail from "./pages/ProductDetail";
 
 function Home() {
   const [listName, setListName] = useState([]);
   const [searchName, setSearchName] = useState("");
   const [submitBtn, setSubmitBtn] = useState(false);
+  const [detailBtn, setDetailBtn] = useState(false);
+  const [productInfo, setProductInfo] = useState({});
+
   return (
     <HomeSection>
       <Navigation
@@ -25,10 +29,18 @@ function Home() {
         <Route
           path="/product"
           element={
-            <ProductPage listName={listName} setListName={setListName} searchName={searchName} submitBtn={submitBtn} />
+            <ProductPage
+              listName={listName}
+              setListName={setListName}
+              searchName={searchName}
+              submitBtn={submitBtn}
+              setProductInfo={setProductInfo}
+              setDetailBtn={setDetailBtn}
+            />
           }
         />
       </Routes>
+      {detailBtn && <ProductDetail productInfo={productInfo} setDetailBtn={setDetailBtn} />}
       <Footer />
     </HomeSection>
   );
