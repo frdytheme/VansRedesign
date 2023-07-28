@@ -31,7 +31,7 @@ const ProductPageStyle = styled.div`
   margin-top: 80px;
   top: 0;
   left: 0;
-  z-index: 999;
+  z-index: 998;
   display: grid;
   transform: translateY(120%);
   opacity: 0;

@@ -4,12 +4,12 @@ import EventSwiper from "./pages/grids/EventSwiper";
 import MainBanner from "./pages/grids/MainBanner";
 import NewArrival from "./pages/grids/NewArrival";
 
-function MainPage({ setListName }) {
+function MainPage({ setListName, setProductInfo, setDetailBtn }) {
   return (
     <MainGrid>
       <MainBanner setListName={setListName} />
       <EventSwiper />
-      <NewArrival />
+      <NewArrival setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
       <div className="grid_test"></div>
     </MainGrid>
   );

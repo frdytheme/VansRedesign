@@ -1,13 +1,49 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import ImageSlide from "./ImageSlide";
 
-function ProductDetail({ productInfo, setDetailBtn }) {
+function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const PUBLIC = process.env.PUBLIC_URL;
-  const { _id, id, name, color, category, model, price, size, mainCategory } = productInfo;
-  const imgUrl = PUBLIC + `./images/product/${model}/${model}_${model}_primary.jpg`;
+  const { name, color, model, price, size, mainCategory } = productInfo;
   const sizeArr = Object.keys(size);
   const [selectedSize, setSelectedSize] = useState("");
+  const [imgArr, setImgArr] = useState([]);
+  const [mainImg, setMainImg] = useState("");
+  const [sameProduct, setSameProduct] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [productName, setProductName] = useState(name);
+
+  const fetchSameProduct = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/product?all=1&name=${productName}`);
+      const data = response.data;
+      if (data.total === 1) return;
+      const products = data.products.filter((item) => item.model !== model);
+      setSameProduct(products);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchImg = async () => {
+    try {
+      const response = await axios.get(`${PUBLIC}/images/product/${model}`);
+      const data = response.data;
+      const mainImg = data.pop();
+      data.unshift(mainImg);
+      setImgArr(data);
+      setMainImg(data[0]);
+      setLoading(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchImg();
+    fetchSameProduct();
+  }, [productInfo]);
 
   const selectSize = (e, item) => {
     const sizes = document.querySelectorAll(".size_item");
@@ -21,26 +57,26 @@ function ProductDetail({ productInfo, setDetailBtn }) {
     setSelectedSize(item);
   };
 
-  const transformSize = () => {
-    const box = document.querySelector(".product_info_container");
-    if (box.classList.contains("fullsize")) return box.classList.remove("fullsize");
-    box.classList.add("fullsize");
-  };
-
   return (
     <ProductDetailStyle className="product_info_container">
       <div className="console_box">
-        <span className="material-symbols-outlined full_btn" onClick={transformSize}>
-          fullscreen
-        </span>
         <span className="material-symbols-outlined close_btn" onClick={() => setDetailBtn(false)}>
           close
         </span>
       </div>
       <div className="info_box">
-        <div className="img_wrapper">
-          <img src={imgUrl} alt={name + `제품 이미지`} className="product_img" />
-        </div>
+        {loading ? (
+          <div className="img_wrapper">
+            <img
+              src={PUBLIC + `./images/product/${model}/${mainImg}`}
+              alt={name + `제품 이미지`}
+              className="product_img"
+            />
+            <ImageSlide imgArr={imgArr} model={model} setMainImg={setMainImg} />
+          </div>
+        ) : (
+          <div className="img_wrapper loading_status"></div>
+        )}
         <ul className="product_info">
           {mainCategory.includes("NEW") && <li className="product_info_li product_new_arrivals">NEW ARRIVALS</li>}
           <li className="product_info_li product_name">{name}</li>
@@ -52,6 +88,23 @@ function ProductDetail({ productInfo, setDetailBtn }) {
               {sizeArr.map((item) => (
                 <li key={item} className="size_item" onClick={(e) => selectSize(e, item)}>
                   {item}
+                </li>
+              ))}
+            </ul>
+          </li>
+          <li>
+            <ul className="same_product_list">
+              {sameProduct.map((item) => (
+                <li key={item.id}>
+                  <img
+                    src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                    alt={`${item.name} 제품 이미지`}
+                    className="same_product"
+                    onClick={() => {
+                      setLoading(false);
+                      setProductInfo(item);
+                    }}
+                  />
                 </li>
               ))}
             </ul>
@@ -77,22 +130,14 @@ const ProductDetailStyle = styled.div`
   top: 0;
   left: 50%;
   transform: translate(-50%, -100%);
-  width: 70%;
-  height: auto;
+  width: 90%;
+  height: 40vw;
   background-color: #fff;
   z-index: 9999;
-  border: 2px solid #000;
+  border: 1px solid #000;
   border-top: none;
   transition: 0.4s;
   animation: ${slideDown} 0.6s forwards;
-  &.fullsize {
-    width: 100%;
-    .product_size {
-      .size_list {
-        width: 75%;
-      }
-    }
-  }
   .console_box {
     width: 100%;
     border-bottom: 1px solid #000;
@@ -115,16 +160,19 @@ const ProductDetailStyle = styled.div`
   }
   .info_box {
     display: flex;
-    padding: 2vw;
+    padding: 3vw;
     .img_wrapper {
+      width: 25vw;
       margin-right: 2vw;
       .product_img {
-        width: 30vw;
+        width: 25vw;
       }
+    }
+    .loading_status {
+      width: 36.9vw;
     }
     .product_info {
       width: 100%;
-      position: relative;
       .product_info_li {
         margin: 1vw 0;
       }
@@ -143,8 +191,8 @@ const ProductDetailStyle = styled.div`
       }
       .product_price {
         position: absolute;
-        right: 0;
-        bottom: 4vw;
+        left: 67.3vw;
+        bottom: 6vw;
         font-size: 2vw;
         font-weight: 500;
       }
@@ -173,10 +221,26 @@ const ProductDetailStyle = styled.div`
           }
         }
       }
+      .same_product_list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 0.5vw;
+        li {
+          width: 6vw;
+          .same_product {
+            width: 100%;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.7);
+            }
+          }
+        }
+      }
       .product_btns {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: 3vw;
+        right: 4vw;
         margin: 0;
         button {
           background-color: #d9d9d9;

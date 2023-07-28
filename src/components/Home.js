@@ -25,7 +25,10 @@ function Home() {
         submitBtn={submitBtn}
       />
       <Routes>
-        <Route path="/" element={<MainPage setListName={setListName} />} />
+        <Route
+          path="/"
+          element={<MainPage setListName={setListName} setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />}
+        />
         <Route
           path="/product"
           element={
@@ -40,7 +43,15 @@ function Home() {
           }
         />
       </Routes>
-      {detailBtn && <ProductDetail productInfo={productInfo} setDetailBtn={setDetailBtn} />}
+      {detailBtn && (
+        <div
+          className="detail_box_bg"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) return setDetailBtn(false);
+          }}>
+          <ProductDetail productInfo={productInfo} setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
+        </div>
+      )}
       <Footer />
     </HomeSection>
   );
@@ -52,6 +63,15 @@ const HomeSection = styled.div`
   max-height: 100vh;
   position: relative;
   overflow: hidden;
+  .detail_box_bg {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+  }
 `;
 
 export default Home;

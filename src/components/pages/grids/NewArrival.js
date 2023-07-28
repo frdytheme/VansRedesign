@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 
 import { Navigation } from "swiper";
 
-function NewArrival() {
+function NewArrival({ setProductInfo, setDetailBtn }) {
   const [newItems, setNewItems] = useState([]);
   const PUBLIC = process.env.PUBLIC_URL;
 
@@ -26,6 +26,11 @@ function NewArrival() {
     getNewArrival();
   }, []);
 
+  const selectProduct = (item) => {
+    setDetailBtn(true);
+    setProductInfo(item);
+  };
+
   return (
     <NewArrivalStyle>
       <Swiper
@@ -38,7 +43,7 @@ function NewArrival() {
         {newItems.map((item, idx) => {
           return (
             <SwiperSlide key={idx}>
-              <figure className="product_box">
+              <figure className="product_box" onClick={() => selectProduct(item)}>
                 <div className="img_wrapper">
                   <img
                     src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}

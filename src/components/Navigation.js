@@ -260,7 +260,7 @@ const Nav = styled.header`
     .gnb {
       color: #fff;
       display: flex;
-      z-index: 9999;
+      z-index: 999;
       margin-left: auto;
       .gnb_item {
         width: 100%;

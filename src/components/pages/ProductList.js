@@ -83,7 +83,6 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     filteredUrl.current = `http://localhost:5000/api/product?${search.current.join(
       "&"
     )}&mainCategory=${encodeListName}&name=${searchName}`;
-    console.log(filteredUrl.current);
     const fetchFilteredProduct = async () => {
       try {
         const response = await axios.get(filteredUrl.current);
