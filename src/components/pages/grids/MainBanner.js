@@ -9,7 +9,7 @@ import "swiper/css/autoplay";
 import { Scrollbar } from "swiper";
 import { useNavigate } from "react-router-dom";
 
-function MainBanner({ setListName, gnbs }) {
+function MainBanner({ setListName}) {
   const bannerImg = [
     { img: "banner_0.jpg", name: "KNU 컬렉션" },
     { img: "banner_1.jpg", name: "Authentic" },
@@ -51,8 +51,8 @@ function MainBanner({ setListName, gnbs }) {
 const BannerStyle = styled.div`
   width: 100%;
   grid-column: span 3;
+  grid-row: span 2;
   overflow: hidden;
-  border-radius: 20px;
   display: flex;
   cursor: pointer;
   &:active {

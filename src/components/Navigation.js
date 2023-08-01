@@ -127,6 +127,7 @@ function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubm
 
     translateName(e);
     clickMenu();
+    setSearchName("");
   };
 
   const submitSearch = (e) => {
@@ -134,10 +135,6 @@ function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubm
     setSubmitBtn((prev) => !prev);
     navigate("./product");
   };
-
-  useEffect(() => {
-    setSearchName("");
-  }, [submitBtn, setSearchName]);
 
   return (
     <Nav>
@@ -220,12 +217,13 @@ const Nav = styled.header`
   box-sizing: border-box;
   .nav_box {
     background-color: var(--color-red);
+    background-color: #000;
     width: 100%;
     height: 70px;
     line-height: 70px;
     display: flex;
     justify-content: space-between;
-    border-radius: 20px;
+    border-radius: 15px;
     text-align: center;
     position: relative;
     .logo {
@@ -268,7 +266,7 @@ const Nav = styled.header`
         padding-right: 30px;
         cursor: pointer;
         &.active {
-          color: #000;
+          color: var(--color-pink);
           & .lnb {
             display: flex;
             gap: 30px;

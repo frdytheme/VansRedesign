@@ -6,6 +6,7 @@ import ProductPage from "./pages/ProductPage";
 import { Route, Routes } from "react-router-dom";
 import Footer from "./Footer";
 import ProductDetail from "./pages/ProductDetail";
+import LoginPage from "./LoginPage";
 
 function Home() {
   const [listName, setListName] = useState([]);
@@ -42,6 +43,7 @@ function Home() {
             />
           }
         />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
       {detailBtn && (
         <div

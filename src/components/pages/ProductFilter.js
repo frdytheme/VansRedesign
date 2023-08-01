@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function ProductFilter({ product, setFilterList, filterToggle, listName }) {
+function ProductFilter({ product, setFilterList, filterToggle, listName, submitBtn }) {
   const [loadedColor, setLoadedColor] = useState([]);
   const [loadedSize, setLoadedSize] = useState([]);
   const [loadedPrice, setLoadedPrice] = useState([]);
@@ -207,7 +207,7 @@ function ProductFilter({ product, setFilterList, filterToggle, listName }) {
 
   useEffect(()=>{
     removeFilter();
-  },[listName])
+  },[listName, submitBtn])
 
   return (
     <ProductFilterStyle>

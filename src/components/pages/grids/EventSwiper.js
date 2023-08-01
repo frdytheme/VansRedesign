@@ -46,14 +46,13 @@ function EventSwiper() {
 }
 
 const EventStyle = styled.div`
-  grid-row: span 2;
+  grid-row: span 3;
   .swiper-pagination-bullet {
     background: #d51920;
   }
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 20px;
   display: flex;
   .swiper-slide {
     cursor: pointer;

@@ -133,7 +133,7 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     };
     if (
       truncScrollTop >= boxHeight - 1 &&
-      nowPage.current <= lastPage &&
+      nowPage.current < lastPage &&
       (product.length === nowPage.current * 25 || filteredProduct.length === nowPage.current * 25)
     ) {
       nowPage.current = nowPage.current + 1;
@@ -155,6 +155,7 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
         filterToggle={filterToggle}
         setFilterToggle={setFilterToggle}
         listName={listName}
+        submitBtn={submitBtn}
       />
       <div className="flex_container">
         {product.length === 0 || filteredProduct.length === 0 ? (
