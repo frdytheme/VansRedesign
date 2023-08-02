@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import NavBanner from "./pages/NavBanner";
 
-function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubmitBtn }) {
+function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
   let id = 0;
   const gnbList = [
     {
@@ -21,7 +21,6 @@ function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubm
             "썸머 풋웨어 컬렉션",
           ],
         },
-        // { title: "CUSTOM", menu: ["VANS X HARIBO", "PINK VIBE", "NEW SEASON, NEW SWATCH"] },
       ],
     },
     {
@@ -31,7 +30,6 @@ function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubm
         { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
         { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의"] },
         { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
-        // { title: "WHAT'S HOT", menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "울트라레인지"] },
       ],
     },
     {
@@ -41,10 +39,6 @@ function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubm
         { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
         { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의", "원피스&스커트"] },
         { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
-        // {
-        //   title: "WHAT'S HOT",
-        //   menu: ["기본 실루엣", "온라인 단독", "COMFYCUSH", "애너하임 팩토리", "플랫폼", "뮬 패밀리"],
-        // },
       ],
     },
     {
@@ -54,47 +48,12 @@ function Navigation({ setListName, submitBtn, searchName, setSearchName, setSubm
         { title: "신발", menu: ["전체보기", "토들러", "키즈 신발", "베스트 셀러"] },
         { title: "의류", menu: ["전체보기", "보이즈", "키즈 의류"] },
         { title: "악세서리", menu: ["전체보기", "모자", "양말"] },
-        // {
-        //   title: "CUSTOMS",
-        //   menu: ["커스텀 하기", "강아지&고양이 패턴"],
-        // },
       ],
     },
     {
       id: id++,
       name: "VAULT",
     },
-    // {
-    //   id: id++,
-    //   name: "CUSTOM",
-    //   lnb: [
-    //     {
-    //       title: "CUSTOMS",
-    //       menu: [
-    //         "나만의 신발 만들기",
-    //         "어센틱 커스텀",
-    //         "슬립온 커스텀",
-    //         "올드스쿨 커스텀",
-    //         "에라 커스텀",
-    //         "스케이트-하이 커스텀",
-    //       ],
-    //     },
-    //     {
-    //       title: "FEATURED",
-    //       menu: ["VANS X HARIBO", "PINK VIBE", "NEW SEASON, NEW SWATCH"],
-    //     },
-    //   ],
-    // },
-    // { id: id++, name: "SKATEBOARDING" },
-    // { id: id++, name: "SALE" },
-    // {
-    //   id: id++,
-    //   name: "MORE",
-    //   lnb: [
-    //     { title: "MORE FUN", menu: ["SURF", "SUSTAINABILITY", "ABOUT VANS", "VANS NEWS", "THIS IS OFF THE WALL"] },
-    //     { title: "SNOW" },
-    //   ],
-    // },
   ];
   const navigate = useNavigate();
   const gnbs = document.querySelectorAll(".gnb_item");

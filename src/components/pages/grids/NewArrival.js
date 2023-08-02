@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
-import axios from "axios";
 
 import "swiper/css";
 import "swiper/css/navigation";
 
 import { Navigation } from "swiper";
+import api from "../../../assets/api/api";
 
 function NewArrival({ setProductInfo, setDetailBtn }) {
   const [newItems, setNewItems] = useState([]);
@@ -14,7 +14,7 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
 
   const getNewArrival = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/product?all=1&mainCategory=NEW");
+      const response = await api.get("/product?all=1&mainCategory=NEW");
       const data = response.data.products;
       setNewItems(data);
     } catch (err) {

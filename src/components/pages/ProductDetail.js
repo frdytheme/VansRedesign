@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ImageSlide from "./ImageSlide";
+import api from "../../assets/api/api";
 
 function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const PUBLIC = process.env.PUBLIC_URL;
@@ -16,7 +17,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
 
   const fetchSameProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/product?all=1&name=${productName}`);
+      const response = await api.get(`/product?all=1&name=${productName}`);
       const data = response.data;
       if (data.total === 1) return;
       const products = data.products.filter((item) => item.model !== model);

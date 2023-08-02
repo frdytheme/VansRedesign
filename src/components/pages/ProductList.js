@@ -3,8 +3,16 @@ import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import axios from "axios";
 import ProductBox from "./ProductBox";
+import api from "../../assets/api/api";
 
-function ProductList({ listName, setListName, searchName, submitBtn, setProductInfo, setDetailBtn }) {
+function ProductList({
+  listName,
+  setListName,
+  searchName,
+  submitBtn,
+  setProductInfo,
+  setDetailBtn,
+}) {
   const encodeListName = encodeURIComponent(listName);
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
@@ -26,8 +34,8 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
 
   const getProduct = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/product?page=1&mainCategory=${encodeListName}&name=${searchName}`
+      const response = await api.get(
+        `/product?page=1&mainCategory=${encodeListName}&name=${searchName}`
       );
       const { products, totalPages } = response.data;
       setLastPage(totalPages);
@@ -57,11 +65,23 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     filterList.categoryFilter = filterList.category.length > 0 ? true : false;
 
     const isChange =
-      filterList.colorFilter || filterList.sizeFilter || filterList.priceFilter || filterList.categoryFilter;
+      filterList.colorFilter ||
+      filterList.sizeFilter ||
+      filterList.priceFilter ||
+      filterList.categoryFilter;
 
     setFilterToggle(isChange);
 
-    const { color, price, size, category, colorFilter, sizeFilter, priceFilter, categoryFilter } = filterList;
+    const {
+      color,
+      price,
+      size,
+      category,
+      colorFilter,
+      sizeFilter,
+      priceFilter,
+      categoryFilter,
+    } = filterList;
 
     if (colorFilter) {
       search.current.push(`color=${color.join(",")}`);
@@ -76,16 +96,18 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     }
 
     if (categoryFilter) {
-      const replaceCategory = category.map((category) => category.split("&")).flat();
+      const replaceCategory = category
+        .map((category) => category.split("&"))
+        .flat();
       search.current.push(`category=${replaceCategory.join(",")}`);
     }
 
-    filteredUrl.current = `http://localhost:5000/api/product?${search.current.join(
+    filteredUrl.current = `/product?${search.current.join(
       "&"
     )}&mainCategory=${encodeListName}&name=${searchName}`;
     const fetchFilteredProduct = async () => {
       try {
-        const response = await axios.get(filteredUrl.current);
+        const response = await api.get(filteredUrl.current);
         const { products, totalPages } = response.data;
         setFilteredProduct(products);
         setLastPage(totalPages);
@@ -97,7 +119,12 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     fetchFilteredProduct();
 
     if (!filterToggle) {
-      nowPage.current = product.length === 0 ? 1 : product.length / 25 < 1 ? 1 : product.length / 25;
+      nowPage.current =
+        product.length === 0
+          ? 1
+          : product.length / 25 < 1
+          ? 1
+          : product.length / 25;
     }
   }, [filterList, filterToggle]);
 
@@ -107,8 +134,8 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     const truncScrollTop = Math.trunc(scrollTop);
     const addProduct = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/product?page=${nowPage.current}&mainCategory=${encodeListName}&name=${searchName}`
+        const response = await api.get(
+          `/product?page=${nowPage.current}&mainCategory=${encodeListName}&name=${searchName}`
         );
         const { products } = await response.data;
         const updateProduct = [...product, ...products];
@@ -119,8 +146,8 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     };
     const addFilteredProduct = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/product?${search.current.join("&")}&page=${
+        const response = await api.get(
+          `/product?${search.current.join("&")}&page=${
             nowPage.current
           }&mainCategory=${encodeListName}&name=${searchName}`
         );
@@ -134,7 +161,8 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
     if (
       truncScrollTop >= boxHeight - 1 &&
       nowPage.current < lastPage &&
-      (product.length === nowPage.current * 25 || filteredProduct.length === nowPage.current * 25)
+      (product.length === nowPage.current * 25 ||
+        filteredProduct.length === nowPage.current * 25)
     ) {
       nowPage.current = nowPage.current + 1;
       filterToggle ? addFilteredProduct() : addProduct();
@@ -166,9 +194,21 @@ function ProductList({ listName, setListName, searchName, submitBtn, setProductI
             </div>
           </div>
         ) : filterToggle ? (
-          filteredProduct.map((item) => <ProductBox item={item} key={item.model} onClick={() => selectProduct(item)} />)
+          filteredProduct.map((item) => (
+            <ProductBox
+              item={item}
+              key={item.model}
+              onClick={() => selectProduct(item)}
+            />
+          ))
         ) : (
-          product.map((item) => <ProductBox item={item} key={item.model} onClick={() => selectProduct(item)} />)
+          product.map((item) => (
+            <ProductBox
+              item={item}
+              key={item.model}
+              onClick={() => selectProduct(item)}
+            />
+          ))
         )}
       </div>
     </ProductListStyle>
