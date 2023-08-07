@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
-import axios from "axios";
 import ProductBox from "./ProductBox";
 import api from "../../assets/api/api";
 

@@ -4,12 +4,19 @@ import EventSwiper from "./pages/grids/EventSwiper";
 import MainBanner from "./pages/grids/MainBanner";
 import NewArrival from "./pages/grids/NewArrival";
 import LoginGrid from "./pages/grids/LoginGrid";
+import UserStatus from "./pages/grids/UserStatus";
 
-function MainPage({ setListName, setProductInfo, setDetailBtn }) {
+function MainPage({
+  setListName,
+  setProductInfo,
+  setDetailBtn,
+  isLogin,
+  setIsLogin,
+}) {
   return (
     <MainGrid>
       <MainBanner setListName={setListName} />
-      <LoginGrid />
+      {isLogin ? <UserStatus /> : <LoginGrid />}
       <EventSwiper />
       <NewArrival setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
     </MainGrid>

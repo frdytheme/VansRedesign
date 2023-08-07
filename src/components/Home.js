@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Navigation from "./Navigation";
 import MainPage from "./MainPage";
@@ -14,6 +14,9 @@ function Home() {
   const [submitBtn, setSubmitBtn] = useState(false);
   const [detailBtn, setDetailBtn] = useState(false);
   const [productInfo, setProductInfo] = useState({});
+  const [isLogin, setIsLogin] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
 
   return (
     <HomeSection>
@@ -28,7 +31,15 @@ function Home() {
       <Routes>
         <Route
           path="/"
-          element={<MainPage setListName={setListName} setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />}
+          element={
+            <MainPage
+              setListName={setListName}
+              setProductInfo={setProductInfo}
+              setDetailBtn={setDetailBtn}
+              isLogin={isLogin}
+              setIsLogin={setIsLogin}
+            />
+          }
         />
         <Route
           path="/product"
@@ -50,8 +61,13 @@ function Home() {
           className="detail_box_bg"
           onClick={(e) => {
             if (e.target === e.currentTarget) return setDetailBtn(false);
-          }}>
-          <ProductDetail productInfo={productInfo} setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
+          }}
+        >
+          <ProductDetail
+            productInfo={productInfo}
+            setProductInfo={setProductInfo}
+            setDetailBtn={setDetailBtn}
+          />
         </div>
       )}
       <Footer />

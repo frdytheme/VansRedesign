@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import api from "../assets/api/api";
+import { useNavigate } from "react-router-dom";
+import authApi from "../assets/api/authApi";
 
 function LoginPage() {
   const [userData, setUserData] = useState({
     name: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleUserData = (e) => {
     const { name, value } = e.target;
@@ -17,13 +19,16 @@ function LoginPage() {
   const checkUserInfo = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/login", userData, {
+      const response = await authApi.post("/login", userData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      console.log(response.data.message);
+      // localStorage.setItem("accessToken", response.data.accessToken);
+      // localStorage.setItem("refreshToken", response.data.refreshToken);
+      // localStorage.setItem("isLoggedIn", true);
+      alert(`환영합니다 ${userData.name}님!`);
+      // navigate("/home");
     } catch (err) {
       alert(err.response.data.message);
     }
@@ -91,10 +96,12 @@ const LoginPageStyle = styled.form`
       input {
         width: 100%;
         box-sizing: border-box;
-        height: 35px;
+        height: 45px;
         text-indent: 10px;
         outline: none;
         margin-bottom: 1vw;
+        border: 1px solid #999;
+        border-radius: 8px;
       }
     }
     .login_btn {
