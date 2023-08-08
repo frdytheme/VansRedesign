@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
+import api from "../assets/api/api";
 
 function LoginPage() {
   const [userData, setUserData] = useState({
@@ -16,21 +17,29 @@ function LoginPage() {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const jwtCheck = async () => {
+    try {
+      const response = await authApi.get("/auth");
+      console.log(response.data);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
   const checkUserInfo = async (e) => {
     e.preventDefault();
     try {
-      const response = await authApi.post("/login", userData, {
+      await authApi.post("/login", userData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      // localStorage.setItem("accessToken", response.data.accessToken);
-      // localStorage.setItem("refreshToken", response.data.refreshToken);
-      // localStorage.setItem("isLoggedIn", true);
       alert(`환영합니다 ${userData.name}님!`);
       // navigate("/home");
     } catch (err) {
       alert(err.response.data.message);
+    } finally {
+      jwtCheck();
     }
   };
 
@@ -60,6 +69,21 @@ function LoginPage() {
             value={userData.password}
             onChange={handleUserData}
           />
+        </div>
+        <div className="user_options">
+          <label>
+            <input type="checkbox" name="user_id_save" id="user_id_save" 
+            />
+            아이디 저장
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="user_auto_login"
+              id="user_auto_login"
+            />
+            자동 로그인
+          </label>
         </div>
         <button type="submit" className="login_btn">
           로그인
@@ -99,9 +123,21 @@ const LoginPageStyle = styled.form`
         height: 45px;
         text-indent: 10px;
         outline: none;
-        margin-bottom: 1vw;
         border: 1px solid #999;
         border-radius: 8px;
+        &:first-child {
+          margin-bottom: 1vw;
+        }
+      }
+    }
+    .user_options {
+      margin: 0.5vw 0;
+      font-size: 0.7vw;
+      display: flex;
+      label {
+        margin-right: 0.7vw;
+        display: flex;
+        align-items: center;
       }
     }
     .login_btn {
