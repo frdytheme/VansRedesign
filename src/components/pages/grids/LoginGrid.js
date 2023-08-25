@@ -13,7 +13,7 @@ function LoginGrid() {
       </div>
       <div className="user_box option_box">
         <p className="option_style visitor_box">비회원 로그인</p>
-        <p className="option_style join_box">회원가입</p>
+        <p className="option_style join_box" onClick={() => navigate("./join")}>회원가입</p>
       </div>
     </LoginGridStyle>
   );

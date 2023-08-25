@@ -1,29 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
-import api from "../assets/api/api";
 
 function LoginPage() {
+  const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
+  const userAutoLogin = JSON.parse(localStorage.getItem("userAutoLogin"));
+  const userId = localStorage.getItem("userId");
+
   const [userData, setUserData] = useState({
-    name: "",
+    name: userId ? JSON.parse(userId) : "",
     password: "",
   });
+
   const navigate = useNavigate();
 
   const handleUserData = (e) => {
     const { name, value } = e.target;
 
     setUserData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const jwtCheck = async () => {
-    try {
-      const response = await authApi.get("/auth");
-      console.log(response.data);
-    } catch (err) {
-      console.log(err.response.data);
-    }
   };
 
   const checkUserInfo = async (e) => {
@@ -34,14 +29,39 @@ function LoginPage() {
           "Content-Type": "application/json",
         },
       });
-      alert(`환영합니다 ${userData.name}님!`);
-      // navigate("/home");
+      if (userSaveState) {
+        localStorage.setItem("userId", JSON.stringify(userData.name));
+      }
+      sessionStorage.setItem("loginState", JSON.stringify(true));
+      navigate("/home");
     } catch (err) {
       alert(err.response.data.message);
-    } finally {
-      jwtCheck();
     }
   };
+
+  const handleUserSave = (e) => {
+    const checked = e.target.checked;
+    localStorage.setItem("userSaveState", JSON.stringify(checked));
+    if (!checked) {
+      localStorage.removeItem("userId");
+    }
+  };
+
+  const handleAutoLogin = (e) => {
+    const checked = e.target.checked;
+    localStorage.setItem("userAutoLogin", JSON.stringify(checked));
+  };
+
+  useEffect(() => {
+    const userSaveCheck = document.getElementById("user_id_save");
+    const userAutoLoginCheck = document.getElementById("user_auto_login");
+    if (userSaveState) {
+      userSaveCheck.checked = userSaveState;
+    }
+    if (userAutoLogin) {
+      userAutoLoginCheck.checked = userAutoLogin;
+    }
+  }, []);
 
   return (
     <LoginPageStyle onSubmit={(e) => checkUserInfo(e)}>
@@ -72,7 +92,11 @@ function LoginPage() {
         </div>
         <div className="user_options">
           <label>
-            <input type="checkbox" name="user_id_save" id="user_id_save" 
+            <input
+              type="checkbox"
+              name="user_id_save"
+              id="user_id_save"
+              onChange={handleUserSave}
             />
             아이디 저장
           </label>
@@ -81,6 +105,7 @@ function LoginPage() {
               type="checkbox"
               name="user_auto_login"
               id="user_auto_login"
+              onChange={handleAutoLogin}
             />
             자동 로그인
           </label>
@@ -91,7 +116,9 @@ function LoginPage() {
         <div className="find_box">
           <p className="find_id">아이디 찾기</p>
           <p className="find_pw">비밀번호 찾기</p>
-          <p className="join_user">회원가입</p>
+          <p className="join_user" onClick={() => navigate("/home/join")}>
+            회원가입
+          </p>
         </div>
       </div>
     </LoginPageStyle>

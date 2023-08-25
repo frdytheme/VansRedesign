@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import Footer from "./Footer";
 import ProductDetail from "./pages/ProductDetail";
 import LoginPage from "./LoginPage";
+import JoinPage from "./JoinPage";
 
 function Home() {
   const [listName, setListName] = useState([]);
@@ -14,9 +15,6 @@ function Home() {
   const [submitBtn, setSubmitBtn] = useState(false);
   const [detailBtn, setDetailBtn] = useState(false);
   const [productInfo, setProductInfo] = useState({});
-  const [isLogin, setIsLogin] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
 
   return (
     <HomeSection>
@@ -36,8 +34,6 @@ function Home() {
               setListName={setListName}
               setProductInfo={setProductInfo}
               setDetailBtn={setDetailBtn}
-              isLogin={isLogin}
-              setIsLogin={setIsLogin}
             />
           }
         />
@@ -55,6 +51,7 @@ function Home() {
           }
         />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/join" element={<JoinPage />} />
       </Routes>
       {detailBtn && (
         <div
