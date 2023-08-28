@@ -116,6 +116,9 @@ function LoginPage() {
         <div className="find_box">
           <p className="find_id">아이디 찾기</p>
           <p className="find_pw">비밀번호 찾기</p>
+
+
+          
           <p className="join_user" onClick={() => navigate("/home/join")}>
             회원가입
           </p>

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Countdown from "react-countdown";
+import CountDown from "./CountDown";
 
 function JoinPage() {
   const navigate = useNavigate();
@@ -11,11 +14,16 @@ function JoinPage() {
     pwCheck: "",
     email: "",
   });
+  const [emailAuthNum, setEmailAuthNum] = useState("");
+  const [authBoxShow, setAuthBoxShow] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [emailChange, setEmailChange] = useState(false);
 
   const [userOnly, setUserOnly] = useState(false);
   const [pwConfirm, setPwConfirm] = useState(false);
 
   const checkIsOnly = async () => {
+    if (joinUser.name.length <= 4) return;
     try {
       const response = await authApi.post("/register/idCheck", joinUser, {
         headers: {
@@ -24,10 +32,14 @@ function JoinPage() {
       });
       const isOnly = response.data.isOnly;
       if (isOnly) {
-        alert("사용 가능한 아이디입니다.");
-        setUserOnly(isOnly);
+        const res = window.confirm(
+          `사용 가능한 아이디입니다. \n "${joinUser.name}"로 사용하시겠습니까?`
+        );
+        if (res) {
+          setUserOnly(isOnly);
+        }
       } else {
-        alert("사용 불가능한 아이디입니다.");
+        alert("이미 존재하는 아이디입니다.");
         setUserOnly(isOnly);
       }
     } catch (err) {
@@ -78,16 +90,78 @@ function JoinPage() {
     e.preventDefault();
     if (!userOnly) return alert("아이디 중복확인을 해주세요.");
     if (!pwConfirm) return alert("비밀번호가 일치하지 않습니다.");
+    if (!isAuth) return alert("이메일 인증을 해주세요.");
+
     const { name, email, pw } = joinUser;
     const user = { name, email, password: pw };
     try {
-      const response = await authApi.post("/register", user, {
+      await authApi.post("/register", user, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       alert("회원가입이 완료되었습니다.");
-      navigate("/home/login")
+      navigate("/home/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const changeEmail = () => {
+    setJoinUser((prev) => ({ ...prev, email: "" }));
+    setAuthBoxShow(false);
+    setEmailChange(false);
+  };
+
+  const emailAuth = async () => {
+    if (authBoxShow) return;
+    if (!joinUser.email) return alert("이메일을 입력해주세요.");
+    if (!joinUser.email.includes("@"))
+      return alert("이메일 형식이 잘못되었습니다.");
+    const emailObj = {
+      email: joinUser.email,
+    };
+    setAuthBoxShow(true);
+    setEmailChange(true);
+    try {
+      await axios.post("http://localhost:5000/api/emailAuth", emailObj, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setTimeout(() => {
+        setEmailChange(false);
+        setAuthBoxShow(false);
+        setEmailAuthNum("");
+      }, 120000);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const authEmailNum = async () => {
+    const auth = {
+      authNum: Number(emailAuthNum),
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/emailAuth/check",
+        auth,
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.data.auth) {
+        alert("인증되었습니다.");
+        setIsAuth(true);
+        setAuthBoxShow(false);
+      } else {
+        alert("인증번호가 틀렸습니다.");
+        setIsAuth(false);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -115,6 +189,8 @@ function JoinPage() {
           value={joinUser.name}
           minLength={4}
           maxLength={16}
+          disabled={userOnly}
+          required
           onChange={(e) => {
             setJoinUser((prev) => ({ ...prev, name: e.target.value }));
             setUserOnly(false);
@@ -145,6 +221,7 @@ function JoinPage() {
           value={joinUser.pw}
           minLength={8}
           maxLength={20}
+          required
           onChange={(e) =>
             setJoinUser((prev) => ({ ...prev, pw: e.target.value }))
           }
@@ -157,6 +234,7 @@ function JoinPage() {
           value={joinUser.pwCheck}
           minLength={8}
           maxLength={20}
+          required
           onChange={(e) =>
             setJoinUser((prev) => ({ ...prev, pwCheck: e.target.value }))
           }
@@ -179,10 +257,40 @@ function JoinPage() {
           name="new_email"
           placeholder="이메일"
           value={joinUser.email}
+          disabled={isAuth}
+          required
           onChange={(e) =>
             setJoinUser((prev) => ({ ...prev, email: e.target.value }))
           }
         />
+        {isAuth ? (
+          <div className="email_auth_btn success">인증 완료</div>
+        ) : emailChange ? (
+          <div className="email_auth_btn pending" onClick={changeEmail}>
+            이메일 변경
+          </div>
+        ) : (
+          <div className="email_auth_btn" onClick={emailAuth}>
+            이메일 인증
+          </div>
+        )}
+        {authBoxShow && (
+          <div className="email_auth_box">
+            <div className="auth_input_box">
+              <input
+                type="text"
+                placeholder="인증번호"
+                className="auth_input"
+                value={emailAuthNum}
+                onChange={(e) => setEmailAuthNum(e.target.value)}
+              />
+              <div className="auth_num_btn" onClick={authEmailNum}>
+                인증
+              </div>
+            </div>
+            <CountDown />
+          </div>
+        )}
       </fieldset>
       <button type="submit" id="join_btn">
         가입하기
@@ -263,6 +371,51 @@ const JoinPageStyle = styled.form`
     margin-top: 0.3vw;
     &.submit {
       color: green;
+    }
+  }
+  .email_auth_btn {
+    border: 1px solid #000;
+    cursor: pointer;
+    padding: 1vw;
+    text-align: center;
+    border-radius: 10px;
+    margin: 0.5vw 0;
+    &.pending {
+      background-color: #f9f9f9;
+      color: var(--color-red);
+      border: 1px solid var(--color-red);
+    }
+    &.success {
+      cursor: default;
+      border: 1px solid green;
+      color: green;
+    }
+  }
+  .email_auth_box {
+    .auth_input_box {
+      position: relative;
+      .auth_input {
+        margin-bottom: 0.3vw;
+      }
+      .auth_num_btn {
+        position: absolute;
+        top: 0;
+        right: -4px;
+        background-color: var(--color-red);
+        color: #fff;
+        width: 5vw;
+        height: 42px;
+        line-height: 42px;
+        text-align: center;
+        border-radius: 0 10px 10px 0;
+        cursor: pointer;
+      }
+    }
+
+    .auth_timer {
+      margin-left: 0.2vw;
+      color: #777;
+      font-size: 0.8vw;
     }
   }
 `;
