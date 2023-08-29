@@ -3,15 +3,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
 
-function LoginPage() {
+function LoginPage({ userData, setUserData, userId }) {
   const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
   const userAutoLogin = JSON.parse(localStorage.getItem("userAutoLogin"));
-  const userId = localStorage.getItem("userId");
-
-  const [userData, setUserData] = useState({
-    name: userId ? JSON.parse(userId) : "",
-    password: "",
-  });
 
   const navigate = useNavigate();
 
@@ -24,7 +18,7 @@ function LoginPage() {
   const checkUserInfo = async (e) => {
     e.preventDefault();
     try {
-      await authApi.post("/login", userData, {
+      await authApi.post("user/login", userData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -117,8 +111,6 @@ function LoginPage() {
           <p className="find_id">아이디 찾기</p>
           <p className="find_pw">비밀번호 찾기</p>
 
-
-          
           <p className="join_user" onClick={() => navigate("/home/join")}>
             회원가입
           </p>

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Countdown from "react-countdown";
 import CountDown from "./CountDown";
+import CountDown2 from "./CountDown2";
 
 function JoinPage() {
   const navigate = useNavigate();
@@ -14,18 +13,19 @@ function JoinPage() {
     pwCheck: "",
     email: "",
   });
+
   const [emailAuthNum, setEmailAuthNum] = useState("");
   const [authBoxShow, setAuthBoxShow] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [emailChange, setEmailChange] = useState(false);
-
   const [userOnly, setUserOnly] = useState(false);
   const [pwConfirm, setPwConfirm] = useState(false);
+  const [resetTimer, setResetTimer] = useState(false);
 
   const checkIsOnly = async () => {
     if (joinUser.name.length <= 4) return;
     try {
-      const response = await authApi.post("/register/idCheck", joinUser, {
+      const response = await authApi.post("/user/idCheck", joinUser, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -95,7 +95,7 @@ function JoinPage() {
     const { name, email, pw } = joinUser;
     const user = { name, email, password: pw };
     try {
-      await authApi.post("/register", user, {
+      await authApi.post("/user/join", user, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -114,7 +114,7 @@ function JoinPage() {
   };
 
   const emailAuth = async () => {
-    if (authBoxShow) return;
+    if (authBoxShow) setResetTimer((prev) => !prev);
     if (!joinUser.email) return alert("이메일을 입력해주세요.");
     if (!joinUser.email.includes("@"))
       return alert("이메일 형식이 잘못되었습니다.");
@@ -124,16 +124,11 @@ function JoinPage() {
     setAuthBoxShow(true);
     setEmailChange(true);
     try {
-      await axios.post("http://localhost:5000/api/emailAuth", emailObj, {
+      await authApi.post("/user/emailAuth", emailObj, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      setTimeout(() => {
-        setEmailChange(false);
-        setAuthBoxShow(false);
-        setEmailAuthNum("");
-      }, 120000);
     } catch (err) {
       console.error(err);
     }
@@ -144,16 +139,11 @@ function JoinPage() {
       authNum: Number(emailAuthNum),
     };
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/emailAuth/check",
-        auth,
-
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await authApi.post("/user/emailAuth/check", auth, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (response.data.auth) {
         alert("인증되었습니다.");
         setIsAuth(true);
@@ -288,7 +278,24 @@ function JoinPage() {
                 인증
               </div>
             </div>
-            <CountDown />
+            <div className="count_box">
+              {resetTimer ? (
+                <CountDown
+                  setEmailChange={setEmailChange}
+                  setAuthBoxShow={setAuthBoxShow}
+                  setEmailAuthNum={setEmailAuthNum}
+                />
+              ) : (
+                <CountDown2
+                  setEmailChange={setEmailChange}
+                  setAuthBoxShow={setAuthBoxShow}
+                  setEmailAuthNum={setEmailAuthNum}
+                />
+              )}
+              <div className="resend_auth" onClick={emailAuth}>
+                인증번호 재발송
+              </div>
+            </div>
           </div>
         )}
       </fieldset>
@@ -411,11 +418,22 @@ const JoinPageStyle = styled.form`
         cursor: pointer;
       }
     }
-
-    .auth_timer {
-      margin-left: 0.2vw;
-      color: #777;
-      font-size: 0.8vw;
+    .count_box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5vw;
+      .auth_timer {
+        margin-left: 0.2vw;
+        color: #777;
+        font-size: 0.8vw;
+      }
+      .resend_auth {
+        margin-left: 0.2vw;
+        color: var(--color-red);
+        cursor: pointer;
+        font-size: 0.8vw;
+      }
     }
   }
 `;

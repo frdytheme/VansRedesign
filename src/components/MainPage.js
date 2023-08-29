@@ -10,6 +10,7 @@ function MainPage({
   setListName,
   setProductInfo,
   setDetailBtn,
+  userData,
 }) {
 
   const loginState = sessionStorage.getItem("loginState");
@@ -17,7 +18,7 @@ function MainPage({
   return (
     <MainGrid>
       <MainBanner setListName={setListName} />
-      {JSON.parse(loginState) ? <UserStatus /> : <LoginGrid />}
+      {JSON.parse(loginState) ? <UserStatus userData={userData} /> : <LoginGrid />}
       <EventSwiper />
       <NewArrival setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
     </MainGrid>

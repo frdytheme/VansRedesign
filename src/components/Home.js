@@ -15,6 +15,11 @@ function Home() {
   const [submitBtn, setSubmitBtn] = useState(false);
   const [detailBtn, setDetailBtn] = useState(false);
   const [productInfo, setProductInfo] = useState({});
+  const userId = localStorage.getItem("userId");
+  const [userData, setUserData] = useState({
+    name: userId ? JSON.parse(userId) : "",
+    password: "",
+  });
 
   return (
     <HomeSection>
@@ -34,6 +39,7 @@ function Home() {
               setListName={setListName}
               setProductInfo={setProductInfo}
               setDetailBtn={setDetailBtn}
+              userData={userData}
             />
           }
         />
@@ -50,7 +56,16 @@ function Home() {
             />
           }
         />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            <LoginPage
+              userData={userData}
+              setUserData={setUserData}
+              userId={userId}
+            />
+          }
+        />
         <Route path="/join" element={<JoinPage />} />
       </Routes>
       {detailBtn && (
