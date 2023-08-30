@@ -109,6 +109,7 @@ function JoinPage() {
 
   const changeEmail = () => {
     setJoinUser((prev) => ({ ...prev, email: "" }));
+    setEmailAuthNum("");
     setAuthBoxShow(false);
     setEmailChange(false);
   };
@@ -136,7 +137,7 @@ function JoinPage() {
 
   const authEmailNum = async () => {
     const auth = {
-      authNum: Number(emailAuthNum),
+      authNum: emailAuthNum,
     };
     try {
       const response = await authApi.post("/user/emailAuth/check", auth, {
@@ -184,6 +185,12 @@ function JoinPage() {
           onChange={(e) => {
             setJoinUser((prev) => ({ ...prev, name: e.target.value }));
             setUserOnly(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              checkIsOnly();
+            }
           }}
         />
         {userOnly ? (
@@ -247,11 +254,17 @@ function JoinPage() {
           name="new_email"
           placeholder="이메일"
           value={joinUser.email}
-          disabled={isAuth}
+          disabled={isAuth || authBoxShow}
           required
           onChange={(e) =>
             setJoinUser((prev) => ({ ...prev, email: e.target.value }))
           }
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              emailAuth();
+            }
+          }}
         />
         {isAuth ? (
           <div className="email_auth_btn success">인증 완료</div>
@@ -273,6 +286,12 @@ function JoinPage() {
                 className="auth_input"
                 value={emailAuthNum}
                 onChange={(e) => setEmailAuthNum(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    authEmailNum();
+                  }
+                }}
               />
               <div className="auth_num_btn" onClick={authEmailNum}>
                 인증
