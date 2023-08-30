@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navigation from "./Navigation";
 import MainPage from "./MainPage";
@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import ProductDetail from "./pages/ProductDetail";
 import LoginPage from "./LoginPage";
 import JoinPage from "./JoinPage";
+import authApi from "../assets/api/authApi";
 
 function Home() {
   const [listName, setListName] = useState([]);
@@ -20,6 +21,32 @@ function Home() {
     name: userId ? JSON.parse(userId) : "",
     password: "",
   });
+  const [isLogin, setIsLogin] = useState(false);
+
+  const autoLoginFunc = async () => {
+    const autoLogin = localStorage.getItem("userAutoLogin");
+    const name = localStorage.getItem("userId");
+    const user = {
+      name: name,
+    };
+    try {
+      if (autoLogin) {
+        await authApi.post("/user/auth", user, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        sessionStorage.setItem("loginState", JSON.stringify(true));
+        setIsLogin(true);
+      }
+    } catch (err) {
+      setIsLogin(false);
+    }
+  };
+
+  useEffect(() => {
+    autoLoginFunc();
+  }, []);
 
   return (
     <HomeSection>

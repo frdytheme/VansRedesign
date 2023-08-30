@@ -23,7 +23,7 @@ function LoginPage({ userData, setUserData, userId }) {
           "Content-Type": "application/json",
         },
       });
-      if (userSaveState) {
+      if (userSaveState || userAutoLogin) {
         localStorage.setItem("userId", JSON.stringify(userData.name));
       }
       sessionStorage.setItem("loginState", JSON.stringify(true));

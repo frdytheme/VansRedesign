@@ -14,12 +14,15 @@ function JoinPage() {
     email: "",
   });
 
+  const [inputPw, setInputPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [pwConfirm, setPwConfirm] = useState(false);
+
   const [emailAuthNum, setEmailAuthNum] = useState("");
   const [authBoxShow, setAuthBoxShow] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [emailChange, setEmailChange] = useState(false);
   const [userOnly, setUserOnly] = useState(false);
-  const [pwConfirm, setPwConfirm] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
 
   const checkIsOnly = async () => {
@@ -68,23 +71,22 @@ function JoinPage() {
   }, [joinUser.name]);
 
   useEffect(() => {
-    const { pw, pwCheck } = joinUser;
     const pwOption = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
     const pwRedTxt = document.querySelector(".pw_red_txt");
-    if (pwOption.test(pw) && pw.length >= 8) {
+    if (pwOption.test(inputPw) && inputPw.length >= 8) {
       pwRedTxt.classList.add("submit");
-    } else if (!pwOption.test(pw) && pw.length > 0) {
-      alert(`${pw[pw.length - 1]}은 사용 불가합니다.`);
-      setJoinUser((prev) => ({ ...prev, pw: pw.slice(0, pw.length - 1) }));
+    } else if (!pwOption.test(inputPw) && inputPw.length > 0) {
+      alert(`${inputPw[inputPw.length - 1]}은 사용 불가합니다.`);
+      setInputPw((prev) => prev.slice(0, prev.length - 1));
     } else {
       pwRedTxt.classList.remove("submit");
     }
-    if (pw === pwCheck) {
+    if (inputPw === confirmPw) {
       setPwConfirm(true);
     } else {
       setPwConfirm(false);
     }
-  }, [joinUser.pw, joinUser.pwCheck]);
+  }, [inputPw, confirmPw]);
 
   const submitJoin = async (e) => {
     e.preventDefault();
@@ -215,13 +217,11 @@ function JoinPage() {
           id="new_pw"
           name="new_pw"
           placeholder="비밀번호"
-          value={joinUser.pw}
+          value={inputPw}
           minLength={8}
           maxLength={20}
           required
-          onChange={(e) =>
-            setJoinUser((prev) => ({ ...prev, pw: e.target.value }))
-          }
+          onChange={(e) => setInputPw(e.target.value)}
         />
         <input
           type="password"
@@ -232,9 +232,7 @@ function JoinPage() {
           minLength={8}
           maxLength={20}
           required
-          onChange={(e) =>
-            setJoinUser((prev) => ({ ...prev, pwCheck: e.target.value }))
-          }
+          onChange={(e) => setConfirmPw(e.target.value)}
         />
         <p className="red_txt pw_red_txt">
           영문 대소문자 / 숫자 / 특수문자 사용 가능, 8~20글자
