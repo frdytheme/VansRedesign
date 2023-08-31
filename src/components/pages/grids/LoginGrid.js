@@ -1,65 +1,88 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import authApi from "../../../assets/api/authApi";
 
 function LoginGrid() {
   const navigate = useNavigate();
+  const autoLogin = JSON.parse(localStorage.getItem("userAutoLogin"));
+  const name = JSON.parse(localStorage.getItem("userId"));
+
+  const autoLoginFunc = async () => {
+    const user = {
+      name: name,
+    };
+    try {
+      const response = await authApi.post("/user/auth", user, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = response.data;
+      if (data.state === "expired") {
+        alert("로그인 정보가 만료되었습니다.");
+        navigate("./login");
+      }
+      sessionStorage.setItem("loginState", JSON.stringify(true));
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleLogin = () => {
+    if (autoLogin) {
+      return autoLoginFunc();
+    }
+    navigate("./login");
+  };
 
   return (
     <LoginGridStyle>
-      <div className="user_box login_btn" onClick={() => navigate("./login")}>
-        <img src={`${process.env.PUBLIC_URL}/images/official/vans_logo_wht.svg`} alt="반스 로고" />
-        <p>로그인</p>
-      </div>
-      <div className="user_box option_box">
-        <p className="option_style visitor_box">비회원 로그인</p>
-        <p className="option_style join_box" onClick={() => navigate("./join")}>회원가입</p>
+      <div className="user_box">
+        <div className="login_btn" onClick={handleLogin}>
+          <p>
+            <img
+              src={`${process.env.PUBLIC_URL}/images/official/vans_logo_wht.svg`}
+              alt="반스 로고"
+            />
+            로그인
+          </p>
+        </div>
+        <p className="option_style join_box" onClick={() => navigate("./join")}>
+          회원가입
+        </p>
       </div>
     </LoginGridStyle>
   );
 }
 
 const LoginGridStyle = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 6fr 4fr;
+  color: #fff;
+  overflow: hidden;
   .user_box {
-    margin: 0.2vw 0;
     width: 100%;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    &:hover {
-      cursor: pointer;
-    }
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
   }
   .login_btn {
     background-color: var(--color-red);
     gap: 0.5vw;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     img {
       width: 4vw;
     }
   }
-  .option_box {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 1fr;
-    .option_style {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .visitor_box {
-      background-color: #999;
-      border-radius: 15px 0 0 15px;
-    }
-    .join_box {
-      background-color: #000;
-      border-radius: 0 15px 15px 0;
-    }
+  .join_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
   }
 `;
 

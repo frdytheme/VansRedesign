@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import authApi from "../../../assets/api/authApi";
 
 function UserStatus({ userData }) {
-  const [user, setUser] = useState({ name: userData.name });
-
   const userLogout = async () => {
     try {
       const response = await authApi.post("/user/logout");
@@ -12,11 +10,13 @@ function UserStatus({ userData }) {
     } catch (err) {
       console.error(err);
     } finally {
-      sessionStorage.setItem("loginState", false);
+      sessionStorage.setItem("loginState", JSON.stringify(false));
+      localStorage.setItem("userAutoLogin", JSON.stringify(false));
       window.location.reload();
     }
   };
   const tokenCheck = async () => {
+    const user = { name: userData.name };
     try {
       const response = await authApi.post("/user/auth", user, {
         headers: {
@@ -32,11 +32,17 @@ function UserStatus({ userData }) {
   return (
     <UserStatusStyle>
       <div className="user_interface">
-        <p className="user_name">{user.name}님</p>
+        <p className="user_name">
+          <em>{userData.name}</em>
+          <img
+            src={`${process.env.PUBLIC_URL}/images/official/vans_logo_wht.svg`}
+            alt="반스 로고"
+          />
+        </p>
         <ul className="user_menu">
           <li className="user_menu_li user_info_edit" onClick={tokenCheck}>
             <span className="material-symbols-outlined">person</span>
-            회원 정보 수정
+            마이페이지
           </li>
           <li className="user_menu_li user_cart">
             <span className="material-symbols-outlined">shopping_bag</span>
@@ -56,39 +62,49 @@ function UserStatus({ userData }) {
 }
 
 const UserStatusStyle = styled.div`
-  background-color: var(--color-red);
+  background-image: linear-gradient(140deg, #ff6464, #db3056, #851d41, #141e46);
   overflow: hidden;
-  display: grid;
-  grid-auto-columns: 1fr;
-  grid-template-rows: 8fr 2fr;
   color: #fff;
-
+  display: grid;
+  grid-template-columns: 8fr 2fr;
   .user_interface {
+    display: flex;
+    gap: 7px;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 30px;
     .user_name {
       color: #fff;
-      font-weight: 500;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
+      padding-bottom: 7px;
+      border-bottom: 1px solid #fff;
+      gap: 0.7vw;
+      em {
+        cursor: pointer;
+      }
+      img {
+        height: 20px;
+      }
     }
     .user_menu {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5vw;
+      gap: 0.7vw;
+      align-self: flex-end;
       .user_menu_li {
         display: flex;
         align-items: center;
         cursor: pointer;
-        font-size: 0.8vw;
+        font-size: 15px;
+        &:hover {
+        }
       }
     }
   }
-
   .logout_btn {
-    background-color: #000;
+    /* background-color: #770e12; */
     cursor: pointer;
-    /* height: 50px; */
     display: flex;
     align-items: center;
     justify-content: center;

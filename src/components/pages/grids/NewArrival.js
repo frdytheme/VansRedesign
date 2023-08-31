@@ -72,7 +72,7 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
 
 const NewArrivalStyle = styled.div`
   grid-column: span 3;
-  grid-row: span 2;
+  grid-row: span 1;
   .swiper,
   .swiper-container {
     height: 100%;

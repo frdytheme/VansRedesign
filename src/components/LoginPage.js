@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
 
-function LoginPage({ userData, setUserData, userId }) {
+function LoginPage({ userData, setUserData }) {
   const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
   const userAutoLogin = JSON.parse(localStorage.getItem("userAutoLogin"));
 

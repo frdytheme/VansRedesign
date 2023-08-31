@@ -51,7 +51,7 @@ function MainBanner({ setListName}) {
 const BannerStyle = styled.div`
   width: 100%;
   grid-column: span 3;
-  grid-row: span 2;
+  grid-row: span 3;
   overflow: hidden;
   display: flex;
   cursor: pointer;
