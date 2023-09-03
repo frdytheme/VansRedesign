@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navigation from "./Navigation";
 import MainPage from "./MainPage";
@@ -8,6 +8,8 @@ import Footer from "./Footer";
 import ProductDetail from "./pages/ProductDetail";
 import LoginPage from "./LoginPage";
 import JoinPage from "./JoinPage";
+import Cookies from "js-cookie";
+import CartPage from "./CartPage";
 
 function Home() {
   const [listName, setListName] = useState([]);
@@ -20,6 +22,16 @@ function Home() {
     name: userId ? JSON.parse(userId) : "",
     password: "",
   });
+
+  useEffect(() => {
+    const closeBox = (e) => {
+      if (e.key === "Escape") {
+        setDetailBtn(false);
+        window.removeEventListener("keydown", closeBox);
+      }
+    };
+    if (detailBtn) window.addEventListener("keydown", closeBox);
+  }, [detailBtn]);
 
   return (
     <HomeSection>
@@ -61,6 +73,7 @@ function Home() {
           element={<LoginPage userData={userData} setUserData={setUserData} />}
         />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
       {detailBtn && (
         <div

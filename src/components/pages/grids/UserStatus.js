@@ -44,10 +44,6 @@ function UserStatus({ userData }) {
             <span className="material-symbols-outlined">person</span>
             마이페이지
           </li>
-          <li className="user_menu_li user_cart">
-            <span className="material-symbols-outlined">shopping_bag</span>
-            장바구니
-          </li>
           <li className="user_menu_li order_list">
             <span className="material-symbols-outlined">list_alt</span>주문 내역
           </li>
@@ -103,12 +99,15 @@ const UserStatusStyle = styled.div`
     }
   }
   .logout_btn {
-    /* background-color: #770e12; */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
+    transition: 0.5s;
+    &:hover {
+      color: var(--color-pink);
+    }
   }
 `;
 

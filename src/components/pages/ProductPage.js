@@ -2,7 +2,14 @@ import React from "react";
 import ProductList from "./ProductList";
 import styled, { keyframes } from "styled-components";
 
-function ProductPage({ listName, setListName, searchName, submitBtn, setProductInfo, setDetailBtn }) {
+function ProductPage({
+  listName,
+  setListName,
+  searchName,
+  submitBtn,
+  setProductInfo,
+  setDetailBtn,
+}) {
   return (
     <ProductPageStyle>
       <ProductList

@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 
 import { Navigation } from "swiper";
 import api from "../../../assets/api/api";
+import updateRecently from "../../../assets/module/updateRecently";
 
 function NewArrival({ setProductInfo, setDetailBtn }) {
   const [newItems, setNewItems] = useState([]);
@@ -29,6 +30,7 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
   const selectProduct = (item) => {
     setDetailBtn(true);
     setProductInfo(item);
+    updateRecently(item);
   };
 
   return (
@@ -39,19 +41,29 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
         spaceBetween={15}
         navigation={true}
         modules={[Navigation]}
-        className="mySwiper">
+        className="mySwiper"
+      >
         {newItems.map((item, idx) => {
           return (
             <SwiperSlide key={idx}>
-              <figure className="product_box" onClick={() => selectProduct(item)}>
+              <figure
+                className="product_box"
+                onClick={() => selectProduct(item)}
+              >
                 <div className="img_wrapper">
                   <img
-                    src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                    src={
+                      PUBLIC +
+                      `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`
+                    }
                     alt="제품 대표 사진"
                     className="product_img"
                   />
                   <img
-                    src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
+                    src={
+                      PUBLIC +
+                      `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`
+                    }
                     alt="제품 대표 사진"
                     className="product_img hover"
                   />
@@ -59,7 +71,9 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
                 <figcaption className="product_caption">
                   <em className="new_arrival">NEW</em>
                   <p className="product_name">{item.name}</p>
-                  <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
+                  <p className="product_price">
+                    {Number(item.price).toLocaleString("ko-KR") + "원"}
+                  </p>
                 </figcaption>
               </figure>
             </SwiperSlide>

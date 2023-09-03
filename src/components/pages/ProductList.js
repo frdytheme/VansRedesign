@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import ProductBox from "./ProductBox";
-import api from "../../assets/api/api";
+import authApi from "../../assets/api/authApi";
+import updateRecently from "../../assets/module/updateRecently";
 
 function ProductList({
   listName,
@@ -33,7 +34,7 @@ function ProductList({
 
   const getProduct = async () => {
     try {
-      const response = await api.get(
+      const response = await authApi.get(
         `/product?page=1&mainCategory=${encodeListName}&name=${searchName}`
       );
       const { products, totalPages } = response.data;
@@ -106,7 +107,7 @@ function ProductList({
     )}&mainCategory=${encodeListName}&name=${searchName}`;
     const fetchFilteredProduct = async () => {
       try {
-        const response = await api.get(filteredUrl.current);
+        const response = await authApi.get(filteredUrl.current);
         const { products, totalPages } = response.data;
         setFilteredProduct(products);
         setLastPage(totalPages);
@@ -133,7 +134,7 @@ function ProductList({
     const truncScrollTop = Math.trunc(scrollTop);
     const addProduct = async () => {
       try {
-        const response = await api.get(
+        const response = await authApi.get(
           `/product?page=${nowPage.current}&mainCategory=${encodeListName}&name=${searchName}`
         );
         const { products } = await response.data;
@@ -145,7 +146,7 @@ function ProductList({
     };
     const addFilteredProduct = async () => {
       try {
-        const response = await api.get(
+        const response = await authApi.get(
           `/product?${search.current.join("&")}&page=${
             nowPage.current
           }&mainCategory=${encodeListName}&name=${searchName}`
@@ -171,6 +172,7 @@ function ProductList({
   const selectProduct = (item) => {
     setProductInfo(item);
     setDetailBtn(true);
+    updateRecently(item);
   };
 
   return (

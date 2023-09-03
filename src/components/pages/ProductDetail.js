@@ -58,10 +58,14 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
     setSelectedSize(item);
   };
 
+
   return (
     <ProductDetailStyle className="product_info_container">
       <div className="console_box">
-        <span className="material-symbols-outlined close_btn" onClick={() => setDetailBtn(false)}>
+        <span
+          className="material-symbols-outlined close_btn"
+          onClick={() => setDetailBtn(false)}
+        >
           close
         </span>
       </div>
@@ -79,7 +83,11 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
           <div className="img_wrapper loading_status"></div>
         )}
         <ul className="product_info">
-          {mainCategory.includes("NEW") && <li className="product_info_li product_new_arrivals">NEW ARRIVALS</li>}
+          {mainCategory.includes("NEW") && (
+            <li className="product_info_li product_new_arrivals">
+              NEW ARRIVALS
+            </li>
+          )}
           <li className="product_info_li product_name">{name}</li>
           <li className="product_info_li product_color_model">
             {color} | {model}
@@ -87,7 +95,11 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
           <li className="product_info_li product_size">
             <ul className="size_list">
               {sizeArr.map((item) => (
-                <li key={item} className="size_item" onClick={(e) => selectSize(e, item)}>
+                <li
+                  key={item}
+                  className="size_item"
+                  onClick={(e) => selectSize(e, item)}
+                >
                   {item}
                 </li>
               ))}
@@ -110,8 +122,17 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
               ))}
             </ul>
           </li>
-          <li className="product_info_li product_price">{price && price.toLocaleString("ko-KR")}원</li>
-          <li className={`product_info_li product_btns ${selectedSize && "active"}`}>
+          <li className="product_DC">
+            상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
+          </li>
+          <li className="product_info_li product_price">
+            {price && price.toLocaleString("ko-KR")}원
+          </li>
+          <li
+            className={`product_info_li product_btns ${
+              selectedSize && "active"
+            }`}
+          >
             <button>구매</button>
             <button>장바구니</button>
           </li>
@@ -220,6 +241,11 @@ const ProductDetailStyle = styled.div`
             }
           }
         }
+      }
+      .product_DC {
+        margin-top: 15px;
+        font-size: 0.9vw;
+        line-height: 1.4;
       }
       .same_product_list {
         display: flex;
