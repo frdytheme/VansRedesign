@@ -8,7 +8,6 @@ import Footer from "./Footer";
 import ProductDetail from "./pages/ProductDetail";
 import LoginPage from "./LoginPage";
 import JoinPage from "./JoinPage";
-import Cookies from "js-cookie";
 import CartPage from "./CartPage";
 
 function Home() {
@@ -32,6 +31,8 @@ function Home() {
     };
     if (detailBtn) window.addEventListener("keydown", closeBox);
   }, [detailBtn]);
+
+
 
   return (
     <HomeSection>

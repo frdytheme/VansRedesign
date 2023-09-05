@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ImageSlide from "./ImageSlide";
 import api from "../../assets/api/api";
+import Pfuntion from "../../assets/module/Pfunction";
+import Pfunction from "../../assets/module/Pfunction";
 
 function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const PUBLIC = process.env.PUBLIC_URL;
@@ -58,6 +60,10 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
     setSelectedSize(item);
   };
 
+  const handleCart = () => {
+    Pfunction.addCart(productInfo, selectedSize);
+    setDetailBtn(false);
+  };
 
   return (
     <ProductDetailStyle className="product_info_container">
@@ -134,7 +140,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
             }`}
           >
             <button>구매</button>
-            <button>장바구니</button>
+            <button onClick={handleCart}>장바구니</button>
           </li>
         </ul>
       </div>

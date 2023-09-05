@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import EventSwiper from "./pages/grids/EventSwiper";
 import MainBanner from "./pages/grids/MainBanner";
@@ -9,7 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 function MainPage({ setListName, setProductInfo, setDetailBtn, userData }) {
   const loginState = sessionStorage.getItem("loginState");
+  const cart = JSON.parse(sessionStorage.getItem("CART"));
   const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(cart ? cart.total : 0);
+
+  useEffect(() => {
+    if (cart) setCartCount(cart.total);
+  }, [cart]);
 
   return (
     <MainGrid>
@@ -22,7 +28,7 @@ function MainPage({ setListName, setProductInfo, setDetailBtn, userData }) {
 
       <div className="cart_grid" onClick={() => navigate("./cart")}>
         <span className="material-symbols-outlined">shopping_bag</span>CART
-        <em>( {0} )</em>
+        <em>( {cartCount} )</em>
       </div>
       <EventSwiper />
       <NewArrival setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
@@ -51,7 +57,7 @@ const MainGrid = styled.main`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2vw;
+    font-size: 1.2vw;
     cursor: pointer;
     background: url("./images/event/cart_bg.jpg") no-repeat center / cover;
     background-size: 100%;
@@ -61,11 +67,11 @@ const MainGrid = styled.main`
       background-size: 130%;
     }
     span {
-      font-size: 2.5vw;
+      font-size: 2vw;
     }
     em {
-      font-size: 1.5vw;
-      margin-left: 1vw;
+      font-size: 1vw;
+      margin-left: 0.7vw;
     }
   }
 `;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import ProductBox from "./ProductBox";
 import authApi from "../../assets/api/authApi";
-import updateRecently from "../../assets/module/updateRecently";
+import Pfunction from "../../assets/module/Pfunction";
 
 function ProductList({
   listName,
@@ -172,7 +172,7 @@ function ProductList({
   const selectProduct = (item) => {
     setProductInfo(item);
     setDetailBtn(true);
-    updateRecently(item);
+    Pfunction.updateRecently(item);
   };
 
   return (

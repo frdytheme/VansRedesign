@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 
 import { Navigation } from "swiper";
 import api from "../../../assets/api/api";
-import updateRecently from "../../../assets/module/updateRecently";
+import Pfunction from "../../../assets/module/Pfunction";
 
 function NewArrival({ setProductInfo, setDetailBtn }) {
   const [newItems, setNewItems] = useState([]);
@@ -30,7 +30,7 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
   const selectProduct = (item) => {
     setDetailBtn(true);
     setProductInfo(item);
-    updateRecently(item);
+    Pfunction.updateRecently(item);
   };
 
   return (
