@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import authApi from "../assets/api/authApi";
 
 function CartPage() {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
-  const { data, total } = cart;
+  const { data, total } = cart ? cart : {};
   const [cartList, setCartList] = useState([]);
 
-  useEffect(() => {
+  const parsingCart = () => {
     const products = [];
     for (const model in data) {
       products.push({ model });
@@ -18,6 +19,37 @@ function CartPage() {
     });
 
     setCartList(list);
+  };
+
+  const countUp = async (product, size) => {
+    const { model } = product;
+    try {
+      const response = await authApi.get(`/product?model=${model}`);
+      const productDB = response.data.products[0];
+      const value = productDB.size[size];
+      const qty = product.sizes[size];
+      if (value > qty) {
+        data[model].sizes[size]++;
+        cart.data = data;
+        sessionStorage.setItem("CART", JSON.stringify(cart));
+        parsingCart();
+      } else {
+        alert("현재 주문 가능한 최대 수량입니다.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const countDown = (product, size) => {
+    const { model } = product;
+    data[model].sizes[size]--;
+    cart.data = data;
+    sessionStorage.setItem("CART", JSON.stringify(cart));
+    parsingCart();
+  };
+
+  useEffect(() => {
+    parsingCart();
   }, []);
 
   return (
@@ -31,28 +63,72 @@ function CartPage() {
           <li className="process_li third">3. COMPLETE</li>
         </ul>
         <div className="cart_container">
-          <ul className="cart_list">
-            {cartList.map((product, idx) => {
-              const { model, price, sizes, name } = product;
-              return (
-                <li key={idx} className="cart_item">
-                  <img
-                    src={`${process.env.PUBLIC_URL}/images/product/${model}/${model}_${model}_primary.jpg`}
-                    alt={`${model}이미지`}
-                    className="product_img"
-                  />
-                  <div className="product_info">
-                    <p className="product_name">{name}</p>
-                    <ul className="product_sizes">
-                      {Object.keys(sizes).map((size, idx) => (
-                        <li key={idx}>{size}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          {cart ? (
+            <ul className="cart_list">
+              {cartList.map((product, idx) => {
+                const { model, price, sizes, name } = product;
+                return Object.keys(sizes).map((size) => {
+                  return (
+                    <li key={model + size + idx} className="cart_item">
+                      <input
+                        type="checkbox"
+                        name="product_check"
+                        id="product_check"
+                      />
+                      <img
+                        src={`${process.env.PUBLIC_URL}/images/product/${model}/${model}_${model}_primary.jpg`}
+                        alt={`${model}이미지`}
+                        className="product_img"
+                      />
+                      <div className="product_info">
+                        <div className="infomation_box">
+                          <p className="product_name">{name}</p>
+                          <p className="product_size">Size : {size}</p>
+                          <div className="qty_box">
+                            <p className="qty">수량</p>
+                            {sizes[size] === 1 ? (
+                              <span className="qty_btn down disabled">-</span>
+                            ) : (
+                              <span
+                                className="qty_btn down"
+                                onClick={() => countDown(product, size)}
+                              >
+                                -
+                              </span>
+                            )}
+                            <input
+                              type="text"
+                              value={sizes[size]}
+                              onChange={() => console.log("값 변경")}
+                            />
+                            <span
+                              className="qty_btn up"
+                              onClick={() => countUp(product, size)}
+                            >
+                              +
+                            </span>
+                          </div>
+                        </div>
+                        <div className="option_box">
+                          <span className="material-symbols-outlined delete_btn">
+                            close
+                          </span>
+                          <p className="option_change">옵션변경</p>
+                          <p className="product_price">
+                            {price.toLocaleString("ko-KR")}원
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                });
+              })}
+            </ul>
+          ) : (
+            <ul className="cart_list">
+              <li>상품이 없습니다.</li>
+            </ul>
+          )}
         </div>
         <div className="order_box">
           <div className="order_title">
@@ -121,9 +197,83 @@ const CartPageStyle = styled.div`
         border-bottom: 1px solid #000;
         box-sizing: border-box;
         .cart_item {
+          width: 100%;
           display: flex;
+          gap: 1vw;
+          padding: 1vw 0;
+          border-bottom: 1px dotted #000;
           .product_img {
             width: 10%;
+            border-radius: 15px;
+          }
+          .product_info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .infomation_box {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              .product_name {
+                font-size: 1vw;
+              }
+              .product_size {
+                display: flex;
+                align-items: center;
+                gap: 0.4vw;
+                font-size: 0.7vw;
+              }
+              .qty_box {
+                display: flex;
+                align-items: center;
+                gap: 0.5vw;
+                input {
+                  width: 1vw;
+                  font-size: 0.8vw;
+                  text-align: center;
+                }
+                .qty_btn {
+                  font-size: 1.3vw;
+                  cursor: pointer;
+                  user-select: none;
+                  &:hover {
+                    color: var(--color-red);
+                  }
+                  &.disabled {
+                    color: #a1a1a1;
+                    cursor: default;
+                  }
+                }
+              }
+            }
+            .option_box {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              justify-content: space-between;
+              .product_price {
+                font-size: 1vw;
+                font-weight: 500;
+              }
+              .option_change {
+                color: #a9a9a9;
+                font-size: 0.8vw;
+                cursor: pointer;
+                &:hover {
+                  color: #000;
+                }
+              }
+              .delete_btn {
+                top: 5px;
+                right: 0;
+                font-size: 1.6vw;
+                font-weight: bold;
+                cursor: pointer;
+                &:hover {
+                  color: var(--color-red);
+                }
+              }
+            }
           }
         }
       }

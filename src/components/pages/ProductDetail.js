@@ -5,6 +5,7 @@ import ImageSlide from "./ImageSlide";
 import api from "../../assets/api/api";
 import Pfuntion from "../../assets/module/Pfunction";
 import Pfunction from "../../assets/module/Pfunction";
+import authApi from "../../assets/api/authApi";
 
 function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const PUBLIC = process.env.PUBLIC_URL;
@@ -16,6 +17,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const [sameProduct, setSameProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productName, setProductName] = useState(name);
+  const [qty, setQty] = useState(1);
 
   const fetchSameProduct = async () => {
     try {
@@ -65,6 +67,21 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
     setDetailBtn(false);
   };
 
+  const handleQty = async () => {
+    try {
+      const response = await authApi.get(`/product?model=${model}`);
+      const product = response.data.products[0];
+      const sizeQty = product.size[selectedSize];
+      if (qty < sizeQty) {
+        setQty((prev) => prev + 1);
+      } else {
+        alert("주문 가능한 최대 수량입니다.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <ProductDetailStyle className="product_info_container">
       <div className="console_box">
@@ -104,7 +121,10 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
                 <li
                   key={item}
                   className="size_item"
-                  onClick={(e) => selectSize(e, item)}
+                  onClick={(e) => {
+                    selectSize(e, item);
+                    setQty(1);
+                  }}
                 >
                   {item}
                 </li>
@@ -128,8 +148,20 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
               ))}
             </ul>
           </li>
-          <li className="product_DC">
+          <li className="product_info_li product_DC">
             상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
+          </li>
+          <li className="product_info_li product_qty">
+            <div className="select_qty">
+              수량 선택
+              <div className="btn_box">
+                <span className="material-symbols-outlined">remove</span>
+                <p>{qty}</p>
+                <span className="material-symbols-outlined" onClick={handleQty}>
+                  add
+                </span>
+              </div>
+            </div>
           </li>
           <li className="product_info_li product_price">
             {price && price.toLocaleString("ko-KR")}원
@@ -214,6 +246,39 @@ const ProductDetailStyle = styled.div`
       .product_color_model {
         color: #888;
         user-select: none;
+      }
+      .product_qty {
+        font-size: 1.2vw;
+        display: flex;
+        justify-content: flex-end;
+        .select_qty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1vw;
+          .btn_box {
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+            font-size: 2.5vw;
+            p {
+              width: 3vw;
+              height: 3vw;
+              text-align: center;
+              line-height: 3vw;
+              border: 1px solid #000;
+            }
+            span {
+              font-weight: bold;
+              font-size: 3vw;
+              cursor: pointer;
+              user-select: none;
+              &:hover {
+                color: var(--color-red);
+              }
+            }
+          }
+        }
       }
       .product_price {
         position: absolute;
