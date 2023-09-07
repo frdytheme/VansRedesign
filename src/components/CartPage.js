@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 
@@ -6,6 +7,10 @@ function CartPage() {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
   const { data, total } = cart ? cart : {};
   const [cartList, setCartList] = useState([]);
+  const [orderList, setOrderList] = useState([]);
+  const [orderPrice, setOrderPrice] = useState(0);
+  const delivery = orderList.length ? 3000 : 0;
+  const navigate = useNavigate();
 
   const parsingCart = () => {
     const products = [];
@@ -17,7 +22,6 @@ function CartPage() {
       const { sizes, price, name } = data[model];
       return { model, sizes, price, name };
     });
-
     setCartList(list);
   };
 
@@ -27,9 +31,9 @@ function CartPage() {
       const response = await authApi.get(`/product?model=${model}`);
       const productDB = response.data.products[0];
       const value = productDB.size[size];
-      const qty = product.sizes[size];
+      const qty = product.sizes[size].qty;
       if (value > qty) {
-        data[model].sizes[size]++;
+        data[model].sizes[size].qty++;
         cart.data = data;
         sessionStorage.setItem("CART", JSON.stringify(cart));
         parsingCart();
@@ -42,15 +46,67 @@ function CartPage() {
   };
   const countDown = (product, size) => {
     const { model } = product;
-    data[model].sizes[size]--;
+    data[model].sizes[size].qty--;
     cart.data = data;
     sessionStorage.setItem("CART", JSON.stringify(cart));
+    parsingCart();
+  };
+
+  const removeItem = (product, size) => {
+    const { model } = product;
+    const newSizeObj = {};
+    const nowObj = product.sizes;
+    for (const key in nowObj) {
+      if (key !== size) {
+        newSizeObj[key] = nowObj[key];
+      }
+    }
+    data[model].sizes = newSizeObj;
+    const empty = Object.keys(data[model].sizes).length;
+    if (!empty) {
+      delete data[model];
+    }
+    const totalCount = Object.values(data)
+      .map((obj) => Object.keys(obj.sizes).length)
+      .reduce((acc, cur) => acc + cur, 0);
+    cart.total = totalCount;
+    if (totalCount) {
+      sessionStorage.setItem("CART", JSON.stringify(cart));
+    } else {
+      sessionStorage.removeItem("CART");
+    }
+    parsingCart();
+  };
+
+  const clearCart = () => {
+    sessionStorage.removeItem("CART");
     parsingCart();
   };
 
   useEffect(() => {
     parsingCart();
   }, []);
+
+  const handleCheck = (model, size) => {
+    data[model].sizes[size].chk = !data[model].sizes[size].chk;
+    sessionStorage.setItem("CART", JSON.stringify(cart));
+    parsingCart();
+  };
+
+  useEffect(() => {
+    const order = [];
+    cartList.map((item) => {
+      const keys = Object.keys(item.sizes);
+      Object.values(item.sizes).map((size, idx) => {
+        const { price, model, name } = item;
+        if (size.chk)
+          order.push({ model, name, price, size: keys[idx], qty: size.qty });
+      });
+    });
+    const price = order.reduce((acc, cur) => acc + cur.price * cur.qty, 0);
+    setOrderList(order);
+    setOrderPrice(price);
+  }, [cartList]);
 
   return (
     <CartPageStyle>
@@ -74,6 +130,8 @@ function CartPage() {
                         type="checkbox"
                         name="product_check"
                         id="product_check"
+                        checked={sizes[size].chk}
+                        onChange={() => handleCheck(model, size)}
                       />
                       <img
                         src={`${process.env.PUBLIC_URL}/images/product/${model}/${model}_${model}_primary.jpg`}
@@ -86,7 +144,7 @@ function CartPage() {
                           <p className="product_size">Size : {size}</p>
                           <div className="qty_box">
                             <p className="qty">수량</p>
-                            {sizes[size] === 1 ? (
+                            {sizes[size].qty === 1 ? (
                               <span className="qty_btn down disabled">-</span>
                             ) : (
                               <span
@@ -98,8 +156,8 @@ function CartPage() {
                             )}
                             <input
                               type="text"
-                              value={sizes[size]}
-                              onChange={() => console.log("값 변경")}
+                              value={sizes[size].qty}
+                              onChange={() => console.log("수량 변경중")}
                             />
                             <span
                               className="qty_btn up"
@@ -110,10 +168,12 @@ function CartPage() {
                           </div>
                         </div>
                         <div className="option_box">
-                          <span className="material-symbols-outlined delete_btn">
+                          <span
+                            className="material-symbols-outlined delete_btn"
+                            onClick={() => removeItem(product, size)}
+                          >
                             close
                           </span>
-                          <p className="option_change">옵션변경</p>
                           <p className="product_price">
                             {price.toLocaleString("ko-KR")}원
                           </p>
@@ -125,10 +185,21 @@ function CartPage() {
               })}
             </ul>
           ) : (
-            <ul className="cart_list">
-              <li>상품이 없습니다.</li>
+            <ul className="cart_list empty_list">
+              <li>장바구니에 담긴 상품이 없습니다.</li>
+              <li
+                className="show_product_btn"
+                onClick={() => navigate("/home/product")}
+              >
+                쇼핑하러가기
+              </li>
             </ul>
           )}
+        </div>
+        <div className="total_count">
+          <p>
+            총 {total}개 / {orderList.length}개 선택
+          </p>
         </div>
         <div className="order_box">
           <div className="order_title">
@@ -137,21 +208,27 @@ function CartPage() {
           <ul className="price_box">
             <li className="price_list">
               <p className="price_info">상품 금액</p>
-              <p className="is_price">{0}원</p>
+              <p className="is_price">{orderPrice.toLocaleString("ko-KR")}원</p>
             </li>
             <li className="price_list">
               <p className="price_info">배송비</p>
-              <p className="is_price">{0}원</p>
+              <p className="is_price">{delivery.toLocaleString("ko-KR")}원</p>
             </li>
             <li className="price_list">
               <p className="price_info">주문 금액</p>
-              <p className="is_price">{0}원</p>
+              <p className="is_price">
+                {(orderPrice + delivery).toLocaleString("ko-KR")}원
+              </p>
             </li>
           </ul>
           <div className="btn_container">
             <div className="return btn">돌아가기</div>
             <div className="order btn">결제하기</div>
           </div>
+        </div>
+        <div className="list_option">
+          <p>전체선택</p>
+          <p onClick={clearCart}>전체삭제</p>
         </div>
       </div>
     </CartPageStyle>
@@ -170,7 +247,7 @@ const CartPageStyle = styled.div`
     display: grid;
     grid-template-columns: 7fr 3fr;
     grid-auto-rows: 1fr 9fr;
-    gap: 1vw;
+    position: relative;
     .cart_process {
       display: flex;
       align-items: center;
@@ -178,7 +255,6 @@ const CartPageStyle = styled.div`
       font-size: 1vw;
       color: #999;
       font-weight: 500;
-      grid-column: span 2;
       .process_li {
         &.active {
           color: #000;
@@ -189,19 +265,49 @@ const CartPageStyle = styled.div`
       }
     }
     .cart_container {
-      margin-right: 2vw;
+      margin-right: 1vw;
+      overflow: auto;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      grid-row: 2 / 4;
+      &::-webkit-scrollbar {
+        width: 0;
+      }
       .cart_list {
         width: 100%;
-        height: 100%;
-        border-top: 1px solid #000;
-        border-bottom: 1px solid #000;
         box-sizing: border-box;
+        &.empty_list {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.5vw;
+          font-size: 1vw;
+          font-weight: 500;
+          padding-top: 5vw;
+          .show_product_btn {
+            text-align: center;
+            width: 10vw;
+            height: 3vw;
+            line-height: 3vw;
+            color: #fff;
+            border-radius: 15px;
+            background-color: var(--color-red);
+            cursor: pointer;
+            &:hover {
+              color: #000;
+            }
+          }
+        }
         .cart_item {
           width: 100%;
           display: flex;
           gap: 1vw;
           padding: 1vw 0;
           border-bottom: 1px dotted #000;
+          box-sizing: border-box;
+          &:last-child {
+            border: none;
+          }
           .product_img {
             width: 10%;
             border-radius: 15px;
@@ -278,12 +384,26 @@ const CartPageStyle = styled.div`
         }
       }
     }
+
+    .total_count {
+      margin-top: 0.5vw;
+      background-color: #222;
+      padding: 0 1vw;
+      color: #fff;
+      font-size: 1vw;
+      display: flex;
+      align-items: center;
+      grid-row: 1 / 2;
+      grid-column: 2/ 3;
+    }
     .order_box {
       display: grid;
       grid-auto-columns: 1fr;
       grid-template-rows: 1fr 8fr 1fr;
       border: 1px solid #000;
       gap: 1vw;
+      grid-column: 2 / 3;
+      grid-row: 2 / 4;
       .order_title {
         height: 60px;
         line-height: 60px;
@@ -331,6 +451,22 @@ const CartPageStyle = styled.div`
             box-sizing: border-box;
           }
         }
+      }
+    }
+  }
+  .list_option {
+    position: absolute;
+    left: 0;
+    top: 102%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 69%;
+    color: #777;
+    p {
+      cursor: pointer;
+      &:hover {
+        color: #000;
       }
     }
   }

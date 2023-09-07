@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ImageSlide from "./ImageSlide";
 import api from "../../assets/api/api";
-import Pfuntion from "../../assets/module/Pfunction";
 import Pfunction from "../../assets/module/Pfunction";
-import authApi from "../../assets/api/authApi";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
 
 function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const PUBLIC = process.env.PUBLIC_URL;
@@ -18,6 +19,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const [loading, setLoading] = useState(false);
   const [productName, setProductName] = useState(name);
   const [qty, setQty] = useState(1);
+  const [maxQty, setMaxQty] = useState(0);
 
   const fetchSameProduct = async () => {
     try {
@@ -62,23 +64,32 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
     setSelectedSize(item);
   };
 
+  useEffect(() => {
+    const maximum = productInfo.size[selectedSize];
+    setMaxQty(maximum);
+  }, [selectedSize]);
+
   const handleCart = () => {
-    Pfunction.addCart(productInfo, selectedSize);
+    Pfunction.addCart(productInfo, selectedSize, qty);
     setDetailBtn(false);
   };
 
-  const handleQty = async () => {
-    try {
-      const response = await authApi.get(`/product?model=${model}`);
-      const product = response.data.products[0];
-      const sizeQty = product.size[selectedSize];
-      if (qty < sizeQty) {
-        setQty((prev) => prev + 1);
+  const handleQty = (e) => {
+    if (e.target.textContent === "remove") {
+      if (qty > 1) {
+        return setQty(qty - 1);
       } else {
-        alert("주문 가능한 최대 수량입니다.");
+        return;
       }
-    } catch (err) {
-      console.error(err);
+    }
+    if (qty < maxQty) {
+      setQty(qty + 1);
+    } else if (!selectedSize) {
+      alert("사이즈를 선택해주세요.");
+    } else if (maxQty === 0) {
+      alert("품절된 상품입니다.");
+    } else {
+      alert("주문 가능한 최대 수량입니다.");
     }
   };
 
@@ -131,48 +142,63 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
               ))}
             </ul>
           </li>
-          <li>
-            <ul className="same_product_list">
-              {sameProduct.map((item) => (
-                <li key={item.id}>
-                  <img
-                    src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                    alt={`${item.name} 제품 이미지`}
-                    className="same_product"
-                    onClick={() => {
-                      setLoading(false);
-                      setProductInfo(item);
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </li>
-          <li className="product_info_li product_DC">
-            상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
-          </li>
-          <li className="product_info_li product_qty">
-            <div className="select_qty">
-              수량 선택
-              <div className="btn_box">
-                <span className="material-symbols-outlined">remove</span>
-                <p>{qty}</p>
-                <span className="material-symbols-outlined" onClick={handleQty}>
-                  add
-                </span>
+          <li className="product_info_li option_box">
+            <div className="txt_box">
+              <Swiper
+                className="mySwiper same_product_list"
+                slidesPerView={6}
+                spaceBetween={50}
+              >
+                {sameProduct.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <img
+                      src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                      alt={`${item.name} 제품 이미지`}
+                      className="same_product"
+                      onClick={() => {
+                        setLoading(false);
+                        setProductInfo(item);
+                      }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <div className="product_info_li product_DC">
+                상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
               </div>
             </div>
-          </li>
-          <li className="product_info_li product_price">
-            {price && price.toLocaleString("ko-KR")}원
-          </li>
-          <li
-            className={`product_info_li product_btns ${
-              selectedSize && "active"
-            }`}
-          >
-            <button>구매</button>
-            <button onClick={handleCart}>장바구니</button>
+            <div className="option_wrapper">
+              <div className="product_info_li product_qty">
+                <div className="select_qty">
+                  <div className="btn_box">
+                    <span
+                      className="material-symbols-outlined"
+                      onClick={handleQty}
+                    >
+                      remove
+                    </span>
+                    <p>{qty}</p>
+                    <span
+                      className="material-symbols-outlined"
+                      onClick={handleQty}
+                    >
+                      add
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="product_price">
+                {price && price.toLocaleString("ko-KR")}원
+              </div>
+              <div
+                className={`product_info_li product_btns ${
+                  selectedSize && "active"
+                }`}
+              >
+                <button>구매</button>
+                <button onClick={handleCart}>장바구니</button>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -220,7 +246,7 @@ const ProductDetailStyle = styled.div`
   .info_box {
     display: grid;
     grid-template-columns: 2fr 8fr;
-    grid-auto-rows: 35vw;
+    grid-auto-rows: 1fr;
     padding: 3vw;
     .img_wrapper {
       width: 25vw;
@@ -247,48 +273,7 @@ const ProductDetailStyle = styled.div`
         color: #888;
         user-select: none;
       }
-      .product_qty {
-        font-size: 1.2vw;
-        display: flex;
-        justify-content: flex-end;
-        .select_qty {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1vw;
-          .btn_box {
-            display: flex;
-            align-items: center;
-            gap: 1vw;
-            font-size: 2.5vw;
-            p {
-              width: 3vw;
-              height: 3vw;
-              text-align: center;
-              line-height: 3vw;
-              border: 1px solid #000;
-            }
-            span {
-              font-weight: bold;
-              font-size: 3vw;
-              cursor: pointer;
-              user-select: none;
-              &:hover {
-                color: var(--color-red);
-              }
-            }
-          }
-        }
-      }
-      .product_price {
-        position: absolute;
-        left: 67.3vw;
-        bottom: 6vw;
-        font-size: 2vw;
-        font-weight: 500;
-      }
       .product_size {
-        margin-top: 3vw;
         .size_list {
           display: flex;
           flex-wrap: wrap;
@@ -313,47 +298,89 @@ const ProductDetailStyle = styled.div`
           }
         }
       }
-      .product_DC {
-        margin-top: 15px;
-        font-size: 0.9vw;
-        line-height: 1.4;
-      }
-      .same_product_list {
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        gap: 0.5vw;
-        li {
-          width: 6vw;
-          .same_product {
-            width: 100%;
-            cursor: pointer;
-            &:hover {
-              filter: brightness(0.7);
+      .option_box {
+        display: grid;
+        grid-template-columns: 6fr 4fr;
+        grid-auto-rows: 1fr;
+        font-size: 2vw;
+        font-weight: 500;
+        .txt_box {
+          width: 100%;
+          .same_product_list {
+            width: 36vw;
+            .same_product {
+              width: 6vw;
+              cursor: pointer;
+              &:hover {
+                filter: brightness(0.7);
+              }
             }
           }
+          .product_DC {
+            margin-top: 15px;
+            font-size: 0.9vw;
+            line-height: 1.4;
+          }
         }
-      }
-      .product_btns {
-        position: absolute;
-        bottom: 3vw;
-        right: 4vw;
-        margin: 0;
-        button {
-          background-color: #d9d9d9;
-          color: #999;
-          width: 9vw;
-          height: 3vw;
-          border: none;
-          margin-left: 0.5vw;
-          user-select: none;
-          font-size: 1.2vw;
-        }
-        &.active {
-          button {
-            background-color: var(--color-red);
-            color: #fff;
-            cursor: pointer;
+
+        .option_wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 1vw;
+          align-items: end;
+          margin-top: 5vw;
+          .product_qty {
+            .select_qty {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              .btn_box {
+                display: flex;
+                align-items: center;
+                gap: 1vw;
+                font-size: 1.5vw;
+                p {
+                  width: 3vw;
+                  height: 3vw;
+                  text-align: center;
+                  line-height: 3vw;
+                  border: 1px solid #000;
+                }
+                span {
+                  font-weight: bold;
+                  font-size: 2vw;
+                  cursor: pointer;
+                  user-select: none;
+                  &:hover {
+                    color: var(--color-red);
+                  }
+                }
+              }
+              .max_qty {
+                font-size: 0.8vw;
+                color: #999;
+              }
+            }
+          }
+          .product_btns {
+            display: flex;
+            button {
+              background-color: #d9d9d9;
+              color: #999;
+              width: 9vw;
+              height: 3vw;
+              border: none;
+              margin-left: 0.5vw;
+              user-select: none;
+              font-size: 1.2vw;
+            }
+            &.active {
+              button {
+                background-color: var(--color-red);
+                color: #fff;
+                cursor: pointer;
+              }
+            }
           }
         }
       }
