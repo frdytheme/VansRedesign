@@ -45,12 +45,17 @@ function Home() {
     if (detailBtn) window.addEventListener("keydown", closeBox);
   }, [detailBtn]);
 
+  const closeCartAlarm = () => {
+    setNavCart(false);
+    clearTimeout(timerId);
+  };
+
   const noShowAlarm = (e) => {
-    const confirm = window.confirm("장바구니 알림창을 숨기시겠습니까?");
+    const confirm = window.confirm("하루 동안 알림창을 끄시겠습니까?");
     if (confirm) {
       Cookies.set("show_cart_alarm", true, { expires: 1 });
     }
-    setNavCart(false);
+    closeCartAlarm();
   };
 
   return (
@@ -74,6 +79,7 @@ function Home() {
               setDetailBtn={setDetailBtn}
               userData={userData}
               cartCount={cartCount}
+              closeCartAlarm={closeCartAlarm}
             />
           }
         />
@@ -87,6 +93,7 @@ function Home() {
               submitBtn={submitBtn}
               setProductInfo={setProductInfo}
               setDetailBtn={setDetailBtn}
+              closeCartAlarm={closeCartAlarm}
             />
           }
         />
@@ -118,31 +125,33 @@ function Home() {
       )}
       {showAlarm || (
         <div className={`cart_modal_box${navCart ? " active" : ""}`}>
-          <div className={`timer_bar${navCart ? " active" : ""}`}></div>
           <p className="txt_box">방금 담으신 상품을 확인하러 가시겠습니까?</p>
-          <div className="btn_box">
-            <div
-              className="keep_btn btn"
-              onClick={() => {
-                setNavCart(false);
-                clearTimeout(timerId);
-              }}
-            >
-              쇼핑 계속하기
+          {navCart && (
+            <div className="btn_box">
+              <div
+                className={`move_btn${navCart ? " active" : ""}`}
+                onClick={() => {
+                  navigate("/home/cart");
+                  closeCartAlarm();
+                }}
+              >
+                <span className="material-symbols-outlined icon">
+                  shopping_cart
+                </span>
+              </div>
             </div>
-            <div
-              className="move_btn btn"
-              onClick={() => {
-                navigate("/home/cart");
-                setNavCart(false);
-              }}
-            >
-              장바구니 이동
+          )}
+          <div className="no_show">
+            <div className="off_option" onClick={() => closeCartAlarm()}>
+              <span className="material-symbols-outlined close_btn">close</span>
+              창 닫기
             </div>
-          </div>
-          <div className="no_show" onClick={noShowAlarm}>
-            오늘 하루 보지 않기
-            <span className="material-symbols-outlined close_btn">close</span>
+            <div className="off_option" onClick={noShowAlarm}>
+              오늘 알림
+              <span className="material-symbols-outlined close_btn">
+                notifications_off
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -150,6 +159,21 @@ function Home() {
     </HomeSection>
   );
 }
+
+const timer = keyframes`
+100% {
+  right: 0%;
+}
+`;
+
+const wiggle = keyframes`
+30% {
+  transform: translate(-10%, -55%) rotate(-15deg);
+}
+  60% {
+    transform: translate(-55%, -45%) rotate(15deg);
+  }
+`;
 
 const HomeSection = styled.div`
   width: 100%;
@@ -178,7 +202,7 @@ const HomeSection = styled.div`
     transform: translateX(-50%);
     z-index: 9999;
     text-align: center;
-    padding: 1vw 2vw;
+    padding: 1vw 0 0.3vw;
     display: flex;
     flex-direction: column;
     gap: 0.7vw;
@@ -189,47 +213,65 @@ const HomeSection = styled.div`
       top: 0;
     }
     .txt_box {
-      font-size: 1vw;
+      font-size: 0.8vw;
     }
     .btn_box {
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 1vw;
       font-size: 0.8vw;
-      .btn {
-        background-color: #000;
-        &.keep_btn {
-          background-color: #fff;
-          border: 1px solid #000;
-          color: #000;
-        }
+      .move_btn {
+        width: 50%;
+        height: 20px;
+        background-color: #4d3c77;
         color: #fff;
         padding: 0.8vw 1.7vw;
         border-radius: 15px;
         cursor: pointer;
-      }
-    }
-    .timer_bar {
-      width: 90%;
-      height: 0.1vw;
-      background-color: rgba(100, 100, 100);
-      &.active {
-        transition: 10s linear;
-        width: 0;
-        background-color: rgba(255, 100, 100);
+        position: relative;
+        overflow: hidden;
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 100%;
+          width: 100%;
+          background-color: #000;
+          height: 100%;
+          animation: ${timer} 10s linear;
+          animation-play-state: paused;
+        }
+        &.active {
+          &:after {
+            animation-play-state: running;
+          }
+        }
+        .icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(0);
+          z-index: 99;
+          animation: ${wiggle} 1s alternate infinite;
+        }
       }
     }
     .no_show {
+      width: 90%;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: space-between;
       font-size: 0.7vw;
-      cursor: pointer;
       color: #777;
       font-weight: 500;
-      &:hover {
-        color: var(--color-red);
+      .off_option {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          color: var(--color-red);
+        }
       }
     }
   }

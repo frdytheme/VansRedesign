@@ -9,6 +9,7 @@ function ProductPage({
   submitBtn,
   setProductInfo,
   setDetailBtn,
+  closeCartAlarm
 }) {
   return (
     <ProductPageStyle>
@@ -19,6 +20,7 @@ function ProductPage({
         submitBtn={submitBtn}
         setProductInfo={setProductInfo}
         setDetailBtn={setDetailBtn}
+        closeCartAlarm={closeCartAlarm}
       />
     </ProductPageStyle>
   );

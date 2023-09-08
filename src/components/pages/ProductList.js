@@ -12,6 +12,7 @@ function ProductList({
   submitBtn,
   setProductInfo,
   setDetailBtn,
+  closeCartAlarm,
 }) {
   const encodeListName = encodeURIComponent(listName);
   const [product, setProduct] = useState([]);
@@ -173,6 +174,7 @@ function ProductList({
     setProductInfo(item);
     setDetailBtn(true);
     Pfunction.updateRecently(item);
+    closeCartAlarm();
   };
 
   return (

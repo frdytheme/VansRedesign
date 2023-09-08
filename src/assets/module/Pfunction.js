@@ -24,6 +24,8 @@ export default {
         );
         if (confirm) {
           data[model].sizes[size] = { qty, chk: true };
+        } else {
+          return;
         }
       } else {
         data[model].sizes[size] = { qty, chk: true };
@@ -44,7 +46,6 @@ export default {
     sessionStorage.setItem("CART", JSON.stringify(list));
     setNavCart(true);
     const timer = setTimeout(() => {
-      // console.log("타이머 10초 종료, 실행")
       setNavCart(false);
     }, 10000);
     setTimerId(timer);

@@ -13,6 +13,7 @@ function MainPage({
   setDetailBtn,
   userData,
   cartCount,
+  closeCartAlarm,
 }) {
   const loginState = sessionStorage.getItem("loginState");
   const navigate = useNavigate();
@@ -31,7 +32,11 @@ function MainPage({
         <em>( {cartCount} )</em>
       </div>
       <EventSwiper />
-      <NewArrival setProductInfo={setProductInfo} setDetailBtn={setDetailBtn} />
+      <NewArrival
+        setProductInfo={setProductInfo}
+        setDetailBtn={setDetailBtn}
+        closeCartAlarm={closeCartAlarm}
+      />
     </MainGrid>
   );
 }

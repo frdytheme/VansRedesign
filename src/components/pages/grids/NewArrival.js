@@ -9,7 +9,7 @@ import { Navigation } from "swiper";
 import api from "../../../assets/api/api";
 import Pfunction from "../../../assets/module/Pfunction";
 
-function NewArrival({ setProductInfo, setDetailBtn }) {
+function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   const [newItems, setNewItems] = useState([]);
   const PUBLIC = process.env.PUBLIC_URL;
 
@@ -31,6 +31,7 @@ function NewArrival({ setProductInfo, setDetailBtn }) {
     setDetailBtn(true);
     setProductInfo(item);
     Pfunction.updateRecently(item);
+    closeCartAlarm();
   };
 
   return (
