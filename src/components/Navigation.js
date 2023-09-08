@@ -1,16 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import NavBanner from "./pages/NavBanner";
 
-function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
+function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cartCount }) {
   let id = 0;
   const gnbList = [
     {
       id: id++,
       name: "NEW",
       lnb: [
-        { title: "NEW", menu: ["NEW", "신발 신상품", "의류 신상품", "악세서리 신상품", "키즈 신상품"] },
+        {
+          title: "NEW",
+          menu: [
+            "NEW",
+            "신발 신상품",
+            "의류 신상품",
+            "악세서리 신상품",
+            "키즈 신상품",
+          ],
+        },
         {
           title: "COLLECTION",
           menu: [
@@ -27,25 +36,67 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
       id: id++,
       name: "MEN",
       lnb: [
-        { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
-        { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의"] },
-        { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
+        {
+          title: "신발",
+          menu: [
+            "전체보기",
+            "코어클래식",
+            "클래식",
+            "스케이트 슈즈",
+            "클래식플러스",
+            "서프",
+          ],
+        },
+        {
+          title: "의류",
+          menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의"],
+        },
+        {
+          title: "악세서리",
+          menu: ["전체보기", "모자", "가방", "양말", "기타"],
+        },
       ],
     },
     {
       id: id++,
       name: "WOMEN",
       lnb: [
-        { title: "신발", menu: ["전체보기", "코어클래식", "클래식", "스케이트 슈즈", "클래식플러스", "서프"] },
-        { title: "의류", menu: ["전체보기", "탑&티셔츠", "플리스", "아우터", "하의", "원피스&스커트"] },
-        { title: "악세서리", menu: ["전체보기", "모자", "가방", "양말", "기타"] },
+        {
+          title: "신발",
+          menu: [
+            "전체보기",
+            "코어클래식",
+            "클래식",
+            "스케이트 슈즈",
+            "클래식플러스",
+            "서프",
+          ],
+        },
+        {
+          title: "의류",
+          menu: [
+            "전체보기",
+            "탑&티셔츠",
+            "플리스",
+            "아우터",
+            "하의",
+            "원피스&스커트",
+          ],
+        },
+        {
+          title: "악세서리",
+          menu: ["전체보기", "모자", "가방", "양말", "기타"],
+        },
       ],
     },
     {
       id: id++,
       name: "KIDS",
       lnb: [
-        { title: "신발", menu: ["전체보기", "토들러", "키즈 신발", "베스트 셀러"] },
+        {
+          title: "신발",
+          menu: ["전체보기", "토들러", "키즈 신발", "베스트 셀러"],
+        },
         { title: "의류", menu: ["전체보기", "보이즈", "키즈 의류"] },
         { title: "악세서리", menu: ["전체보기", "모자", "양말"] },
       ],
@@ -74,10 +125,13 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
     const translateName = (e) => {
       e.stopPropagation();
 
-      const mainCategory = e.target.parentNode.parentNode.parentNode.getAttribute("gnb-name");
+      const mainCategory =
+        e.target.parentNode.parentNode.parentNode.getAttribute("gnb-name");
       let name = e.target.getAttribute("gnb-name");
-      if (name === "신발" || name === "신발 신상품" || name === "키즈 신발") name = "SHOES";
-      if (name === "의류" || name === "의류 신상품" || name === "키즈 의류") name = "CLOTHES";
+      if (name === "신발" || name === "신발 신상품" || name === "키즈 신발")
+        name = "SHOES";
+      if (name === "의류" || name === "의류 신상품" || name === "키즈 의류")
+        name = "CLOTHES";
       if (name === "악세서리" || name === "악세서리 신상품") name = "ACCESSORY";
       if (name === "키즈 신상품") name = "KIDS";
 
@@ -99,7 +153,10 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
     <Nav>
       <div className="nav_box">
         <div className="logo" onClick={() => navigate("/home")}>
-          <img src={process.env.PUBLIC_URL + "./images/official/vans_logo_wht.svg"} alt="반스 로고" />
+          <img
+            src={process.env.PUBLIC_URL + "./images/official/vans_logo_wht.svg"}
+            alt="반스 로고"
+          />
         </div>
         <ul className="gnb">
           {gnbList.map((li) => (
@@ -112,15 +169,21 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
               onMouseLeave={disableGnb}
               onClick={(e) => {
                 selectMenu(e);
-              }}>
+              }}
+            >
               {li.name}
               {li.lnb && (
                 <div className="lnb" onClick={(e) => e.stopPropagation()}>
-                  {li.name === "NEW" && <NavBanner setListName={setListName} gnbs={gnbs} />}
+                  {li.name === "NEW" && (
+                    <NavBanner setListName={setListName} gnbs={gnbs} />
+                  )}
                   {li.lnb.map((lnb, idx) => {
                     return (
                       <ul key={idx} className="lnb_group">
-                        <li className="lnb_title" onClick={(e) => e.stopPropagation()}>
+                        <li
+                          className="lnb_title"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           {lnb.title}
                         </li>
                         {lnb.menu &&
@@ -129,8 +192,11 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
                               <li
                                 key={idx}
                                 className="lnb_item"
-                                gnb-name={menu === "전체보기" ? lnb.title : menu}
-                                onClick={(e) => selectMenu(e)}>
+                                gnb-name={
+                                  menu === "전체보기" ? lnb.title : menu
+                                }
+                                onClick={(e) => selectMenu(e)}
+                              >
                                 {menu}
                               </li>
                             );
@@ -159,6 +225,10 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn }) {
             <span className="material-symbols-outlined searchIcon">search</span>
           </label>
         </form>
+        <div className="cart_icon" onClick={() => navigate("/home/cart")}>
+          <span className="material-symbols-outlined">shopping_cart</span>
+          <p>{cartCount}</p>
+        </div>
       </div>
     </Nav>
   );
@@ -182,37 +252,17 @@ const Nav = styled.header`
     line-height: 70px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-radius: 15px;
     text-align: center;
     position: relative;
+    gap: 1vw;
     .logo {
       height: 100%;
       display: flex;
       align-items: center;
       margin-left: 40px;
       cursor: pointer;
-    }
-    .searchContainer {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      color: #fff;
-      position: relative;
-      margin-right: 30px;
-      input {
-        width: 10vw;
-        border: none;
-        border-bottom: 1px solid #fff;
-        outline: none;
-        border-radius: 20px;
-        padding: 10px 10px;
-        text-indent: 5px;
-      }
-      .searchIcon {
-        position: absolute;
-        right: 12px;
-        color: var(--color-red);
-      }
     }
     .gnb {
       color: #fff;
@@ -224,6 +274,9 @@ const Nav = styled.header`
         font-size: 16px;
         padding-right: 30px;
         cursor: pointer;
+        &:last-child {
+          padding: 0;
+        }
         &.active {
           color: var(--color-pink);
           & .lnb {
@@ -271,6 +324,45 @@ const Nav = styled.header`
             }
           }
         }
+      }
+    }
+    .searchContainer {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      position: relative;
+      input {
+        width: 10vw;
+        border: none;
+        border-bottom: 1px solid #fff;
+        outline: none;
+        border-radius: 20px;
+        padding: 10px 10px;
+        text-indent: 5px;
+      }
+      .searchIcon {
+        position: absolute;
+        right: 12px;
+        color: var(--color-red);
+      }
+    }
+    .cart_icon {
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5vw;
+      margin-right: 2vw;
+      background-color: #222;
+      border-radius: 10px;
+      padding: 0 0.8vw;
+      height: 50%;
+      border: 1px solid #fff;
+      cursor: pointer;
+      &:hover {
+        border: 1px solid var(--color-pink);
+        color: var(--color-pink);
       }
     }
   }

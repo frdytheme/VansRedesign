@@ -7,15 +7,15 @@ import LoginGrid from "./pages/grids/LoginGrid";
 import UserStatus from "./pages/grids/UserStatus";
 import { useNavigate } from "react-router-dom";
 
-function MainPage({ setListName, setProductInfo, setDetailBtn, userData }) {
+function MainPage({
+  setListName,
+  setProductInfo,
+  setDetailBtn,
+  userData,
+  cartCount,
+}) {
   const loginState = sessionStorage.getItem("loginState");
-  const cart = JSON.parse(sessionStorage.getItem("CART"));
   const navigate = useNavigate();
-  const [cartCount, setCartCount] = useState(cart ? cart.total : 0);
-
-  useEffect(() => {
-    if (cart) setCartCount(cart.total);
-  }, [cart]);
 
   return (
     <MainGrid>

@@ -11,14 +11,23 @@ export default {
     Cookies.set("recentlyProducts", JSON.stringify(products), { expires: 3 });
   },
   // 장바구니 추가
-  addCart: function (item, size, qty) {
+  addCart: function (item, size, qty, setNavCart, setTimerId) {
     const { model, price, name } = item;
     const cart = JSON.parse(sessionStorage.getItem("CART"));
     const list = cart ? cart : { data: {} };
 
     const { data } = list;
     if (data[model]) {
-      data[model].sizes[size] = { qty, chk: true };
+      if (data[model].sizes[size]) {
+        const confirm = window.confirm(
+          "이미 장바구니에 담겨있는 상품입니다. \n다시 담으시겠습니까?"
+        );
+        if (confirm) {
+          data[model].sizes[size] = { qty, chk: true };
+        }
+      } else {
+        data[model].sizes[size] = { qty, chk: true };
+      }
     } else {
       data[model] = { sizes: { [size]: { qty, chk: true } }, price, name };
     }
@@ -33,28 +42,11 @@ export default {
     list.total = total;
 
     sessionStorage.setItem("CART", JSON.stringify(list));
+    setNavCart(true);
+    const timer = setTimeout(() => {
+      // console.log("타이머 10초 종료, 실행")
+      setNavCart(false);
+    }, 10000);
+    setTimerId(timer);
   },
-  // addCart: function (item, size, qty) {
-  //   const { model, price, name } = item;
-  //   const cart = JSON.parse(sessionStorage.getItem("CART"));
-  //   const list = cart ? cart : { data: {} };
-
-  //   const { data } = list;
-  //   if (data[model]) {
-  //     data[model].sizes[size] = qty;
-  //   } else {
-  //     data[model] = { sizes: { [size]: qty }, price, name };
-  //   }
-
-  //   const modelTotal = Object.keys(data[model].sizes).length;
-  //   data[model].qty = modelTotal;
-
-  //   const total = Object.values(data)
-  //     .filter((obj) => obj.qty)
-  //     .reduce((acc, cur) => acc + cur.qty, 0);
-
-  //   list.total = total;
-
-  //   sessionStorage.setItem("CART", JSON.stringify(list));
-  // },
 };

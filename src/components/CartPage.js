@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 
-function CartPage() {
+function CartPage({ setCartCount }) {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
   const { data, total } = cart ? cart : {};
   const [cartList, setCartList] = useState([]);
@@ -23,6 +23,7 @@ function CartPage() {
       return { model, sizes, price, name };
     });
     setCartList(list);
+    setCartCount(cart.total);
   };
 
   const countUp = async (product, size) => {
@@ -67,7 +68,11 @@ function CartPage() {
       delete data[model];
     }
     const totalCount = Object.values(data)
-      .map((obj) => Object.keys(obj.sizes).length)
+      .map((obj) => {
+        const sizeArr = Object.keys(obj.sizes);
+        obj.qty = sizeArr.length;
+        return sizeArr.length;
+      })
       .reduce((acc, cur) => acc + cur, 0);
     cart.total = totalCount;
     if (totalCount) {
@@ -78,9 +83,36 @@ function CartPage() {
     parsingCart();
   };
 
-  const clearCart = () => {
-    sessionStorage.removeItem("CART");
-    parsingCart();
+  const clearCart = (e, orderList) => {
+    const btn = e.target.id;
+    if (btn) {
+      const confirm = window.confirm(
+        "모든 상품을 장바구니에 삭제하시겠습니까?"
+      );
+      if (confirm) {
+        sessionStorage.removeItem("CART");
+        parsingCart();
+      }
+    } else {
+      const confirm = window.confirm(
+        "선택하신 상품을 장바구니에서 삭제하시겠습니까?"
+      );
+      if (confirm) {
+        orderList.forEach((product) => {
+          const { model, size } = product;
+          delete data[model].sizes[Number(size)];
+          const sizeLength = Object.keys(data[model].sizes).length;
+          if (sizeLength) {
+            data[model].qty = sizeLength;
+          } else {
+            delete data[model];
+          }
+        });
+        cart.total = Object.values(data).reduce((acc, cur) => acc + cur.qty, 0);
+        sessionStorage.setItem("CART", JSON.stringify(cart));
+        parsingCart();
+      }
+    }
   };
 
   useEffect(() => {
@@ -89,6 +121,18 @@ function CartPage() {
 
   const handleCheck = (model, size) => {
     data[model].sizes[size].chk = !data[model].sizes[size].chk;
+    sessionStorage.setItem("CART", JSON.stringify(cart));
+    parsingCart();
+  };
+
+  const handleCheckedAll = (e) => {
+    const id = e.target.id;
+    for (const key in data) {
+      const sizeObj = data[key].sizes;
+      for (const size in sizeObj) {
+        sizeObj[size].chk = id === "on";
+      }
+    }
     sessionStorage.setItem("CART", JSON.stringify(cart));
     parsingCart();
   };
@@ -227,8 +271,20 @@ function CartPage() {
           </div>
         </div>
         <div className="list_option">
-          <p>전체선택</p>
-          <p onClick={clearCart}>전체삭제</p>
+          <div className="checked_option option_list">
+            <p onClick={handleCheckedAll} id="on">
+              전체선택
+            </p>
+            <p onClick={handleCheckedAll} id="off">
+              전체해제
+            </p>
+          </div>
+          <div className="delete_option option_list">
+            <p onClick={(e) => clearCart(e, orderList)}>선택삭제</p>
+            <p onClick={(e) => clearCart(e, orderList)} id="all_clear">
+              전체삭제
+            </p>
+          </div>
         </div>
       </div>
     </CartPageStyle>
@@ -463,7 +519,12 @@ const CartPageStyle = styled.div`
     align-items: center;
     width: 69%;
     color: #777;
+    .option_list {
+      display: flex;
+      gap: 1vw;
+    }
     p {
+      font-size: 0.8vw;
       cursor: pointer;
       &:hover {
         color: #000;

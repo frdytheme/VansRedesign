@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
+function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, setTimerId }) {
   const PUBLIC = process.env.PUBLIC_URL;
   const { name, color, model, price, size, mainCategory } = productInfo;
   const sizeArr = Object.keys(size);
@@ -17,13 +17,12 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   const [mainImg, setMainImg] = useState("");
   const [sameProduct, setSameProduct] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [productName, setProductName] = useState(name);
   const [qty, setQty] = useState(1);
   const [maxQty, setMaxQty] = useState(0);
 
   const fetchSameProduct = async () => {
     try {
-      const response = await api.get(`/product?all=1&name=${productName}`);
+      const response = await api.get(`/product?all=1&name=${name}`);
       const data = response.data;
       if (data.total === 1) return;
       const products = data.products.filter((item) => item.model !== model);
@@ -70,7 +69,8 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn }) {
   }, [selectedSize]);
 
   const handleCart = () => {
-    Pfunction.addCart(productInfo, selectedSize, qty);
+    if (!selectedSize) return;
+    Pfunction.addCart(productInfo, selectedSize, qty, setNavCart, setTimerId);
     setDetailBtn(false);
   };
 
