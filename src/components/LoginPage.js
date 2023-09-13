@@ -17,8 +17,13 @@ function LoginPage({ userData, setUserData }) {
 
   const checkUserInfo = async (e) => {
     e.preventDefault();
+    const cart = JSON.parse(sessionStorage.getItem("CART")) || {
+      data: {},
+      total: 0,
+    };
+    const data = { ...userData, cart };
     try {
-      await authApi.post("user/login", userData, {
+      const response = await authApi.post("user/login", data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -26,6 +31,8 @@ function LoginPage({ userData, setUserData }) {
       if (userSaveState || userAutoLogin) {
         localStorage.setItem("userId", JSON.stringify(userData.name));
       }
+      const userCart = response.data.cart;
+      sessionStorage.setItem("CART", JSON.stringify(userCart));
       sessionStorage.setItem("loginState", JSON.stringify(true));
       navigate("/home");
     } catch (err) {
@@ -61,10 +68,7 @@ function LoginPage({ userData, setUserData }) {
     <LoginPageStyle onSubmit={(e) => checkUserInfo(e)}>
       <div className="login_box">
         <div className="logo_box">
-          <img
-            src={`${process.env.PUBLIC_URL}/images/official/vans_logo.svg`}
-            alt="반스 로고"
-          />
+          <img src={`./images/official/vans_logo.svg`} alt="반스 로고" />
         </div>
         <div className="input_box">
           <input

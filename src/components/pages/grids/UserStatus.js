@@ -5,13 +5,13 @@ import authApi from "../../../assets/api/authApi";
 function UserStatus({ userData }) {
   const userLogout = async () => {
     try {
-      const response = await authApi.post("/user/logout");
-      console.log(response.data);
+      await authApi.post("/user/logout");
     } catch (err) {
       console.error(err);
     } finally {
       sessionStorage.setItem("loginState", JSON.stringify(false));
       localStorage.setItem("userAutoLogin", JSON.stringify(false));
+      sessionStorage.removeItem("CART");
       window.location.reload();
     }
   };
@@ -34,10 +34,7 @@ function UserStatus({ userData }) {
       <div className="user_interface">
         <p className="user_name">
           <em>{userData.name}</em>
-          <img
-            src={`${process.env.PUBLIC_URL}/images/official/vans_logo_wht.svg`}
-            alt="반스 로고"
-          />
+          <img src={`./images/official/vans_logo_wht.svg`} alt="반스 로고" />
         </p>
         <ul className="user_menu">
           <li className="user_menu_li user_info_edit" onClick={tokenCheck}>
@@ -92,8 +89,9 @@ const UserStatusStyle = styled.div`
         display: flex;
         align-items: center;
         cursor: pointer;
-        font-size: 15px;
-        &:hover {
+        font-size: 0.9vw;
+        span {
+          font-size: 1.3vw;
         }
       }
     }
@@ -105,6 +103,10 @@ const UserStatusStyle = styled.div`
     justify-content: center;
     gap: 5px;
     transition: 0.5s;
+    font-size: 0.9vw;
+    span {
+      font-size: 1.3vw;
+    }
     &:hover {
       color: var(--color-pink);
     }

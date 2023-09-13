@@ -154,7 +154,7 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cart
       <div className="nav_box">
         <div className="logo" onClick={() => navigate("/home")}>
           <img
-            src={process.env.PUBLIC_URL + "./images/official/vans_logo_wht.svg"}
+            src={"./images/official/vans_logo_wht.svg"}
             alt="반스 로고"
           />
         </div>

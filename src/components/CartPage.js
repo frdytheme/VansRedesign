@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
+import PayPage from "./PayPage";
 
 function CartPage({ setCartCount }) {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
+  const loggedIn = JSON.parse(sessionStorage.getItem("loginState"));
   const { data, total } = cart ? cart : {};
   const [cartList, setCartList] = useState([]);
   const [orderList, setOrderList] = useState([]);
   const [orderPrice, setOrderPrice] = useState(0);
+  const [cartPage, setCartPage] = useState(0);
   const delivery = orderList.length ? 3000 : 0;
   const navigate = useNavigate();
 
@@ -23,7 +26,24 @@ function CartPage({ setCartCount }) {
       return { model, sizes, price, name };
     });
     setCartList(list);
-    setCartCount(cart.total);
+    setCartCount(cart ? cart.total : 0);
+  };
+
+  const cartUpdateAPI = async (list) => {
+    try {
+      const response = await authApi.patch(
+        "user/cartUpdate",
+        { list },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const countUp = async (product, size) => {
@@ -80,6 +100,9 @@ function CartPage({ setCartCount }) {
     } else {
       sessionStorage.removeItem("CART");
     }
+    if (loggedIn) {
+      cartUpdateAPI(cart);
+    }
     parsingCart();
   };
 
@@ -90,10 +113,15 @@ function CartPage({ setCartCount }) {
         "모든 상품을 장바구니에 삭제하시겠습니까?"
       );
       if (confirm) {
+        if (loggedIn) {
+          const list = { data: {}, total: 0 };
+          cartUpdateAPI(list);
+        }
         sessionStorage.removeItem("CART");
-        parsingCart();
+        window.location.reload();
       }
     } else {
+      if (!orderList.length) return alert("선택된 상품이 없습니다.");
       const confirm = window.confirm(
         "선택하신 상품을 장바구니에서 삭제하시겠습니까?"
       );
@@ -110,6 +138,7 @@ function CartPage({ setCartCount }) {
         });
         cart.total = Object.values(data).reduce((acc, cur) => acc + cur.qty, 0);
         sessionStorage.setItem("CART", JSON.stringify(cart));
+        if (loggedIn) cartUpdateAPI(cart);
         parsingCart();
       }
     }
@@ -118,6 +147,16 @@ function CartPage({ setCartCount }) {
   useEffect(() => {
     parsingCart();
   }, []);
+
+  useEffect(() => {
+    const order = orderList.length;
+    const btn = document.querySelector(".order_box .btn_container .order");
+    if (order) {
+      btn.classList.remove("disabled");
+    } else {
+      btn.classList.add("disabled");
+    }
+  }, [orderList]);
 
   const handleCheck = (model, size) => {
     data[model].sizes[size].chk = !data[model].sizes[size].chk;
@@ -152,97 +191,128 @@ function CartPage({ setCartCount }) {
     setOrderPrice(price);
   }, [cartList]);
 
+  const handleReturn = () => {
+    if (!cartPage) {
+      navigate("/home");
+    } else {
+      setCartPage(cartPage - 1);
+    }
+  };
+
+  const goPayContainer = () => {
+    if (!orderList.length) return;
+    if (cartPage === 1) {
+      alert("결제 기능은 준비중입니다.");
+    }
+    setCartPage(1);
+  };
+
+  useEffect(() => {
+    const lis = document.querySelectorAll(".cart_process .process_item");
+    lis.forEach((li, idx) => {
+      if (idx === cartPage) {
+        li.classList.add("active");
+      } else {
+        li.classList.remove("active");
+      }
+    });
+  }, [cartPage]);
+
   return (
     <CartPageStyle>
       <div className="cart_wrapper">
         <ul className="cart_process">
-          <li className="process_li first active">1. CART</li>
+          <li className="process_li process_item first">1. CART</li>
           <li className="process_li gt">&gt;&gt;&gt;</li>
-          <li className="process_li second">2. ORDER</li>
+          <li className="process_li process_item second">2. ORDER</li>
           <li className="process_li gt">&gt;&gt;&gt;</li>
-          <li className="process_li third">3. COMPLETE</li>
+          <li className="process_li process_item third">3. COMPLETE</li>
         </ul>
-        <div className="cart_container">
-          {cart ? (
-            <ul className="cart_list">
-              {cartList.map((product, idx) => {
-                const { model, price, sizes, name } = product;
-                return Object.keys(sizes).map((size) => {
-                  return (
-                    <li key={model + size + idx} className="cart_item">
-                      <input
-                        type="checkbox"
-                        name="product_check"
-                        id="product_check"
-                        checked={sizes[size].chk}
-                        onChange={() => handleCheck(model, size)}
-                      />
-                      <img
-                        src={`${process.env.PUBLIC_URL}/images/product/${model}/${model}_${model}_primary.jpg`}
-                        alt={`${model}이미지`}
-                        className="product_img"
-                      />
-                      <div className="product_info">
-                        <div className="infomation_box">
-                          <p className="product_name">{name}</p>
-                          <p className="product_size">Size : {size}</p>
-                          <div className="qty_box">
-                            <p className="qty">수량</p>
-                            {sizes[size].qty === 1 ? (
-                              <span className="qty_btn down disabled">-</span>
-                            ) : (
+        {!cartPage ? (
+          <div className="cart_container">
+            {cart ? (
+              <ul className="cart_list">
+                {cartList.map((product, idx) => {
+                  const { model, price, sizes, name } = product;
+                  return Object.keys(sizes).map((size) => {
+                    return (
+                      <li key={model + size + idx} className="cart_item">
+                        <input
+                          type="checkbox"
+                          name="product_check"
+                          id="product_check"
+                          checked={sizes[size].chk}
+                          onChange={() => handleCheck(model, size)}
+                        />
+                        <img
+                          src={`./images/product/${model}/${model}_${model}_primary.jpg`}
+                          alt={`${model}이미지`}
+                          className="product_img"
+                        />
+                        <div className="product_info">
+                          <div className="infomation_box">
+                            <p className="product_name">{name}</p>
+                            <p className="product_size">Size : {size}</p>
+                            <div className="qty_box">
+                              <p className="qty">수량</p>
+                              {sizes[size].qty === 1 ? (
+                                <span className="qty_btn down disabled">-</span>
+                              ) : (
+                                <span
+                                  className="qty_btn down"
+                                  onClick={() => countDown(product, size)}
+                                >
+                                  -
+                                </span>
+                              )}
+                              <input
+                                type="text"
+                                value={sizes[size].qty}
+                                onChange={() => console.log("수량 변경중")}
+                              />
                               <span
-                                className="qty_btn down"
-                                onClick={() => countDown(product, size)}
+                                className="qty_btn up"
+                                onClick={() => countUp(product, size)}
                               >
-                                -
+                                +
                               </span>
-                            )}
-                            <input
-                              type="text"
-                              value={sizes[size].qty}
-                              onChange={() => console.log("수량 변경중")}
-                            />
+                            </div>
+                          </div>
+                          <div className="option_box">
                             <span
-                              className="qty_btn up"
-                              onClick={() => countUp(product, size)}
+                              className="material-symbols-outlined delete_btn"
+                              onClick={() => removeItem(product, size)}
                             >
-                              +
+                              close
                             </span>
+                            <p className="product_price">
+                              {price.toLocaleString("ko-KR")}원
+                            </p>
                           </div>
                         </div>
-                        <div className="option_box">
-                          <span
-                            className="material-symbols-outlined delete_btn"
-                            onClick={() => removeItem(product, size)}
-                          >
-                            close
-                          </span>
-                          <p className="product_price">
-                            {price.toLocaleString("ko-KR")}원
-                          </p>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                });
-              })}
-            </ul>
-          ) : (
-            <ul className="cart_list empty_list">
-              <li>장바구니에 담긴 상품이 없습니다.</li>
-              <li
-                className="show_product_btn"
-                onClick={() => navigate("/home/product")}
-              >
-                쇼핑하러가기
-              </li>
-            </ul>
-          )}
-        </div>
+                      </li>
+                    );
+                  });
+                })}
+              </ul>
+            ) : (
+              <ul className="cart_list empty_list">
+                <li>장바구니에 담긴 상품이 없습니다.</li>
+                <li
+                  className="show_product_btn"
+                  onClick={() => navigate("/home/product")}
+                >
+                  쇼핑하러가기
+                </li>
+              </ul>
+            )}
+          </div>
+        ) : (
+          <PayPage />
+        )}
         <div className="total_count">
           <p>
-            총 {total}개 / {orderList.length}개 선택
+            총 {total || 0}개 / {orderList.length}개 선택
           </p>
         </div>
         <div className="order_box">
@@ -266,26 +336,32 @@ function CartPage({ setCartCount }) {
             </li>
           </ul>
           <div className="btn_container">
-            <div className="return btn">돌아가기</div>
-            <div className="order btn">결제하기</div>
+            <div className="return btn" onClick={handleReturn}>
+              {cartPage ? "장바구니로" : "돌아가기"}
+            </div>
+            <div className="order btn" onClick={goPayContainer}>
+              {cartPage ? "결제하기" : "주문하기"}
+            </div>
           </div>
         </div>
-        <div className="list_option">
-          <div className="checked_option option_list">
-            <p onClick={handleCheckedAll} id="on">
-              전체선택
-            </p>
-            <p onClick={handleCheckedAll} id="off">
-              전체해제
-            </p>
+        {!cartPage && (
+          <div className="list_option">
+            <div className="checked_option option_list">
+              <p onClick={handleCheckedAll} id="on">
+                전체선택
+              </p>
+              <p onClick={handleCheckedAll} id="off">
+                전체해제
+              </p>
+            </div>
+            <div className="delete_option option_list">
+              <p onClick={(e) => clearCart(e, orderList)}>선택삭제</p>
+              <p onClick={(e) => clearCart(e, orderList)} id="all_clear">
+                전체삭제
+              </p>
+            </div>
           </div>
-          <div className="delete_option option_list">
-            <p onClick={(e) => clearCart(e, orderList)}>선택삭제</p>
-            <p onClick={(e) => clearCart(e, orderList)} id="all_clear">
-              전체삭제
-            </p>
-          </div>
-        </div>
+        )}
       </div>
     </CartPageStyle>
   );
@@ -311,9 +387,11 @@ const CartPageStyle = styled.div`
       font-size: 1vw;
       color: #999;
       font-weight: 500;
+      user-select: none;
       .process_li {
         &.active {
           color: #000;
+          font-weight: 600;
         }
         &.gt {
           font-size: 0.7vw;
@@ -350,7 +428,7 @@ const CartPageStyle = styled.div`
             background-color: var(--color-red);
             cursor: pointer;
             &:hover {
-              color: #000;
+              outline: 2px solid #000;
             }
           }
         }
@@ -440,7 +518,6 @@ const CartPageStyle = styled.div`
         }
       }
     }
-
     .total_count {
       margin-top: 0.5vw;
       background-color: #222;
@@ -498,13 +575,22 @@ const CartPageStyle = styled.div`
         .btn {
           height: 60px;
           line-height: 60px;
+          cursor: pointer;
           &.order {
             background-color: #000;
+            border: 1px solid #000;
+            border-right: none;
+            border-bottom: none;
           }
           &.return {
             color: #000;
             border-top: 1px solid #000;
             box-sizing: border-box;
+          }
+          &.disabled {
+            background-color: #d9d9d9;
+            color: #aaa;
+            cursor: default;
           }
         }
       }

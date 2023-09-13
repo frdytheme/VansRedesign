@@ -15,7 +15,6 @@ function NavBanner({ setListName, gnbs }) {
     { img: "banner_1.jpg", name: "Authentic" },
     { img: "banner_2.jpg", name: "리컨스트럭트 팩" },
   ];
-  const PUBLIC = process.env.PUBLIC_URL;
   const navigate = useNavigate();
 
   const selectBanner = (e) => {
@@ -38,7 +37,7 @@ function NavBanner({ setListName, gnbs }) {
         {bannerImg.map((img, idx) => (
           <SwiperSlide key={idx}>
             <img
-              src={PUBLIC + `images/banner/${img.img}`}
+              src={`images/banner/${img.img}`}
               alt="배너 이미지"
               className={`bannerImg banner${idx}`}
               banner-name={img.name}

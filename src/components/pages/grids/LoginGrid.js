@@ -43,7 +43,7 @@ function LoginGrid() {
         <div className="login_btn" onClick={handleLogin}>
           <p>
             <img
-              src={`${process.env.PUBLIC_URL}/images/official/vans_logo_wht.svg`}
+              src={`./images/official/vans_logo_wht.svg`}
               alt="반스 로고"
             />
             로그인

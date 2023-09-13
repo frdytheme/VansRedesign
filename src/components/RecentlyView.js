@@ -21,7 +21,7 @@ function RecentlyView() {
           recentlyList.map((product) => (
             <SwiperSlide key={product}>
               <img
-                src={`${process.env.PUBLIC_URL}/images/product/${product}/${product}_${product}_primary.jpg`}
+                src={`./images/product/${product}/${product}_${product}_primary.jpg`}
                 alt="제품 대표 사진"
                 className="product_img"
               />

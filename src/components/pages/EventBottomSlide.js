@@ -31,7 +31,7 @@ function EventBottomSlide({ setNewsNum }) {
                 {news.title}
                 <em>{news.sub}</em>
               </p>
-              <img src={process.env.PUBLIC_URL + `./images/news/${news.cover}`} alt="반스 뉴스 이미지" />
+              <img src={`./images/news/${news.cover}`} alt="반스 뉴스 이미지" />
             </div>
           </SwiperSlide>
         ))}

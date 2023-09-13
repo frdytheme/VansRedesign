@@ -239,6 +239,9 @@ const ProductListStyle = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 1vw;
+    figure {
+      margin-top:2vw;
+    }
     .empty_alert {
       width: 100%;
       padding-top: 5vw;

@@ -8,8 +8,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, setTimerId }) {
-  const PUBLIC = process.env.PUBLIC_URL;
+function ProductDetail({
+  setProductInfo,
+  productInfo,
+  setDetailBtn,
+  setNavCart,
+}) {
   const { name, color, model, price, size, mainCategory } = productInfo;
   const sizeArr = Object.keys(size);
   const [selectedSize, setSelectedSize] = useState("");
@@ -34,7 +38,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, 
 
   const fetchImg = async () => {
     try {
-      const response = await axios.get(`${PUBLIC}/images/product/${model}`);
+      const response = await axios.get(`./images/product/${model}`);
       const data = response.data;
       const mainImg = data.pop();
       data.unshift(mainImg);
@@ -70,7 +74,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, 
 
   const handleCart = () => {
     if (!selectedSize) return;
-    Pfunction.addCart(productInfo, selectedSize, qty, setNavCart, setTimerId);
+    Pfunction.addCart(productInfo, selectedSize, qty, setNavCart);
     setDetailBtn(false);
   };
 
@@ -93,6 +97,12 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, 
     }
   };
 
+  const selectSeries = (item) => {
+    setLoading(false);
+    setProductInfo(item);
+    setQty(1);
+  };
+
   return (
     <ProductDetailStyle className="product_info_container">
       <div className="console_box">
@@ -107,7 +117,7 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, 
         {loading ? (
           <div className="img_wrapper">
             <img
-              src={PUBLIC + `./images/product/${model}/${mainImg}`}
+              src={`./images/product/${model}/${mainImg}`}
               alt={name + `제품 이미지`}
               className="product_img"
             />
@@ -152,13 +162,10 @@ function ProductDetail({ setProductInfo, productInfo, setDetailBtn, setNavCart, 
                 {sameProduct.map((item) => (
                   <SwiperSlide key={item.id}>
                     <img
-                      src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                      src={`./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
                       alt={`${item.name} 제품 이미지`}
                       className="same_product"
-                      onClick={() => {
-                        setLoading(false);
-                        setProductInfo(item);
-                      }}
+                      onClick={() => selectSeries(item)}
                     />
                   </SwiperSlide>
                 ))}
@@ -221,6 +228,7 @@ const ProductDetailStyle = styled.div`
   z-index: 9999;
   border: 1px solid #000;
   border-top: none;
+  border-radius: 0 0 20px 20px;
   transition: 0.4s;
   animation: ${slideDown} 0.6s forwards;
   .console_box {

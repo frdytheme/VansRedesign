@@ -2,28 +2,31 @@ import React from "react";
 import styled from "styled-components";
 
 function ProductBox({ item, onClick }) {
-  const PUBLIC = process.env.PUBLIC_URL;
-
-
   return (
     <ProductBoxStyle onClick={onClick}>
       <div className="img_wrapper">
         <img
-          src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+          src={`./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
           alt="제품 대표 사진"
           className="product_img"
         />
         <img
-          src={PUBLIC + `./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
+          src={`./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
           alt="제품 대표 사진"
           className="product_img hover"
         />
       </div>
       <figcaption className="product_caption">
-        {item.mainCategory.includes("HOT") && <p className="new_arrival">HOT</p>}
-        {item.mainCategory.includes("NEW") && <p className="new_arrival">NEW ARRIVAL</p>}
+        {item.mainCategory.includes("HOT") && (
+          <p className="new_arrival">HOT</p>
+        )}
+        {item.mainCategory.includes("NEW") && (
+          <p className="new_arrival">NEW ARRIVAL</p>
+        )}
         <p className="product_name">{item.name}</p>
-        <p className="product_price">{Number(item.price).toLocaleString("ko-KR") + "원"}</p>
+        <p className="product_price">
+          {Number(item.price).toLocaleString("ko-KR") + "원"}
+        </p>
       </figcaption>
     </ProductBoxStyle>
   );
@@ -32,9 +35,7 @@ function ProductBox({ item, onClick }) {
 const ProductBoxStyle = styled.figure`
   width: 15vw;
   text-align: center;
-  margin-top: 30px;
   position: relative;
-
   .img_wrapper {
     height: 15vw;
     position: relative;

@@ -1,3 +1,5 @@
+import authApi from "../api/authApi";
+
 const Cookies = require("js-cookie");
 
 export default {
@@ -11,9 +13,10 @@ export default {
     Cookies.set("recentlyProducts", JSON.stringify(products), { expires: 3 });
   },
   // 장바구니 추가
-  addCart: function (item, size, qty, setNavCart, setTimerId) {
+  addCart: async function (item, size, qty, setNavCart) {
     const { model, price, name } = item;
     const cart = JSON.parse(sessionStorage.getItem("CART"));
+    const loggedIn = JSON.parse(sessionStorage.getItem("loginState"));
     const list = cart ? cart : { data: {} };
 
     const { data } = list;
@@ -43,11 +46,23 @@ export default {
 
     list.total = total;
 
-    sessionStorage.setItem("CART", JSON.stringify(list));
-    setNavCart(true);
-    const timer = setTimeout(() => {
-      setNavCart(false);
-    }, 10000);
-    setTimerId(timer);
+    try {
+      if (loggedIn) {
+        await authApi.patch(
+          "/user/cartUpdate",
+          { list },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      sessionStorage.setItem("CART", JSON.stringify(list));
+      setNavCart(true);
+    }
   },
 };

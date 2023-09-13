@@ -25,7 +25,6 @@ function Home() {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
   const [cartCount, setCartCount] = useState(cart ? cart.total : 0);
   const [navCart, setNavCart] = useState(false);
-  const [timerId, setTimerId] = useState("");
   const navigate = useNavigate();
   const showAlarm = Cookies.get("show_cart_alarm")
     ? JSON.parse(Cookies.get("show_cart_alarm"))
@@ -47,7 +46,6 @@ function Home() {
 
   const closeCartAlarm = () => {
     setNavCart(false);
-    clearTimeout(timerId);
   };
 
   const noShowAlarm = (e) => {
@@ -57,6 +55,19 @@ function Home() {
     }
     closeCartAlarm();
   };
+
+  useEffect(() => {
+    if (Cookies.get("show_cart_alarm")) return;
+    const timerBar = document.querySelector(".timer_bar");
+    const hideBox = (e) => {
+      setNavCart(false);
+    };
+    timerBar.addEventListener("animationend", hideBox);
+
+    return () => {
+      timerBar.removeEventListener("animationend", hideBox);
+    };
+  }, []);
 
   return (
     <HomeSection>
@@ -119,28 +130,26 @@ function Home() {
             setProductInfo={setProductInfo}
             setDetailBtn={setDetailBtn}
             setNavCart={setNavCart}
-            setTimerId={setTimerId}
           />
         </div>
       )}
       {showAlarm || (
         <div className={`cart_modal_box${navCart ? " active" : ""}`}>
           <p className="txt_box">방금 담으신 상품을 확인하러 가시겠습니까?</p>
-          {navCart && (
-            <div className="btn_box">
-              <div
-                className={`move_btn${navCart ? " active" : ""}`}
-                onClick={() => {
-                  navigate("/home/cart");
-                  closeCartAlarm();
-                }}
-              >
-                <span className="material-symbols-outlined icon">
-                  shopping_cart
-                </span>
-              </div>
+          <div className="btn_box">
+            <div
+              className={`move_btn${navCart ? " active" : ""}`}
+              onClick={() => {
+                navigate("/home/cart");
+                closeCartAlarm();
+              }}
+            >
+              <span className="material-symbols-outlined icon">
+                shopping_cart
+              </span>
+              <div className="timer_bar">타이머 바</div>
             </div>
-          )}
+          </div>
           <div className="no_show">
             <div className="off_option" onClick={() => closeCartAlarm()}>
               <span className="material-symbols-outlined close_btn">close</span>
@@ -208,9 +217,17 @@ const HomeSection = styled.div`
     gap: 0.7vw;
     justify-content: center;
     align-items: center;
-    transition: 1s;
+    transition: 0.7s cubic-bezier(0.49, 0.06, 0.08, 1);
     &.active {
       top: 0;
+      .btn_box {
+        .move_btn {
+          background-color: #4d3c77;
+          .timer_bar {
+            animation: ${timer} 10s linear forwards;
+          }
+        }
+      }
     }
     .txt_box {
       font-size: 0.8vw;
@@ -224,28 +241,21 @@ const HomeSection = styled.div`
       .move_btn {
         width: 50%;
         height: 20px;
-        background-color: #4d3c77;
+        background-color: #000;
         color: #fff;
         padding: 0.8vw 1.7vw;
         border-radius: 15px;
         cursor: pointer;
         position: relative;
         overflow: hidden;
-        &:after {
-          content: "";
+        .timer_bar {
           position: absolute;
           top: 0;
           right: 100%;
           width: 100%;
           background-color: #000;
           height: 100%;
-          animation: ${timer} 10s linear;
-          animation-play-state: paused;
-        }
-        &.active {
-          &:after {
-            animation-play-state: running;
-          }
+          text-indent: -9999px;
         }
         .icon {
           position: absolute;

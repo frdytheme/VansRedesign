@@ -26,7 +26,7 @@ function ImageSlide({ imgArr, model, setMainImg }) {
         {imgArr.map((url, idx) => (
           <SwiperSlide key={idx} className="detail_imgs" onClick={(e) => viewImg(e, url)}>
             <img
-              src={process.env.PUBLIC_URL + `./images/product/${model}/${url}`}
+              src={`./images/product/${model}/${url}`}
               alt="제품 상세 이미지"
               className={idx === 0 ? "selected" : undefined}
             />

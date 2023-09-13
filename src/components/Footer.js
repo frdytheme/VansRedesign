@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 function Footer() {
-  const PUBLIC = process.env.PUBLIC_URL;
   const footerTxt = [
     ["유한책임회사", "브이에프코리아"],
     ["대표", "TZE CHOI THEODORE PANG"],
@@ -23,7 +22,7 @@ function Footer() {
           </li>
         ))}
       </ul>
-      <img src={PUBLIC + `./images/official/vans_footer.svg`} alt="반스 로고" className="footer_logo" />
+      <img src={`./images/official/vans_footer.svg`} alt="반스 로고" className="footer_logo" />
     </FooterStyle>
   );
 }
