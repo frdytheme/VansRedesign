@@ -2,11 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ImageSlide from "./ImageSlide";
-import api from "../../assets/api/api";
 import Pfunction from "../../assets/module/Pfunction";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
+import authApi from "../../assets/api/authApi";
 
 function ProductDetail({
   setProductInfo,
@@ -26,7 +26,7 @@ function ProductDetail({
 
   const fetchSameProduct = async () => {
     try {
-      const response = await api.get(`/product?all=1&name=${name}`);
+      const response = await authApi.get(`/product?all=1&name=${name}`);
       const data = response.data;
       if (data.total === 1) return;
       const products = data.products.filter((item) => item.model !== model);

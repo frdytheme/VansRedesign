@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const authApi = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://vans-redesign-frdytheme.koyeb.app/api",
+  // baseURL: "http://localhost:8000/api",
   withCredentials: true,
 });
 

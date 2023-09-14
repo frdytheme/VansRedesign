@@ -228,7 +228,7 @@ function JoinPage() {
           id="new_pw_check"
           name="new_pw_check"
           placeholder="비밀번호 확인"
-          value={joinUser.pwCheck}
+          value={confirmPw}
           minLength={8}
           maxLength={20}
           required
@@ -237,7 +237,7 @@ function JoinPage() {
         <p className="red_txt pw_red_txt">
           영문 대소문자 / 숫자 / 특수문자 사용 가능, 8~20글자
         </p>
-        {joinUser.pwCheck.length > 0 &&
+        {confirmPw.length > 0 &&
           (pwConfirm ? (
             <p className="red_txt submit">비밀번호가 일치합니다.</p>
           ) : (

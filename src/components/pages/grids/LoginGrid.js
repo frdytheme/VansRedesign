@@ -80,6 +80,7 @@ const LoginGridStyle = styled.div`
   }
   .join_box {
     display: flex;
+    cursor: pointer;
     justify-content: center;
     align-items: center;
     background-color: #000;

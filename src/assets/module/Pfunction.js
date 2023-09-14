@@ -46,6 +46,9 @@ export default {
 
     list.total = total;
 
+    sessionStorage.setItem("CART", JSON.stringify(list));
+    setNavCart(true);
+
     try {
       if (loggedIn) {
         await authApi.patch(
@@ -60,9 +63,6 @@ export default {
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      sessionStorage.setItem("CART", JSON.stringify(list));
-      setNavCart(true);
     }
   },
 };
