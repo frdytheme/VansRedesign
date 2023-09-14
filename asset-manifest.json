@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/VansRedesign/static/css/main.83de247e.css",
+    "main.js": "/VansRedesign/static/js/main.684aea82.js",
+    "static/media/vans_official_movie.webm": "/VansRedesign/static/media/vans_official_movie.29c420f0bd4e1e6659a3.webm",
+    "static/media/PretendardVariable.woff2": "/VansRedesign/static/media/PretendardVariable.36b3a87cd98126711b2b.woff2",
+    "static/media/BlackBoard.woff2": "/VansRedesign/static/media/BlackBoard.c5369df0102c4dab3995.woff2",
+    "static/media/slip_on.png": "/VansRedesign/static/media/slip_on.a74e784209ad507d031c.png",
+    "static/media/KampungOrange.woff2": "/VansRedesign/static/media/KampungOrange.c89762ecd14ef93deb40.woff2",
+    "static/media/oldskool.png": "/VansRedesign/static/media/oldskool.4b8b71943aa6e8c1badc.png",
+    "static/media/era.png": "/VansRedesign/static/media/era.ac21d91be4487f8efe26.png",
+    "static/media/sk8_hi.png": "/VansRedesign/static/media/sk8_hi.d3f4cf04029e013ec044.png",
+    "static/media/authentic.png": "/VansRedesign/static/media/authentic.d47bbc89b5e3dc951d8e.png",
+    "static/media/Goaroundthebooks2022.woff2": "/VansRedesign/static/media/Goaroundthebooks2022.8478d5109f48c863e050.woff2",
+    "static/media/KeeponTruckin.woff2": "/VansRedesign/static/media/KeeponTruckin.2c6470d3ab3c86579bb6.woff2",
+    "static/media/FuegoFatuo.woff2": "/VansRedesign/static/media/FuegoFatuo.4c47fe0978ad2dd57f6d.woff2",
+    "static/media/BrightMelodyPersonalUseOnly.woff2": "/VansRedesign/static/media/BrightMelodyPersonalUseOnly.41983a1c21a6989a7de9.woff2",
+    "static/media/board_logo.svg": "/VansRedesign/static/media/board_logo.6df2a49711a2144fb084397e9cf48fd5.svg",
+    "static/media/johnnytorch.woff2": "/VansRedesign/static/media/johnnytorch.2998537037df5db6198f.woff2",
+    "static/media/BOREDSB.woff2": "/VansRedesign/static/media/BOREDSB.80be5c84e277729c8723.woff2",
+    "index.html": "/VansRedesign/index.html",
+    "main.83de247e.css.map": "/VansRedesign/static/css/main.83de247e.css.map",
+    "main.684aea82.js.map": "/VansRedesign/static/js/main.684aea82.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.83de247e.css",
+    "static/js/main.684aea82.js"
+  ]
+}
