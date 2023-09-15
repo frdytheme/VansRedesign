@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import authApi from "../../assets/api/authApi";
+import PUBLIC from "../../assets/module/PUBLIC";
 
 function ProductDetail({
   setProductInfo,
@@ -38,7 +39,7 @@ function ProductDetail({
 
   const fetchImg = async () => {
     try {
-      const response = await axios.get(`./images/product/${model}`);
+      const response = await axios.get(`${PUBLIC}/images/product/${model}`);
       const data = response.data;
       const mainImg = data.pop();
       data.unshift(mainImg);
@@ -117,7 +118,7 @@ function ProductDetail({
         {loading ? (
           <div className="img_wrapper">
             <img
-              src={`./images/product/${model}/${mainImg}`}
+              src={`${PUBLIC}/images/product/${model}/${mainImg}`}
               alt={name + `제품 이미지`}
               className="product_img"
             />
@@ -162,7 +163,7 @@ function ProductDetail({
                 {sameProduct.map((item) => (
                   <SwiperSlide key={item.id}>
                     <img
-                      src={`./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                      src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
                       alt={`${item.name} 제품 이미지`}
                       className="same_product"
                       onClick={() => selectSeries(item)}

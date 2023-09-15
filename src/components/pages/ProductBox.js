@@ -1,17 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import PUBLIC from "../../assets/module/PUBLIC";
 
 function ProductBox({ item, onClick }) {
   return (
     <ProductBoxStyle onClick={onClick}>
       <div className="img_wrapper">
         <img
-          src={`./images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+          src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
           alt="제품 대표 사진"
           className="product_img"
         />
         <img
-          src={`./images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
+          src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_02.jpg`}
           alt="제품 대표 사진"
           className="product_img hover"
         />

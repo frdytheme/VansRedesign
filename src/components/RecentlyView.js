@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import styled from "styled-components";
 import Cookies from "js-cookie";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function RecentlyView() {
   const productsCookie = Cookies.get("recentlyProducts");
@@ -21,7 +22,7 @@ function RecentlyView() {
           recentlyList.map((product) => (
             <SwiperSlide key={product}>
               <img
-                src={`./images/product/${product}/${product}_${product}_primary.jpg`}
+                src={`${PUBLIC}/images/product/${product}/${product}_${product}_primary.jpg`}
                 alt="제품 대표 사진"
                 className="product_img"
               />

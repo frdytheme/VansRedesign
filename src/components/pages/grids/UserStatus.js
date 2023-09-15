@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import authApi from "../../../assets/api/authApi";
+import PUBLIC from "../../../assets/module/PUBLIC";
 
 function UserStatus({ userData }) {
   const userLogout = async () => {
@@ -34,7 +35,7 @@ function UserStatus({ userData }) {
       <div className="user_interface">
         <p className="user_name">
           <em>{userData.name}</em>
-          <img src={`./images/official/vans_logo_wht.svg`} alt="반스 로고" />
+          <img src={`${PUBLIC}/images/official/vans_logo_wht.svg`} alt="반스 로고" />
         </p>
         <ul className="user_menu">
           <li className="user_menu_li user_info_edit" onClick={tokenCheck}>

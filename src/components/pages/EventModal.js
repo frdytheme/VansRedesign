@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import EventBottomSlide from "./EventBottomSlide";
+import PUBLIC from "../../assets/module/PUBLIC";
 
 function EventModal({ newsDB, setNewsToggle, newsNum, setNewsNum }) {
   const data = newsDB.data[newsNum];
@@ -15,19 +16,36 @@ function EventModal({ newsDB, setNewsToggle, newsNum, setNewsNum }) {
     <ModalStyle>
       <div className="modal_bg" onClick={closeModal}>
         <div className="modal_box">
-          <img src={"./images/official/vans_logo.png"} alt="반스 로고" className="vans_logo" />
+          <img
+            src={`${PUBLIC}/images/official/vans_logo.png`}
+            alt="반스 로고"
+            className="vans_logo"
+          />
           <h2>{data.title}</h2>
           <h3>{data.sub}</h3>
           {data.figure.map((fig, idx) => (
             <figure key={idx}>
-              <img src={`./images/news/${fig.img}`} alt="반스 뉴스 이미지" />
+              <img
+                src={`${PUBLIC}/images/news/${fig.img}`}
+                alt="반스 뉴스 이미지"
+              />
               <figcaption>
                 {fig.by && <h4 className="by_txt">{fig.by}</h4>}
-                {fig.caption && fig.caption.split("^").map((cap, idx) => <p key={idx}>{cap}</p>)}
+                {fig.caption &&
+                  fig.caption
+                    .split("^")
+                    .map((cap, idx) => <p key={idx}>{cap}</p>)}
               </figcaption>
             </figure>
           ))}
-          {data.video && <video src={`./images/news/${data.video}`} muted autoPlay loop />}
+          {data.video && (
+            <video
+              src={`${PUBLIC}/images/news/${data.video}`}
+              muted
+              autoPlay
+              loop
+            />
+          )}
           {data.des.split("^").map((des, idx) => (
             <p key={idx} className="description">
               {des}

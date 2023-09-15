@@ -8,6 +8,7 @@ import "swiper/css/autoplay";
 
 import { Autoplay, Scrollbar } from "swiper";
 import { useNavigate } from "react-router-dom";
+import PUBLIC from "../../assets/module/PUBLIC";
 
 function NavBanner({ setListName, gnbs }) {
   const bannerImg = [
@@ -37,7 +38,7 @@ function NavBanner({ setListName, gnbs }) {
         {bannerImg.map((img, idx) => (
           <SwiperSlide key={idx}>
             <img
-              src={`images/banner/${img.img}`}
+              src={`${PUBLIC}/images/banner/${img.img}`}
               alt="배너 이미지"
               className={`bannerImg banner${idx}`}
               banner-name={img.name}

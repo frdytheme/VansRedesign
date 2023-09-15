@@ -6,6 +6,7 @@ import NewArrival from "./pages/grids/NewArrival";
 import LoginGrid from "./pages/grids/LoginGrid";
 import UserStatus from "./pages/grids/UserStatus";
 import { useNavigate } from "react-router-dom";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function MainPage({
   setListName,
@@ -64,11 +65,13 @@ const MainGrid = styled.main`
     align-items: center;
     font-size: 1.2vw;
     cursor: pointer;
-    background: url("./images/event/cart_bg.jpg") no-repeat center / cover;
+    background: url("${PUBLIC}/images/event/cart_bg.jpg") no-repeat center /
+      cover;
     background-size: 100%;
     transition: 0.6s;
     &:hover {
-      background: url("./images/event/cart_bg.jpg") no-repeat 50% 20% / cover;
+      background: url("${PUBLIC}/images/event/cart_bg.jpg") no-repeat 50% 20% /
+        cover;
       background-size: 130%;
     }
     span {

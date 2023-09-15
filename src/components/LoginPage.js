@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function LoginPage({ userData, setUserData }) {
   const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
@@ -68,7 +69,7 @@ function LoginPage({ userData, setUserData }) {
     <LoginPageStyle onSubmit={(e) => checkUserInfo(e)}>
       <div className="login_box">
         <div className="logo_box">
-          <img src={`./images/official/vans_logo.svg`} alt="반스 로고" />
+          <img src={`${PUBLIC}/images/official/vans_logo.svg`} alt="반스 로고" />
         </div>
         <div className="input_box">
           <input

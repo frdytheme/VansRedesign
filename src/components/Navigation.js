@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import NavBanner from "./pages/NavBanner";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cartCount }) {
   let id = 0;
@@ -154,7 +155,7 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cart
       <div className="nav_box">
         <div className="logo" onClick={() => navigate("/home")}>
           <img
-            src={"./images/official/vans_logo_wht.svg"}
+            src={`${PUBLIC}/images/official/vans_logo_wht.svg`}
             alt="반스 로고"
           />
         </div>

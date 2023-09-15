@@ -7,6 +7,7 @@ import "swiper/css/autoplay";
 
 import { Autoplay } from "swiper";
 import styled from "styled-components";
+import PUBLIC from "../../assets/module/PUBLIC";
 
 function EventBottomSlide({ setNewsNum }) {
   const changeNewsModal = (e) => {
@@ -31,7 +32,7 @@ function EventBottomSlide({ setNewsNum }) {
                 {news.title}
                 <em>{news.sub}</em>
               </p>
-              <img src={`./images/news/${news.cover}`} alt="반스 뉴스 이미지" />
+              <img src={`${PUBLIC}/images/news/${news.cover}`} alt="반스 뉴스 이미지" />
             </div>
           </SwiperSlide>
         ))}

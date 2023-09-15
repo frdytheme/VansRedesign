@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 import PayPage from "./PayPage";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function CartPage({ setCartCount }) {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
@@ -245,7 +246,7 @@ function CartPage({ setCartCount }) {
                           onChange={() => handleCheck(model, size)}
                         />
                         <img
-                          src={`./images/product/${model}/${model}_${model}_primary.jpg`}
+                          src={`${PUBLIC}/images/product/${model}/${model}_${model}_primary.jpg`}
                           alt={`${model}이미지`}
                           className="product_img"
                         />

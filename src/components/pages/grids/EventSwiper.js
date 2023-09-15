@@ -7,6 +7,7 @@ import { Autoplay, Pagination } from "swiper";
 import styled from "styled-components";
 import newsDB from "../../../assets/DB/NewsData.json";
 import EventModal from "../EventModal";
+import PUBLIC from "../../../assets/module/PUBLIC";
 
 function EventSwiper() {
   const [newsToggle, setNewsToggle] = useState(false);
@@ -33,7 +34,7 @@ function EventSwiper() {
                 {news.title}
                 <em>{news.sub}</em>
               </p>
-              <img src={`./images/news/${news.cover}`} alt="반스 뉴스 이미지" />
+              <img src={`${PUBLIC}/images/news/${news.cover}`} alt="반스 뉴스 이미지" />
             </div>
           </SwiperSlide>
         ))}

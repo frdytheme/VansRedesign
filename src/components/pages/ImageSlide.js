@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper";
+import PUBLIC from "../../assets/module/PUBLIC";
 
 function ImageSlide({ imgArr, model, setMainImg }) {
   const imgs = document.querySelectorAll(".detail_imgs img");
@@ -26,7 +27,7 @@ function ImageSlide({ imgArr, model, setMainImg }) {
         {imgArr.map((url, idx) => (
           <SwiperSlide key={idx} className="detail_imgs" onClick={(e) => viewImg(e, url)}>
             <img
-              src={`./images/product/${model}/${url}`}
+              src={`${PUBLIC}/images/product/${model}/${url}`}
               alt="제품 상세 이미지"
               className={idx === 0 ? "selected" : undefined}
             />

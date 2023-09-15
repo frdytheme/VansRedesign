@@ -11,14 +11,16 @@ import ProductBox from "../ProductBox";
 import authApi from "../../../assets/api/authApi";
 
 function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
+  const newProduct = JSON.parse(sessionStorage.getItem("NEW_ARRIVAL")) || [];
   const [newItems, setNewItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const getNewArrival = async () => {
+    setLoading(false);
     try {
       const response = await authApi.get("/product?all=1&mainCategory=NEW");
       const data = response.data.products;
-      setNewItems(data);
+      sessionStorage.setItem("NEW_ARRIVAL", JSON.stringify(data));
     } catch (err) {
       console.error(err);
     } finally {
@@ -27,7 +29,7 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   };
 
   useEffect(() => {
-    getNewArrival();
+    if (newProduct.length === 0) getNewArrival();
   }, []);
 
   const selectProduct = (item) => {
@@ -47,7 +49,7 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
         modules={[Navigation]}
         className="mySwiper"
       >
-        {newItems.map((item, idx) => {
+        {newProduct.map((item, idx) => {
           return (
             <SwiperSlide key={idx}>
               <ProductBox item={item} onClick={() => selectProduct(item)} />

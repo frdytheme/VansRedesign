@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import authApi from "../../../assets/api/authApi";
+import PUBLIC from "../../../assets/module/PUBLIC";
 
 function LoginGrid() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function LoginGrid() {
         <div className="login_btn" onClick={handleLogin}>
           <p>
             <img
-              src={`./images/official/vans_logo_wht.svg`}
+              src={`${PUBLIC}/images/official/vans_logo_wht.svg`}
               alt="반스 로고"
             />
             로그인

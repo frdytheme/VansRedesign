@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function Footer() {
   const footerTxt = [
@@ -22,7 +23,7 @@ function Footer() {
           </li>
         ))}
       </ul>
-      <img src={`./images/official/vans_footer.svg`} alt="반스 로고" className="footer_logo" />
+      <img src={`${PUBLIC}/images/official/vans_footer.svg`} alt="반스 로고" className="footer_logo" />
     </FooterStyle>
   );
 }
