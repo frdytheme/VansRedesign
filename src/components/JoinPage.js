@@ -4,6 +4,7 @@ import authApi from "../assets/api/authApi";
 import { useNavigate } from "react-router-dom";
 import CountDown from "./CountDown";
 import CountDown2 from "./CountDown2";
+import LoadingBox from "./LoadingBox";
 
 function JoinPage() {
   const navigate = useNavigate();
@@ -24,8 +25,10 @@ function JoinPage() {
   const [emailChange, setEmailChange] = useState(false);
   const [userOnly, setUserOnly] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const checkIsOnly = async () => {
+    setLoading(true);
     if (joinUser.name.length <= 4) return;
     try {
       const response = await authApi.post("/user/idCheck", joinUser, {
@@ -47,6 +50,8 @@ function JoinPage() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,14 +153,14 @@ function JoinPage() {
         },
       });
       if (response.data.auth) {
-        alert("인증되었습니다.");
         setIsAuth(true);
         setAuthBoxShow(false);
       } else {
-        alert("인증번호가 틀렸습니다.");
         setIsAuth(false);
       }
+      alert(response.data.message);
     } catch (err) {
+      alert(err.data.message);
       console.error(err);
     }
   };
@@ -172,6 +177,11 @@ function JoinPage() {
 
   return (
     <JoinPageStyle onSubmit={submitJoin}>
+      {loading && (
+        <div className="loading_state">
+          <LoadingBox />
+        </div>
+      )}
       <fieldset className="input_field id_field">
         <legend>아이디</legend>
         <input
@@ -452,6 +462,9 @@ const JoinPageStyle = styled.form`
         font-size: 0.8vw;
       }
     }
+  }
+  .loading_state {
+    background-color: rgba(255, 255, 255, 0.5);
   }
 `;
 

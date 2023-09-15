@@ -4,6 +4,7 @@ import ProductFilter from "./ProductFilter";
 import ProductBox from "./ProductBox";
 import authApi from "../../assets/api/authApi";
 import Pfunction from "../../assets/module/Pfunction";
+import LoadingBox from "../LoadingBox";
 
 function ProductList({
   listName,
@@ -19,6 +20,7 @@ function ProductList({
   const [filteredProduct, setFilteredProduct] = useState([]);
   const filteredUrl = useRef("");
   const [lastPage, setLastPage] = useState(0);
+  const [loading, setLoading] = useState(false);
   const nowPage = useRef(1);
   const search = useRef([]);
   const [filterList, setFilterList] = useState({
@@ -143,8 +145,11 @@ function ProductList({
         setProduct(updateProduct);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
+
     const addFilteredProduct = async () => {
       try {
         const response = await authApi.get(
@@ -157,6 +162,8 @@ function ProductList({
         setFilteredProduct(updateProduct);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     if (
@@ -165,6 +172,7 @@ function ProductList({
       (product.length === nowPage.current * 25 ||
         filteredProduct.length === nowPage.current * 25)
     ) {
+      setLoading(true);
       nowPage.current = nowPage.current + 1;
       filterToggle ? addFilteredProduct() : addProduct();
     }
@@ -189,6 +197,11 @@ function ProductList({
         submitBtn={submitBtn}
       />
       <div className="flex_container">
+        {loading && (
+          <div className="loading_state">
+            <LoadingBox />
+          </div>
+        )}
         {product.length === 0 || filteredProduct.length === 0 ? (
           <div className="empty_alert">
             <p>찾으시는 상품 정보가 존재하지 않습니다.</p>
@@ -223,6 +236,15 @@ const ProductListStyle = styled.div`
   position: relative;
   background-color: #fff;
   overflow: auto;
+  .loading_state {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: fixed;
+    z-index: 999;
+  }
   &::-webkit-scrollbar {
     width: 15px;
   }
@@ -240,7 +262,7 @@ const ProductListStyle = styled.div`
     flex-wrap: wrap;
     gap: 1vw;
     figure {
-      margin-top:2vw;
+      margin-top: 2vw;
     }
     .empty_alert {
       width: 100%;
