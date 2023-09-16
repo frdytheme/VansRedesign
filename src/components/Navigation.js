@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import NavBanner from "./pages/NavBanner";
 import PUBLIC from "../assets/module/PUBLIC";
 
-function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cartCount }) {
+function Navigation({
+  setListName,
+  searchName,
+  setSearchName,
+  setSubmitBtn,
+  cartCount,
+}) {
+  const [searchNow, setSearchNow] = useState("");
   let id = 0;
   const gnbList = [
     {
@@ -146,6 +153,7 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cart
 
   const submitSearch = (e) => {
     e.preventDefault();
+    setSearchName(searchNow);
     setSubmitBtn((prev) => !prev);
     navigate("./product");
   };
@@ -220,8 +228,8 @@ function Navigation({ setListName, searchName, setSearchName, setSubmitBtn, cart
               type="text"
               className="searchBox"
               placeholder="Search..."
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
+              value={searchNow}
+              onChange={(e) => setSearchNow(e.target.value)}
             />
             <span className="material-symbols-outlined searchIcon">search</span>
           </label>

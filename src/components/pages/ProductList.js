@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import ProductFilter from "./ProductFilter";
 import ProductBox from "./ProductBox";
@@ -35,7 +35,8 @@ function ProductList({
   });
   const [filterToggle, setFilterToggle] = useState(false);
 
-  const getProduct = async () => {
+  const getProduct = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await authApi.get(
         `/product?page=1&mainCategory=${encodeListName}&name=${searchName}`
@@ -45,8 +46,11 @@ function ProductList({
       setProduct(products);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [encodeListName, searchName, setLastPage, setProduct, setLoading]);
+
   const resetScroll = () => {
     const container = document.querySelector("#product_container");
     container.scroll(0, 0);
@@ -56,7 +60,7 @@ function ProductList({
     getProduct();
     nowPage.current = 1;
     resetScroll();
-  }, [listName, submitBtn]);
+  }, [listName, submitBtn, getProduct]);
 
   useEffect(() => {
     search.current = [];
@@ -108,7 +112,9 @@ function ProductList({
     filteredUrl.current = `/product?${search.current.join(
       "&"
     )}&mainCategory=${encodeListName}&name=${searchName}`;
+
     const fetchFilteredProduct = async () => {
+      setLoading(true);
       try {
         const response = await authApi.get(filteredUrl.current);
         const { products, totalPages } = response.data;
@@ -116,6 +122,8 @@ function ProductList({
         setLastPage(totalPages);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -129,6 +137,7 @@ function ProductList({
           ? 1
           : product.length / 25;
     }
+    // eslint-disable-next-line
   }, [filterList, filterToggle]);
 
   const handleScroll = (e) => {

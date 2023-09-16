@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,39 @@ function JoinPage() {
   const [userOnly, setUserOnly] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const handleIdInput = (e) => {
+    const { name } = joinUser;
+    const idCheck = /^[a-zA-Z0-9]+$/;
+    const idRedTxt = document.querySelector(".id_red_txt");
+    const idCheckBtn = document.querySelector(".id_check");
+
+    setJoinUser((prev) => ({ ...prev, name: e.target.value }));
+
+    if (idCheck.test(name) && name.length >= 4 && name.length <= 16) {
+      idRedTxt.classList.add("submit");
+      idCheckBtn.classList.add("active");
+    } else if (!idCheck.test(name) && name.length > 0) {
+      alert("영문 혹은 숫자만 입력 가능합니다.");
+      setJoinUser((prev) => ({
+        ...prev,
+        name: name.slice(0, name.length - 1),
+      }));
+    } else {
+      idRedTxt.classList.remove("submit");
+      idCheckBtn.classList.remove("active");
+    }
+
+    setUserOnly(false);
+  };
+
+  const handlePwInput = (e) => {
+    setInputPw(e.target.value);
+  };
+
+  const handlePwCheckInput = (e) => {
+    setConfirmPw(e.target.value);
+  };
 
   const checkIsOnly = async () => {
     setLoading(true);
@@ -56,27 +89,7 @@ function JoinPage() {
   };
 
   useEffect(() => {
-    const { name } = joinUser;
-    const idCheck = /^[a-zA-Z0-9]+$/;
-    const idRedTxt = document.querySelector(".id_red_txt");
-    const idCheckBtn = document.querySelector(".id_check");
-    if (idCheck.test(name) && name.length >= 4 && name.length <= 16) {
-      idRedTxt.classList.add("submit");
-      idCheckBtn.classList.add("active");
-    } else if (!idCheck.test(name) && name.length > 0) {
-      alert("영문 혹은 숫자만 입력 가능합니다.");
-      setJoinUser((prev) => ({
-        ...prev,
-        name: name.slice(0, name.length - 1),
-      }));
-    } else {
-      idRedTxt.classList.remove("submit");
-      idCheckBtn.classList.remove("active");
-    }
-  }, [joinUser.name]);
-
-  useEffect(() => {
-    const pwOption = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
+    const pwOption = /^[a-zA-Z0-9!@#$%^&*()_+{}[\]:;<>,.?~\\/\\-]+$/;
     const pwRedTxt = document.querySelector(".pw_red_txt");
     if (pwOption.test(inputPw) && inputPw.length >= 8) {
       pwRedTxt.classList.add("submit");
@@ -143,6 +156,7 @@ function JoinPage() {
   };
 
   const authEmailNum = async () => {
+    setLoading(true);
     const auth = {
       authNum: emailAuthNum,
     };
@@ -162,6 +176,8 @@ function JoinPage() {
     } catch (err) {
       alert(err.data.message);
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -194,10 +210,7 @@ function JoinPage() {
           maxLength={16}
           disabled={userOnly}
           required
-          onChange={(e) => {
-            setJoinUser((prev) => ({ ...prev, name: e.target.value }));
-            setUserOnly(false);
-          }}
+          onChange={handleIdInput}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -231,7 +244,7 @@ function JoinPage() {
           minLength={8}
           maxLength={20}
           required
-          onChange={(e) => setInputPw(e.target.value)}
+          onChange={handlePwInput}
         />
         <input
           type="password"
@@ -242,7 +255,7 @@ function JoinPage() {
           minLength={8}
           maxLength={20}
           required
-          onChange={(e) => setConfirmPw(e.target.value)}
+          onChange={handlePwCheckInput}
         />
         <p className="red_txt pw_red_txt">
           영문 대소문자 / 숫자 / 특수문자 사용 가능, 8~20글자

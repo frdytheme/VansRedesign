@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
 import PUBLIC from "../assets/module/PUBLIC";
+import LoadingBox from "./LoadingBox";
 
 function LoginPage({ userData, setUserData }) {
   const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
   const userAutoLogin = JSON.parse(localStorage.getItem("userAutoLogin"));
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -18,6 +20,7 @@ function LoginPage({ userData, setUserData }) {
 
   const checkUserInfo = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const cart = JSON.parse(sessionStorage.getItem("CART")) || {
       data: {},
       total: 0,
@@ -38,6 +41,8 @@ function LoginPage({ userData, setUserData }) {
       navigate("/home");
     } catch (err) {
       alert(err.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,9 +72,17 @@ function LoginPage({ userData, setUserData }) {
 
   return (
     <LoginPageStyle onSubmit={(e) => checkUserInfo(e)}>
+      {loading && (
+        <div className="loding_state">
+          <LoadingBox />
+        </div>
+      )}
       <div className="login_box">
         <div className="logo_box">
-          <img src={`${PUBLIC}/images/official/vans_logo.svg`} alt="반스 로고" />
+          <img
+            src={`${PUBLIC}/images/official/vans_logo.svg`}
+            alt="반스 로고"
+          />
         </div>
         <div className="input_box">
           <input
@@ -129,6 +142,15 @@ const LoginPageStyle = styled.form`
   width: 100%;
   height: 100%;
   position: relative;
+  .loding_state {
+    position: absolute;
+    top: -80px;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
   .login_box {
     width: 300px;
     height: 50%;

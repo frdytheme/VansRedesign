@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import authApi from "../../assets/api/authApi";
 import PUBLIC from "../../assets/module/PUBLIC";
+import LoadingBox from "../LoadingBox";
 
 function ProductDetail({
   setProductInfo,
@@ -18,7 +19,6 @@ function ProductDetail({
   const { name, color, model, price, size, mainCategory } = productInfo;
   const sizeArr = Object.keys(size);
   const [selectedSize, setSelectedSize] = useState("");
-  const [imgArr, setImgArr] = useState([]);
   const [mainImg, setMainImg] = useState("");
   const [sameProduct, setSameProduct] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,22 +37,8 @@ function ProductDetail({
     }
   };
 
-  const fetchImg = async () => {
-    try {
-      const response = await axios.get(`${PUBLIC}/images/product/${model}`);
-      const data = response.data;
-      const mainImg = data.pop();
-      data.unshift(mainImg);
-      setImgArr(data);
-      setMainImg(data[0]);
-      setLoading(true);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
-    fetchImg();
+    setMainImg(`/images/product/${model}/${model}_${model}_primary.jpg`);
     fetchSameProduct();
   }, [productInfo]);
 
@@ -99,13 +85,17 @@ function ProductDetail({
   };
 
   const selectSeries = (item) => {
-    setLoading(false);
     setProductInfo(item);
     setQty(1);
   };
 
   return (
     <ProductDetailStyle className="product_info_container">
+      {loading && (
+        <div className="loading_state">
+          <LoadingBox />
+        </div>
+      )}
       <div className="console_box">
         <span
           className="material-symbols-outlined close_btn"
@@ -115,18 +105,14 @@ function ProductDetail({
         </span>
       </div>
       <div className="info_box">
-        {loading ? (
-          <div className="img_wrapper">
-            <img
-              src={`${PUBLIC}/images/product/${model}/${mainImg}`}
-              alt={name + `제품 이미지`}
-              className="product_img"
-            />
-            <ImageSlide imgArr={imgArr} model={model} setMainImg={setMainImg} />
-          </div>
-        ) : (
-          <div className="img_wrapper loading_status"></div>
-        )}
+        <div className="img_wrapper">
+          <img
+            src={`${PUBLIC}${mainImg}`}
+            alt={name + `제품 이미지`}
+            className="product_img"
+          />
+          <ImageSlide model={model} setMainImg={setMainImg} />
+        </div>
         <ul className="product_info">
           {mainCategory.includes("NEW") && (
             <li className="product_info_li product_new_arrivals">
@@ -232,6 +218,9 @@ const ProductDetailStyle = styled.div`
   border-radius: 0 0 20px 20px;
   transition: 0.4s;
   animation: ${slideDown} 0.6s forwards;
+  .loading_state {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
   .console_box {
     width: 100%;
     border-bottom: 1px solid #000;
