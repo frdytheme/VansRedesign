@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 import { useNavigate } from "react-router-dom";
@@ -10,15 +10,13 @@ function JoinPage() {
   const navigate = useNavigate();
   const [joinUser, setJoinUser] = useState({
     name: "",
-    pw: "",
-    pwCheck: "",
     email: "",
   });
 
   const [inputPw, setInputPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [pwConfirm, setPwConfirm] = useState(false);
-
+  const [idActive, setIdActive] = useState(false);
   const [emailAuthNum, setEmailAuthNum] = useState("");
   const [authBoxShow, setAuthBoxShow] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
@@ -27,30 +25,38 @@ function JoinPage() {
   const [resetTimer, setResetTimer] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const idCheck = useMemo(() => {
+    return /^[a-zA-Z0-9]+$/;
+  }, []);
+
   const handleIdInput = (e) => {
     const { name } = joinUser;
-    const idCheck = /^[a-zA-Z0-9]+$/;
-    const idRedTxt = document.querySelector(".id_red_txt");
-    const idCheckBtn = document.querySelector(".id_check");
 
     setJoinUser((prev) => ({ ...prev, name: e.target.value }));
 
-    if (idCheck.test(name) && name.length >= 4 && name.length <= 16) {
-      idRedTxt.classList.add("submit");
-      idCheckBtn.classList.add("active");
-    } else if (!idCheck.test(name) && name.length > 0) {
+    if (!idCheck.test(name) && name.length > 0) {
       alert("영문 혹은 숫자만 입력 가능합니다.");
       setJoinUser((prev) => ({
         ...prev,
         name: name.slice(0, name.length - 1),
       }));
-    } else {
-      idRedTxt.classList.remove("submit");
-      idCheckBtn.classList.remove("active");
     }
 
     setUserOnly(false);
   };
+
+  useEffect(() => {
+    const { name } = joinUser;
+    const idRedTxt = document.querySelector(".id_red_txt");
+
+    if (idCheck.test(name) && name.length >= 4 && name.length <= 16) {
+      idRedTxt.classList.add("submit");
+      setIdActive(true);
+    } else {
+      idRedTxt.classList.remove("submit");
+      setIdActive(false);
+    }
+  }, [joinUser, idCheck]);
 
   const handlePwInput = (e) => {
     setInputPw(e.target.value);
@@ -61,6 +67,7 @@ function JoinPage() {
   };
 
   const checkIsOnly = async () => {
+    if (!idActive) return;
     setLoading(true);
     if (joinUser.name.length <= 4) return;
     try {
@@ -112,8 +119,8 @@ function JoinPage() {
     if (!pwConfirm) return alert("비밀번호가 일치하지 않습니다.");
     if (!isAuth) return alert("이메일 인증을 해주세요.");
 
-    const { name, email, pw } = joinUser;
-    const user = { name, email, password: pw };
+    const { name, email } = joinUser;
+    const user = { name, email, password: inputPw };
     try {
       await authApi.post("/user/join", user, {
         headers: {
@@ -221,7 +228,10 @@ function JoinPage() {
         {userOnly ? (
           <div className="id_check user_only">사용가능</div>
         ) : (
-          <div className="id_check" onClick={checkIsOnly}>
+          <div
+            className={`id_check${idActive ? " active" : ""}`}
+            onClick={checkIsOnly}
+          >
             중복확인
           </div>
         )}

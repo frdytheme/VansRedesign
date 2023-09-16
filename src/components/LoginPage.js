@@ -9,6 +9,8 @@ function LoginPage({ userData, setUserData }) {
   const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
   const userAutoLogin = JSON.parse(localStorage.getItem("userAutoLogin"));
   const [loading, setLoading] = useState(false);
+  const [findUser, setFindUser] = useState(false);
+  const [findPw, setFindPw] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,6 +61,14 @@ function LoginPage({ userData, setUserData }) {
     localStorage.setItem("userAutoLogin", JSON.stringify(checked));
   };
 
+  const findUserName = () => {
+    setFindUser(true);
+  };
+
+  const findUserPw = () => {
+    setFindPw(true);
+  };
+
   useEffect(() => {
     const userSaveCheck = document.getElementById("user_id_save");
     const userAutoLoginCheck = document.getElementById("user_auto_login");
@@ -68,6 +78,15 @@ function LoginPage({ userData, setUserData }) {
     if (userAutoLogin) {
       userAutoLoginCheck.checked = userAutoLogin;
     }
+    return () => {
+      if (JSON.parse(sessionStorage.getItem("loginState"))) return;
+      if (userSaveState) {
+        setUserData((prev) => ({ ...prev, password: "" }));
+      } else {
+        setUserData({ name: "", password: "" });
+      }
+    };
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -126,14 +145,24 @@ function LoginPage({ userData, setUserData }) {
           로그인
         </button>
         <div className="find_box">
-          <p className="find_id">아이디 찾기</p>
-          <p className="find_pw">비밀번호 찾기</p>
+          <p className="find_id" onClick={findUserName}>
+            아이디 찾기
+          </p>
+          <p className="find_pw" onClick={findUserPw}>
+            비밀번호 찾기
+          </p>
 
           <p className="join_user" onClick={() => navigate("/home/join")}>
             회원가입
           </p>
         </div>
       </div>
+      {findUser && (
+        <div className="find_modal find_user_name">
+          <input type="text" placeholder="이메일" />
+        </div>
+      )}
+      {findPw && <div className="find_modal find_user_pw"></div>}
     </LoginPageStyle>
   );
 }
@@ -214,6 +243,24 @@ const LoginPageStyle = styled.form`
         color: var(--color-red);
         font-weight: bold;
       }
+    }
+  }
+  .find_modal {
+    background-color: #fff;
+    border: 1px solid #000;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2vw;
+    input {
+      width: 12vw;
+      height: 2vw;
+      text-indent: 0.3vw;
+      outline: none;
     }
   }
 `;
