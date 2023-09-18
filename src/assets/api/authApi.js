@@ -4,8 +4,7 @@ import axios from "axios";
 // 반응형...??
 
 const authApi = axios.create({
-  // baseURL: "https://vans-redesign-frdytheme.koyeb.app/api",
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://vans-redesign-frdytheme.koyeb.app/api",
   withCredentials: true,
 });
 
