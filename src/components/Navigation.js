@@ -6,10 +6,10 @@ import PUBLIC from "../assets/module/PUBLIC";
 
 function Navigation({
   setListName,
-  searchName,
   setSearchName,
   setSubmitBtn,
   cartCount,
+  userData,
 }) {
   const [searchNow, setSearchNow] = useState("");
   let id = 0;
@@ -253,6 +253,7 @@ const Nav = styled.header`
   width: 100%;
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
+  color: #fff;
   .nav_box {
     background-color: var(--color-red);
     background-color: #000;
@@ -274,7 +275,6 @@ const Nav = styled.header`
       cursor: pointer;
     }
     .gnb {
-      color: #fff;
       display: flex;
       z-index: 999;
       margin-left: auto;
@@ -296,13 +296,11 @@ const Nav = styled.header`
           }
         }
         &.disabled {
-          color: #fff;
           opacity: 0.4;
           cursor: default;
         }
         .lnb {
           width: 100%;
-          color: #fff;
           position: absolute;
           left: 0;
           top: 100%;
@@ -339,7 +337,6 @@ const Nav = styled.header`
       height: 100%;
       display: flex;
       align-items: center;
-      color: #fff;
       position: relative;
       input {
         width: 10vw;
@@ -356,19 +353,18 @@ const Nav = styled.header`
         color: var(--color-red);
       }
     }
-    .cart_icon {
-      color: #fff;
+    .user_icon {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 0.5vw;
-      margin-right: 2vw;
       background-color: #222;
       border-radius: 10px;
       padding: 0 0.8vw;
       height: 50%;
-      border: 1px solid #fff;
+      border: 1px solid transparent;
       cursor: pointer;
+      margin-right: 2vw;
       &:hover {
         border: 1px solid var(--color-pink);
         color: var(--color-pink);

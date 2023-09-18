@@ -49,22 +49,10 @@ function CartPage({ setCartCount }) {
 
   const countUp = async (product, size) => {
     const { model } = product;
-    try {
-      const response = await authApi.get(`/product?model=${model}`);
-      const productDB = response.data.products[0];
-      const value = productDB.size[size];
-      const qty = product.sizes[size].qty;
-      if (value > qty) {
-        data[model].sizes[size].qty++;
-        cart.data = data;
-        sessionStorage.setItem("CART", JSON.stringify(cart));
-        parsingCart();
-      } else {
-        alert("현재 주문 가능한 최대 수량입니다.");
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    data[model].sizes[size].qty++;
+    cart.data = data;
+    sessionStorage.setItem("CART", JSON.stringify(cart));
+    parsingCart();
   };
   const countDown = (product, size) => {
     const { model } = product;
