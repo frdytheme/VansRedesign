@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function PayPage() {
 
@@ -73,19 +74,19 @@ const PayPageStyle = styled.div`
           outline: 2px solid #000;
         }
         &.naverpay {
-          background: #fff url("./images/pay_logos/naver.png") no-repeat center /
+          background: #fff url("${PUBLIC}/images/pay_logos/naver.png") no-repeat center /
             40%;
         }
         &.kakaopay {
-          background: #ffeb00 url("./images/pay_logos/kakaopay.png") no-repeat
+          background: #ffeb00 url("${PUBLIC}/images/pay_logos/kakaopay.png") no-repeat
             center / 50%;
         }
         &.toss {
-          background: #0064ff url("./images/pay_logos/toss_white.png") no-repeat
+          background: #0064ff url("${PUBLIC}/images/pay_logos/toss_white.png") no-repeat
             center / contain;
         }
         &.payco {
-          background: #e7181e url("./images/pay_logos/payco.png") no-repeat
+          background: #e7181e url("${PUBLIC}/images/pay_logos/payco.png") no-repeat
             center / 50%;
         }
         img {
