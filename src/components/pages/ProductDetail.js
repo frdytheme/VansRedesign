@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ImageSlide from "./ImageSlide";
@@ -26,6 +25,7 @@ function ProductDetail({
   const [maxQty, setMaxQty] = useState(0);
 
   const fetchSameProduct = async () => {
+    setLoading(true);
     try {
       const response = await authApi.get(`/product?all=1&name=${name}`);
       const data = response.data;
@@ -34,6 +34,8 @@ function ProductDetail({
       setSameProduct(products);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,6 +89,8 @@ function ProductDetail({
   const selectSeries = (item) => {
     setProductInfo(item);
     setQty(1);
+    const sizes = document.querySelectorAll(".size_item");
+    sizes.forEach((size) => size.classList.remove("selected"));
   };
 
   return (

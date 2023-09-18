@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import authApi from "../../../assets/api/authApi";
 import PUBLIC from "../../../assets/module/PUBLIC";
+import { useNavigate } from "react-router-dom";
 
 function UserStatus({ userData }) {
+  const navigate = useNavigate();
   const userLogout = async () => {
     try {
       await authApi.post("/user/logout");
@@ -16,29 +18,22 @@ function UserStatus({ userData }) {
       window.location.reload();
     }
   };
-  const tokenCheck = async () => {
-    const user = { name: userData.name };
-    try {
-      const response = await authApi.post("/user/auth", user, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response.data);
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
 
   return (
     <UserStatusStyle>
       <div className="user_interface">
         <p className="user_name">
           <em>{userData.name}</em>
-          <img src={`${PUBLIC}/images/official/vans_logo_wht.svg`} alt="반스 로고" />
+          <img
+            src={`${PUBLIC}/images/official/vans_logo_wht.svg`}
+            alt="반스 로고"
+          />
         </p>
         <ul className="user_menu">
-          <li className="user_menu_li user_info_edit" onClick={tokenCheck}>
+          <li
+            className="user_menu_li user_info_edit"
+            onClick={() => navigate("../mypage")}
+          >
             <span className="material-symbols-outlined">person</span>
             마이페이지
           </li>

@@ -74,7 +74,7 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
       (item) =>
         (item = {
           ...item,
-          txt: item.min.toLocaleString("kr-KR") + "원" + "~" + item.max.toLocaleString("kr-KR") + "원",
+          txt: item.min.toLocaleString("kr-KR") + "원~" + item.max.toLocaleString("kr-KR") + "원",
           checked: false,
         })
     );

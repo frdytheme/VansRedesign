@@ -13,7 +13,6 @@ import LoadingBox from "../../LoadingBox";
 
 function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   const newProduct = JSON.parse(sessionStorage.getItem("NEW_ARRIVAL")) || [];
-  const [newItems, setNewItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getNewArrival = async () => {

@@ -106,7 +106,7 @@ function JoinPage() {
     } else {
       pwRedTxt.classList.remove("submit");
     }
-    if (inputPw === confirmPw) {
+    if (inputPw === confirmPw && inputPw && confirmPw) {
       setPwConfirm(true);
     } else {
       setPwConfirm(false);
@@ -146,19 +146,24 @@ function JoinPage() {
     if (!joinUser.email) return alert("이메일을 입력해주세요.");
     if (!joinUser.email.includes("@"))
       return alert("이메일 형식이 잘못되었습니다.");
-    const emailObj = {
-      email: joinUser.email,
-    };
-    setAuthBoxShow(true);
-    setEmailChange(true);
+    setLoading(true);
     try {
+      const emailObj = {
+        email: joinUser.email,
+      };
       await authApi.post("/user/emailAuth", emailObj, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      setLoading(false);
+      setAuthBoxShow(true);
+      setEmailChange(true);
     } catch (err) {
       console.error(err);
+      alert(err.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 

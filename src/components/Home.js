@@ -10,6 +10,9 @@ import LoginPage from "./LoginPage";
 import JoinPage from "./JoinPage";
 import CartPage from "./CartPage";
 import Cookies from "js-cookie";
+import FindUserId from "./FindUserId";
+import FindUserPw from "./FindUserPw";
+import MyPage from "./MyPage";
 
 function Home() {
   const [listName, setListName] = useState([]);
@@ -112,7 +115,10 @@ function Home() {
           path="/login"
           element={<LoginPage userData={userData} setUserData={setUserData} />}
         />
+        <Route path="/findId" element={<FindUserId />} />
+        <Route path="/findPw" element={<FindUserPw />} />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="/mypage" element={<MyPage userData={userData} />} />
         <Route
           path="/cart"
           element={<CartPage setCartCount={setCartCount} />}
