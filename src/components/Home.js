@@ -191,6 +191,10 @@ const wiggle = keyframes`
 `;
 
 const HomeSection = styled.div`
+@media (max-width:1200px) {
+  height:auto;
+  overflow:auto;
+}
   width: 100%;
   height: 100vh;
   max-height: 100vh;
@@ -210,6 +214,7 @@ const HomeSection = styled.div`
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
       rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     width: 20vw;
+    min-width: 230px;
     border-radius: 0 0 15px 15px;
     position: absolute;
     top: -100%;
@@ -217,7 +222,7 @@ const HomeSection = styled.div`
     transform: translateX(-50%);
     z-index: 9999;
     text-align: center;
-    padding: 1vw 0 0.3vw;
+    padding: 20px 0 10px;
     display: flex;
     flex-direction: column;
     gap: 0.7vw;

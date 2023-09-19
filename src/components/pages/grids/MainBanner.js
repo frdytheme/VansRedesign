@@ -10,7 +10,7 @@ import { Scrollbar } from "swiper";
 import { useNavigate } from "react-router-dom";
 import PUBLIC from "../../../assets/module/PUBLIC";
 
-function MainBanner({ setListName}) {
+function MainBanner({ setListName }) {
   const bannerImg = [
     { img: "banner_0.jpg", name: "KNU 컬렉션" },
     { img: "banner_1.jpg", name: "Authentic" },
@@ -25,14 +25,15 @@ function MainBanner({ setListName}) {
   };
 
   return (
-    <BannerStyle onClick={selectBanner}>
+    <BannerStyle onClick={selectBanner} className="main_banner">
       <Swiper
         scrollbar={{
           hide: true,
         }}
         modules={[Scrollbar]}
         className="mySwiper"
-        loop={true}>
+        loop={true}
+      >
         {bannerImg.map((img, idx) => (
           <SwiperSlide key={idx}>
             <img

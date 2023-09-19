@@ -39,7 +39,7 @@ function LoginGrid() {
   };
 
   return (
-    <LoginGridStyle>
+    <LoginGridStyle className="login_grid">
       <div className="user_box">
         <div className="login_btn" onClick={handleLogin}>
           <p>
@@ -61,6 +61,7 @@ function LoginGrid() {
 const LoginGridStyle = styled.div`
   color: #fff;
   overflow: hidden;
+  /* font-size: 0.9vw; */
   .user_box {
     width: 100%;
     height: 100%;
@@ -70,13 +71,14 @@ const LoginGridStyle = styled.div`
   }
   .login_btn {
     background-color: var(--color-red);
-    gap: 0.5vw;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 0.5vw;
     img {
-      width: 4vw;
+      width: 5vw;
+      margin-right: 0.2vw;
     }
   }
   .join_box {

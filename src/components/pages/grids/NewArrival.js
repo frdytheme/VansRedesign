@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useMediaQuery } from "react-responsive";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -14,6 +15,7 @@ import LoadingBox from "../../LoadingBox";
 function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   const newProduct = JSON.parse(sessionStorage.getItem("NEW_ARRIVAL")) || [];
   const [loading, setLoading] = useState(true);
+  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth:768 });
 
   const getNewArrival = async () => {
     setLoading(false);
@@ -40,10 +42,9 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   };
 
   return (
-    <NewArrivalStyle>
+    <NewArrivalStyle className="new_container">
       <Swiper
-        slidesPerView={5}
-        slidesPerGroup={5}
+        slidesPerView={isTablet ? 6 : 5}
         spaceBetween={10}
         navigation={true}
         modules={[Navigation]}
@@ -72,9 +73,37 @@ const NewArrivalStyle = styled.div`
   }
   .swiper-slide {
     display: flex;
-    justify-content: center;
+    justify-content: start;
+    .img_wrapper {
+      height: 80%;
+      .product_img {
+        height: 100%;
+      }
+    }
     .product_caption {
-      margin-top: 0;
+      margin: 0;
+      padding: 0.5vw 0;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      height: 20%;
+      .product_name {
+        overflow: hidden;
+        max-width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 15px;
+      }
+      .product_price {
+        margin: 0;
+      }
     }
   }
   .swiper-button-next:after,
@@ -83,6 +112,22 @@ const NewArrivalStyle = styled.div`
     color: var(--color-red);
     color: #000;
     font-weight: bold;
+  }
+  @media (max-width: 1200px) {
+    .swiper-slide {
+      .product_caption {
+        .new_arrival {
+          font-size: 1vw;
+        }
+        .product_name {
+          font-size: 1.2vw;
+        }
+
+        .product_price {
+          font-size: 1vw;
+        }
+      }
+    }
   }
 `;
 

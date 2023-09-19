@@ -13,6 +13,7 @@
     "react": "^18.2.0",
     "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
+    "react-responsive": "^9.0.2",
     "react-router-dom": "^6.14.2",
     "react-scripts": "^5.0.1",
     "styled-component": "^2.8.0",
@@ -46,5 +47,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://vans-redesign-frdytheme.koyeb.app"
+  "proxy": "http://localhost:8000"
 }

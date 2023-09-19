@@ -7,6 +7,7 @@ import LoginGrid from "./pages/grids/LoginGrid";
 import UserStatus from "./pages/grids/UserStatus";
 import { useNavigate } from "react-router-dom";
 import PUBLIC from "../assets/module/PUBLIC";
+import { useMediaQuery } from "react-responsive";
 
 function MainPage({
   setListName,
@@ -18,6 +19,7 @@ function MainPage({
 }) {
   const loginState = sessionStorage.getItem("loginState");
   const navigate = useNavigate();
+  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
 
   return (
     <MainGrid>
@@ -27,7 +29,6 @@ function MainPage({
       ) : (
         <LoginGrid />
       )}
-
       <div className="cart_grid" onClick={() => navigate("./cart")}>
         <span className="material-symbols-outlined">shopping_bag</span>CART
         <em>( {cartCount} )</em>
@@ -47,7 +48,7 @@ const MainGrid = styled.main`
   height: calc(100% - 80px);
   display: grid;
   grid-template-columns: 2fr 3fr 2fr 3fr;
-  grid-template-rows: 1fr 2fr 1fr 5fr 1fr;
+  grid-template-rows: 1fr 2fr 1fr 5fr 70px;
   gap: 10px;
   padding: 10px;
   padding-bottom: 0;
@@ -63,7 +64,7 @@ const MainGrid = styled.main`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2vw;
+    font-size: 22px;
     cursor: pointer;
     background: url("${PUBLIC}/images/event/cart_bg.jpg") no-repeat center /
       cover;
@@ -75,11 +76,40 @@ const MainGrid = styled.main`
       background-size: 130%;
     }
     span {
-      font-size: 2vw;
+      font-size: 40px;
     }
     em {
-      font-size: 1vw;
+      font-size: 24px;
       margin-left: 0.7vw;
+    }
+  }
+  @media (max-width: 1200px) {
+    grid-template-columns: 5fr 5fr;
+    grid-template-rows: 1fr;
+    height: auto;
+    padding-right: 0;
+    .main_banner {
+      grid-row: 1 / 2;
+      grid-column: 1 / 3;
+    }
+    .event_swiper {
+      /* grid-row: 1 / 2; */
+      grid-column: 1 / 3;
+    }
+    .login_grid {
+      /* grid-row: 1 / 2;
+      grid-column: 2 / 3;
+      height: 9vw; */
+      display: none;
+    }
+    .cart_grid {
+      /* grid-row: 1 / 2;
+      grid-column: 1 / 2; */
+      display: none;
+    }
+    .new_container {
+      height: 30vw;
+      grid-row: 2 / 3;
     }
   }
 `;

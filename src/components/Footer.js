@@ -15,47 +15,75 @@ function Footer() {
   ];
   return (
     <FooterStyle>
-      <ul className="footer_txt">
-        {footerTxt.map((txt,idx) => (
-          <li key={idx}>
-            <p>{txt[0]}</p>
-            <em>{txt[1]}</em>
-          </li>
-        ))}
-      </ul>
-      <img src={`${PUBLIC}/images/official/vans_footer.svg`} alt="반스 로고" className="footer_logo" />
+      <div className="footer_wrapper">
+        <ul className="footer_txt">
+          {footerTxt.map((txt, idx) => (
+            <li key={idx}>
+              <p>{txt[0]}</p>
+              <em>{txt[1]}</em>
+            </li>
+          ))}
+        </ul>
+        <img
+          src={`${PUBLIC}/images/official/vans_footer.svg`}
+          alt="반스 로고"
+          className="footer_logo"
+        />
+      </div>
     </FooterStyle>
   );
 }
 
 const FooterStyle = styled.footer`
-  width: calc(100% - 20px);
-  height: 70px;
-  margin-left: 10px;
-  background-color: black;
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
   position: absolute;
   bottom: 0;
   left: 0;
-  border-radius: 15px 15px 0 0;
-  display: flex;
-  align-items: center;
-  color: #888;
-  .footer_logo {
-    transform: scale(70%);
-    margin-left: auto;
-    padding-right: 40px;
-  }
-  .footer_txt {
-    padding-left: 20px;
+  .footer_wrapper {
+    width: 100%;
+    height: 70px;
+    background-color: black;
+    border-radius: 15px 15px 0 0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    font-size: 0.6vw;
-    gap: 2vw;
-    margin-left: 30px;
-    p {
-      color: #999;
-      font-weight: bold;
-      margin-bottom: 0.3vw;
+    color: #888;
+    .footer_logo {
+      transform: scale(70%);
+    }
+    .footer_txt {
+      padding-left: 20px;
+      display: flex;
+      align-items: center;
+      font-size: 0.6vw;
+      gap: 2vw;
+      margin-left: 30px;
+      li {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        p {
+          color: #999;
+          font-weight: bold;
+          margin-bottom: 0.3vw;
+        }
+      }
+    }
+  }
+  @media (max-width: 1200px) {
+    position: relative;
+    margin-top: 10px;
+    .footer_wrapper {
+      justify-content: flex-start;
+      padding: 3vw;
+      box-sizing: border-box;
+      height: auto;
+      .footer_txt {
+        margin: 0;
+        flex-wrap: wrap;
+      }
     }
   }
 `;

@@ -20,7 +20,7 @@ function UserStatus({ userData }) {
   };
 
   return (
-    <UserStatusStyle>
+    <UserStatusStyle className="user_status">
       <div className="user_interface">
         <p className="user_name">
           <em>{userData.name}</em>
