@@ -21,8 +21,11 @@ function EventModal({ newsDB, setNewsToggle, newsNum, setNewsNum }) {
             alt="반스 로고"
             className="vans_logo"
           />
-          <h2>{data.title}</h2>
-          <h3>{data.sub}</h3>
+          <div className="title_box">
+            <h2>{data.title}</h2>
+            <div className="title_line"></div>
+            <h3>{data.sub}</h3>
+          </div>
           {data.figure.map((fig, idx) => (
             <figure key={idx}>
               <img
@@ -84,7 +87,7 @@ const bgOff = keyframes`
 
 const ModalStyle = styled.article`
   .modal_bg {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100vh;
     top: 0;
@@ -96,7 +99,7 @@ const ModalStyle = styled.article`
     background-color: rgba(0, 0, 0, 0);
     animation: ${bgOff} 0.7s forwards;
     .modal_box {
-      position: absolute;
+      position: fixed;
       width: 100%;
       height: 95vh;
       border-radius: 20px 20px 0 0;
@@ -107,11 +110,13 @@ const ModalStyle = styled.article`
       opacity: 0;
       animation: ${slideUp} 0.7s forwards;
       text-align: center;
+      font-size: clamp(10px, 1.2vw, 16px);
       overflow: auto;
       box-sizing: border-box;
       .vans_logo {
         width: 10%;
-        margin: 60px 0;
+        min-width: 70px;
+        margin: 4vw 0;
       }
       &::-webkit-scrollbar {
         width: 10px;
@@ -122,32 +127,34 @@ const ModalStyle = styled.article`
         border-radius: 10px;
         border: 2px solid transparent;
       }
-      h2 {
-        font-size: 24px;
-        font-weight: bold;
-        position: relative;
-        &::before {
-          content: "";
-          position: absolute;
-          bottom: -40px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 50px;
-          height: 4px;
+      .title_box {
+        display: grid;
+        grid-auto-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+        place-items: center;
+        gap: 2vw;
+        margin-bottom: 2vw;
+        h2 {
+          font-size: clamp(16px, 1.5vw, 24px);
+          font-weight: bold;
+          position: relative;
+        }
+        .title_line {
+          width: 2.5vw;
+          height: 0.2vw;
           background-color: black;
           z-index: 8;
         }
-      }
-      h3 {
-        margin: 80px 0 40px;
-        font-size: 20px;
+        h3 {
+          font-size: clamp(14px, 1.2vw, 20px);
+        }
       }
       figure {
         width: 60%;
         margin: 0 auto;
         img {
           object-fit: cover;
-          width: 70%;
+          width: 75%;
           margin: 20px 0;
         }
         figcaption {

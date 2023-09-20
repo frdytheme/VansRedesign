@@ -102,6 +102,10 @@ const MainGrid = styled.main`
       height: 9vw; */
       display: none;
     }
+    .user_status {
+      /* grid-column: 2 / 3; */
+      display: none;
+    }
     .cart_grid {
       /* grid-row: 1 / 2;
       grid-column: 1 / 2; */

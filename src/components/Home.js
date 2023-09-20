@@ -191,10 +191,6 @@ const wiggle = keyframes`
 `;
 
 const HomeSection = styled.div`
-@media (max-width:1200px) {
-  height:auto;
-  overflow:auto;
-}
   width: 100%;
   height: 100vh;
   max-height: 100vh;
@@ -295,6 +291,9 @@ const HomeSection = styled.div`
         }
       }
     }
+  }
+  @media (max-width: 1200px) {
+    overflow: auto;
   }
 `;
 

@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function ProductFilter({ product, setFilterList, filterToggle, listName, submitBtn }) {
+function ProductFilter({
+  product,
+  filterList,
+  setFilterList,
+  filterToggle,
+  listName,
+  submitBtn,
+}) {
   const [loadedColor, setLoadedColor] = useState([]);
   const [loadedSize, setLoadedSize] = useState([]);
   const [loadedPrice, setLoadedPrice] = useState([]);
@@ -33,7 +40,10 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
   ];
 
   const sizeList = {
-    shoes: [210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 310],
+    shoes: [
+      210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280,
+      285, 290, 295, 300, 310,
+    ],
     clothes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
     kids: [4, 5, 6, 7],
     toddler: [105, 110, 115, 120, 130, 135, 140, 145, 150, 155, 160],
@@ -74,7 +84,11 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
       (item) =>
         (item = {
           ...item,
-          txt: item.min.toLocaleString("kr-KR") + "원~" + item.max.toLocaleString("kr-KR") + "원",
+          txt:
+            item.min.toLocaleString("kr-KR") +
+            "원~" +
+            item.max.toLocaleString("kr-KR") +
+            "원",
           checked: false,
         })
     );
@@ -113,86 +127,67 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
     getCategory();
   }, [product]);
 
-  const selectColor = (color) => {
-    const newData = [...colorFilter, color];
-    const remainingColor = loadedColor.filter((item) => item !== color);
-    setColorFilter(newData);
-    setLoadedColor(remainingColor);
+  const selectColor = (e, color) => {
+    const target = e.currentTarget;
+    if (target.classList.contains("selected")) {
+      target.classList.remove("selected");
+      setFilterList((prev) => ({
+        ...prev,
+        color: prev.color.filter((item) => item !== color.name),
+      }));
+      return;
+    }
+    target.classList.add("selected");
     setFilterList((prev) => ({ ...prev, color: [...prev.color, color.name] }));
   };
-  const removeColor = (color) => {
-    const remainingColor = colorFilter.filter((item) => item !== color);
-    const returnColor = [...loadedColor, color].sort((a, b) => a.no - b.no);
-    setLoadedColor(returnColor);
-    setColorFilter(remainingColor);
-    setFilterList((prev) => ({ ...prev, color: prev.color.filter((item) => item !== color.name) }));
-  };
 
-  const sizeSnb = document.querySelectorAll(".filter_list.size .filter_snb li");
-
-  const removeSize = (e) => {
-    const size = e.target.textContent;
-    const remainingSize = sizeFilter.filter((item) => item !== size);
-    setSizeFilter(remainingSize);
-    setFilterList((prev) => ({ ...prev, size: prev.size.filter((item) => item !== size) }));
-    sizeSnb.forEach((item) => (item.textContent === size ? item.classList.remove("disabled") : false));
-  };
-
-  const selectSize = (e) => {
-    e.target.classList.add("disabled");
-    const size = e.target.textContent;
-    if (sizeFilter.includes(size)) {
-      removeSize(e);
-    } else {
-      const newSize = [...sizeFilter, size];
-      setSizeFilter(newSize);
-      setFilterList((prev) => ({ ...prev, size: [...prev.size, size] }));
+  const selectSize = (e, size) => {
+    const target = e.currentTarget;
+    if (target.classList.contains("selected")) {
+      target.classList.remove("selected");
+      setFilterList((prev) => ({
+        ...prev,
+        size: prev.size.filter((item) => item !== size),
+      }));
+      return;
     }
-  };
-
-  const removePrice = (price) => {
-    loadedPrice.forEach((item) => item.txt === price.txt && (item.checked = false));
-    setPriceFilter((prev) => prev.filter((item) => item !== price));
-    setFilterList((prev) => ({ ...prev, price: prev.price.filter((item) => item !== price) }));
+    target.classList.add("selected");
+    setFilterList((prev) => ({ ...prev, size: [...prev.size, size] }));
   };
 
   const handlePrice = (e, price) => {
     price.checked = !price.checked;
     if (e.target.checked) {
-      setPriceFilter((prev) => [...prev, price]);
       setFilterList((prev) => ({ ...prev, price: [...prev.price, price] }));
     } else {
-      removePrice(price);
+      setFilterList((prev) => ({
+        ...prev,
+        price: prev.price.filter((item) => item !== price),
+      }));
     }
-  };
-
-  const removeCategory = (category) => {
-    loadedCategory.forEach((item) => category.name === item.name && (item.checked = false));
-    setCategoryFilter((prev) => prev.filter((item) => item !== category));
-    setFilterList((prev) => ({ ...prev, category: prev.category.filter((item) => item !== category.name) }));
+    console.log(loadedPrice);
   };
 
   const handleCategory = (e, category) => {
     category.checked = !category.checked;
     if (e.target.checked) {
-      setCategoryFilter((prev) => [...prev, category]);
-      setFilterList((prev) => ({ ...prev, category: [...prev.category, category.name] }));
+      setFilterList((prev) => ({
+        ...prev,
+        category: [...prev.category, category.name],
+      }));
     } else {
-      removeCategory(category);
+      setFilterList((prev) => ({
+        ...prev,
+        category: prev.category.filter((item) => item !== category.name),
+      }));
     }
   };
 
   const removeFilter = () => {
-    const returnColor = [...loadedColor, ...colorFilter].sort((a, b) => a.no - b.no);
-    setLoadedColor(returnColor);
-    const sizeList = document.querySelectorAll(".filter_list.size .filter_snb li");
-    sizeList.forEach((item) => item.classList.remove("disabled"));
+    const filterItem = document.querySelectorAll(".filter_list .filter_snb li");
+    filterItem.forEach((item) => item.classList.remove("selected"));
     loadedPrice.forEach((item) => (item.checked = false));
     loadedCategory.forEach((item) => (item.checked = false));
-    setColorFilter([]);
-    setSizeFilter([]);
-    setPriceFilter([]);
-    setCategoryFilter([]);
     setFilterList({
       color: [],
       colorFilter: false,
@@ -205,45 +200,44 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
     });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     removeFilter();
-  },[listName, submitBtn])
+  }, [listName, submitBtn]);
+
+  const openFilter = () => {
+    const color = document.querySelector(".filter_snb.color");
+    if (color.classList.contains("opened"))
+      return color.classList.remove("opened");
+    color.classList.add("opened");
+  };
 
   return (
     <ProductFilterStyle>
       <ul className="filter_container">
         <li className="filter_title">FILTER</li>
         <li className="filter_list color">
-          <p className="list_name">COLOR</p>
-          <ul className="filter_item filter_selected">
-            {colorFilter.map((color, idx) => (
-              <li key={`selectedColor${idx}`} onClick={() => removeColor(color)}>
-                <div className="color_circle" style={{ backgroundColor: `${color.code}` }}></div>
-                <p className="color_name">{color.name}</p>
-              </li>
-            ))}
-          </ul>
-          <ul className="filter_item filter_snb">
-            {loadedColor.map((color, idx) => (
-              <li key={idx} onClick={() => selectColor(color)}>
-                <div className="color_circle" style={{ backgroundColor: `${color.code}` }}></div>
-                <p className="color_name">{color.name}</p>
-              </li>
-            ))}
-          </ul>
+          <p className="list_name" onClick={openFilter}>
+            COLOR
+          </p>
+          {loadedColor.length === 0 || (
+            <ul className="filter_item filter_snb color">
+              {loadedColor.map((color, idx) => (
+                <li key={idx} onClick={(e) => selectColor(e, color)}>
+                  <div
+                    className="color_circle"
+                    style={{ backgroundColor: `${color.code}` }}
+                  ></div>
+                  <p className="color_name">{color.name}</p>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
         <li className="filter_list size">
           <p className="list_name">SIZE</p>
-          <ul className="filter_item filter_selected">
-            {sizeFilter.map((size, idx) => (
-              <li key={idx} onClick={removeSize}>
-                {size}
-              </li>
-            ))}
-          </ul>
           <ul className="filter_item filter_snb">
             {loadedSize.map((size, idx) => (
-              <li key={idx} onClick={selectSize}>
+              <li key={idx} onClick={(e) => selectSize(e, size)}>
                 {size}
               </li>
             ))}
@@ -251,13 +245,6 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
         </li>
         <li className="filter_list price">
           <p className="list_name">PRICE</p>
-          <ul className="filter_item filter_selected">
-            {priceFilter.map((price, idx) => (
-              <li key={`selected_price_li${idx}`} onClick={() => removePrice(price)}>
-                {price.txt}
-              </li>
-            ))}
-          </ul>
           <ul className="filter_item filter_snb">
             {loadedPrice.map((price, idx) => (
               <li key={`price_li${idx}`}>
@@ -277,13 +264,6 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
         </li>
         <li className="filter_list category">
           <p className="list_name">CATEGORY</p>
-          <ul className="filter_item filter_selected">
-            {categoryFilter.map((category, idx) => (
-              <li key={`category${idx}`} onClick={() => removeCategory(category)}>
-                {category.name}
-              </li>
-            ))}
-          </ul>
           <ul className="filter_item filter_snb">
             {loadedCategory.map((category, idx) => (
               <li key={`category${idx}`}>
@@ -312,17 +292,15 @@ function ProductFilter({ product, setFilterList, filterToggle, listName, submitB
 }
 
 const ProductFilterStyle = styled.div`
-  position: absolute;
-  top: left;
+  position: fixed;
+  top: 0;
   left: 1vw;
   width: 15vw;
-  height: 90vh;
   background-color: #fff;
   margin-top: 1vw;
   z-index: 9999;
   .filter_container {
     margin-top: 20px;
-    height: 100%;
     font-weight: 700;
     text-align: center;
     .filter_title {
@@ -348,34 +326,27 @@ const ProductFilterStyle = styled.div`
       }
       .filter_item {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         grid-auto-rows: 1fr;
-        place-content: center;
         background-color: #fff;
         font-weight: 500;
         font-size: 0.7vw;
-        &.filter_selected {
+        height: 0;
+        overflow: hidden;
+        transition: 0.5s;
+        &.opened {
+          height: 19vw;
+        }
+        &.filter_snb {
           li {
-            position: relative;
-            padding: 0.7vw 0;
-            &:hover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            &.selected {
               opacity: 0.5;
             }
           }
-        }
-        &.filter_snb {
-          position: absolute;
-          top: 0;
-          left: 100%;
-          border: 1px solid #000;
-          border-radius: 10px;
-          padding: 1vw 0.7vw;
-          visibility: hidden;
-        }
-      }
-      &:hover {
-        .filter_item {
-          visibility: visible;
         }
       }
       &.color {
@@ -401,28 +372,24 @@ const ProductFilterStyle = styled.div`
         }
       }
       &.size {
-        .filter_selected {
-          grid-template-columns: repeat(5, 1fr);
-        }
         .filter_snb {
           li {
             overflow: hidden;
-            font-family: "Pretendard", sans-serif;
             width: 3vw;
             height: 2vw;
             border-radius: 7px;
             line-height: 2vw;
             border: 1px solid #d6d6d6;
             margin: 0.2vw;
-            &:hover {
+            /* &:hover {
+              background-color: var(--color-red);
+
+            } */
+            &.selected {
+              opacity: 1;
               background-color: var(--color-red);
               color: #fff;
               border: 1px solid #000;
-            }
-            &.disabled {
-              opacity: 0.5;
-              background-color: #d6d6d6;
-              cursor: pointer;
             }
           }
         }

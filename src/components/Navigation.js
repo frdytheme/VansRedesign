@@ -122,31 +122,30 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
     e.currentTarget.classList.remove("active");
   };
 
-  const selectMenu = (e) => {
+  const selectMenu = (e, li, lnb, item) => {
     const clickMenu = () => {
       navigate("./product");
       menu.forEach((gnb) => gnb.classList.remove("active"));
     };
-
-    const translateName = (e) => {
+    const mainCategory = li.name;
+    const translateName = () => {
       e.stopPropagation();
 
-      const mainCategory =
-        e.target.parentNode.parentNode.parentNode.getAttribute("gnb-name");
-      let name = e.target.getAttribute("gnb-name");
-      if (name === "신발" || name === "신발 신상품" || name === "키즈 신발")
-        name = "SHOES";
-      if (name === "의류" || name === "의류 신상품" || name === "키즈 의류")
-        name = "CLOTHES";
-      if (name === "악세서리" || name === "악세서리 신상품") name = "ACCESSORY";
-      if (name === "키즈 신상품") name = "KIDS";
+      let category = item || "ALL";
 
-      setListName([mainCategory || "ALL", name]);
+      if (category === "전체보기") category = lnb.title;
+      if (category.includes("의류")) category = "CLOTHES";
+      if (category.includes("신발")) category = "SHOES";
+      if (category.includes("악세서리")) category = "ACCESSORY";
+      if (category.includes("키즈")) category = "KIDS";
+
+      setListName([mainCategory, category]);
     };
 
     translateName(e);
     clickMenu();
     setSearchName("");
+    setShowMenu(false);
   };
 
   const submitSearch = (e) => {
@@ -159,6 +158,7 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
   const openGnb = (e) => {
     e.stopPropagation();
     const name = e.target.dataset.name;
+    if (!name) return;
     let menu;
     if (name === "gnb") {
       menu = document.querySelectorAll(".menu_item");
@@ -188,10 +188,19 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
             <li className="tablet_li menu" onClick={() => setShowMenu(true)}>
               <span className="material-symbols-outlined">menu</span>
             </li>
-            <li className="tablet_li cart">
+            <li className="tablet_li cart" onClick={() => navigate("./cart")}>
               <span className="material-symbols-outlined">shopping_cart</span>
             </li>
-            <li className="tablet_li person">
+            <li
+              className="tablet_li person"
+              onClick={() => {
+                const loggedIn = JSON.parse(
+                  sessionStorage.getItem("loginState")
+                );
+                if (loggedIn) return navigate("./mypage");
+                navigate("./login");
+              }}
+            >
               <span className="material-symbols-outlined">person</span>
             </li>
             <li className="tablet_li search">
@@ -209,7 +218,7 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
                 onMouseEnter={activeGnb}
                 onMouseLeave={disableGnb}
                 onClick={(e) => {
-                  selectMenu(e);
+                  selectMenu(e, li);
                 }}
               >
                 {li.name}
@@ -220,7 +229,7 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
                     )}
                     {li.lnb.map((lnb, idx) => {
                       return (
-                        <ul key={idx} className="lnb_group">
+                        <ul key={`desktop_lnb${idx}`} className="lnb_group">
                           <li
                             className="lnb_title"
                             onClick={(e) => e.stopPropagation()}
@@ -231,12 +240,12 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
                             lnb.menu.map((menu, idx) => {
                               return (
                                 <li
-                                  key={idx}
+                                  key={`desktop_lnb_item${idx}`}
                                   className="lnb_item"
                                   gnb-name={
                                     menu === "전체보기" ? lnb.title : menu
                                   }
-                                  onClick={(e) => selectMenu(e)}
+                                  onClick={(e) => selectMenu(e, li, lnb, menu)}
                                 >
                                   {menu}
                                 </li>
@@ -291,24 +300,32 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
                   alt="반스로고레드"
                 />
               </li>
-              {gnbList.map((gnb) => (
+              {gnbList.map((gnb, idx) => (
                 <li
                   className="dropdown_li menu_item"
                   onClick={openGnb}
                   data-name="gnb"
+                  key={`mobile_gnb${idx}`}
                 >
                   {gnb.name}
                   <ul className="lnb">
-                    {gnb.lnb.map((lnb) => (
+                    {gnb.lnb.map((lnb, idx) => (
                       <li
                         className="lnb_li menu_item"
                         onClick={openGnb}
                         data-name="lnb"
+                        key={`mobile_lnb${idx}`}
                       >
                         {lnb.title}
                         <ul className="category">
-                          {lnb.menu.map((category) => (
-                            <li className="category_li">{category}</li>
+                          {lnb.menu.map((category, idx) => (
+                            <li
+                              className="category_li"
+                              key={`mobile_category${idx}`}
+                              onClick={(e) => selectMenu(e, gnb, lnb, category)}
+                            >
+                              {category}
+                            </li>
                           ))}
                         </ul>
                       </li>
@@ -456,8 +473,15 @@ const Nav = styled.header`
     }
   }
   @media (min-width: 768px) and (max-width: 1200px) {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    padding: 0;
     .nav_box {
       justify-content: space-between;
+      border-radius: 0;
+
       .tablet_menu {
         display: flex;
         justify-content: center;
@@ -473,6 +497,7 @@ const Nav = styled.header`
           display: flex;
           justify-content: center;
           align-items: center;
+          cursor: pointer;
           span {
             font-size: 32px;
             font-weight: bold;
@@ -517,6 +542,7 @@ const Nav = styled.header`
         font-weight: bold;
         overflow: hidden;
         cursor: pointer;
+        user-select: none;
         &:first-child {
           background-color: #f1f1f1;
           height: auto;
@@ -533,7 +559,6 @@ const Nav = styled.header`
             border-bottom: 1px solid #fff;
             max-height: 0;
             line-height: 40px;
-            overflow: hidden;
             transition: 0.5s cubic-bezier(0.61, 0, 0.08, 1);
             overflow: hidden;
             .category {

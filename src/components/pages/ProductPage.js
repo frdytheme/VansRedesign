@@ -34,10 +34,10 @@ const slideUp = keyframes`
 `;
 
 const ProductPageStyle = styled.div`
-  position: absolute;
+  /* position: absolute; */
   width: 100%;
   height: calc(100vh - 80px);
-  margin-top: 80px;
+  /* margin-top: 80px; */
   top: 0;
   left: 0;
   z-index: 998;
@@ -45,6 +45,7 @@ const ProductPageStyle = styled.div`
   transform: translateY(120%);
   opacity: 0;
   animation: ${slideUp} 0.7s forwards;
+  z-index: 99999;
 `;
 
 export default ProductPage;

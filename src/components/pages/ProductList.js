@@ -137,6 +137,7 @@ function ProductList({
           ? 1
           : product.length / 25;
     }
+    resetScroll();
     // eslint-disable-next-line
   }, [filterList, filterToggle]);
 
@@ -144,6 +145,8 @@ function ProductList({
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     const boxHeight = scrollHeight - clientHeight;
     const truncScrollTop = Math.trunc(scrollTop);
+
+    // 제품 추가 로드 함수
     const addProduct = async () => {
       try {
         const response = await authApi.get(
@@ -159,6 +162,7 @@ function ProductList({
       }
     };
 
+    // 필터된 제품 추가 로드 함수
     const addFilteredProduct = async () => {
       try {
         const response = await authApi.get(
@@ -266,7 +270,7 @@ const ProductListStyle = styled.div`
   .flex_container {
     width: 79vw;
     margin-left: 17.5vw;
-    padding-bottom: 80px;
+    padding-bottom: 4vw;
     display: flex;
     flex-wrap: wrap;
     gap: 1vw;
@@ -297,6 +301,8 @@ const ProductListStyle = styled.div`
         }
       }
     }
+  }
+  @media (max-width: 1200px) {
   }
 `;
 

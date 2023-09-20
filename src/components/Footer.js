@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PUBLIC from "../assets/module/PUBLIC";
+import { useMatch } from "react-router-dom";
 
 function Footer() {
   const footerTxt = [
@@ -13,23 +14,28 @@ function Footer() {
     ["고객센터", "(평일 09:00 ~ 18:00) 1522-1882"],
     ["이메일", "Vanskr_online@vfc.com"],
   ];
+
+  const isProductPage = Boolean(useMatch("/home/product"));
+
   return (
     <FooterStyle>
-      <div className="footer_wrapper">
-        <ul className="footer_txt">
-          {footerTxt.map((txt, idx) => (
-            <li key={idx}>
-              <p>{txt[0]}</p>
-              <em>{txt[1]}</em>
-            </li>
-          ))}
-        </ul>
-        <img
-          src={`${PUBLIC}/images/official/vans_footer.svg`}
-          alt="반스 로고"
-          className="footer_logo"
-        />
-      </div>
+      {isProductPage || (
+        <div className="footer_wrapper">
+          <ul className="footer_txt">
+            {footerTxt.map((txt, idx) => (
+              <li key={idx}>
+                <p>{txt[0]}</p>
+                <em>{txt[1]}</em>
+              </li>
+            ))}
+          </ul>
+          <img
+            src={`${PUBLIC}/images/official/vans_footer.svg`}
+            alt="반스 로고"
+            className="footer_logo"
+          />
+        </div>
+      )}
     </FooterStyle>
   );
 }
