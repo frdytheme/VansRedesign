@@ -89,6 +89,11 @@ const UserStatusStyle = styled.div`
         span {
           font-size: 1.3vw;
         }
+        &.order_list {
+          user-select: none;
+          cursor: default;
+          opacity: 0.5;
+        }
       }
     }
   }

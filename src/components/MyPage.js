@@ -106,38 +106,19 @@ function MyPage({ userData }) {
 
 const MyPageStyle = styled.div`
   width: 100%;
-  height: 100%;
   position: relative;
+  height:calc(100vh - 180px);
   .loading_state {
     width: 100%;
     height: 83%;
     position: absolute;
   }
-  input {
-    outline: none;
-    padding: 0.5vw;
-  }
-  .check_user_box {
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid #000;
-    padding: 1vw;
-    display: flex;
-    gap: 0.5vw;
-    .check_btn {
-      background-color: var(--color-red);
-      color: #fff;
-      cursor: pointer;
-      border: none;
-      padding: 0 1vw;
-    }
-  }
   .mypage_container {
     width: 100%;
+    height:75%;
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 5vw 0;
     .mypage_box {
       display: flex;
@@ -179,9 +160,8 @@ const MyPageStyle = styled.div`
         .btn {
           padding: 0.5vw;
           cursor: pointer;
-          border-radius: 10px;
-          background-color: #fff;
-          color: #000;
+          border: 1px solid #fff;
+          color: #fff;
         }
       }
       img {

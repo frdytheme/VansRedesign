@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import Navigation from "./Navigation";
 import MainPage from "./MainPage";
 import ProductPage from "./pages/ProductPage";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import ProductDetail from "./pages/ProductDetail";
 import LoginPage from "./LoginPage";
@@ -32,6 +32,7 @@ function Home() {
   const showAlarm = Cookies.get("show_cart_alarm")
     ? JSON.parse(Cookies.get("show_cart_alarm"))
     : false;
+  const isProductPage = Boolean(useMatch("/home/product"));
 
   useEffect(() => {
     if (cart) setCartCount(cart.total);
@@ -121,7 +122,13 @@ function Home() {
         <Route path="/mypage" element={<MyPage userData={userData} />} />
         <Route
           path="/cart"
-          element={<CartPage setCartCount={setCartCount} />}
+          element={
+            <CartPage
+              setCartCount={setCartCount}
+              setDetailBtn={setDetailBtn}
+              setProductInfo={setProductInfo}
+            />
+          }
         />
       </Routes>
       {detailBtn && (
@@ -170,7 +177,7 @@ function Home() {
           </div>
         </div>
       )}
-      <Footer />
+      {isProductPage || <Footer />}
     </HomeSection>
   );
 }

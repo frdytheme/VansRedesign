@@ -472,7 +472,7 @@ const Nav = styled.header`
       }
     }
   }
-  @media (min-width: 768px) and (max-width: 1200px) {
+  @media (max-width: 1200px) {
     position: sticky;
     top: 0;
     left: 0;

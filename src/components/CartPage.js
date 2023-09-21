@@ -4,8 +4,9 @@ import styled from "styled-components";
 import authApi from "../assets/api/authApi";
 import PayPage from "./PayPage";
 import PUBLIC from "../assets/module/PUBLIC";
+import LoadingBox from "./LoadingBox";
 
-function CartPage({ setCartCount }) {
+function CartPage({ setCartCount, setDetailBtn, setProductInfo }) {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
   const loggedIn = JSON.parse(sessionStorage.getItem("loginState"));
   const { data, total } = cart ? cart : {};
@@ -13,6 +14,7 @@ function CartPage({ setCartCount }) {
   const [orderList, setOrderList] = useState([]);
   const [orderPrice, setOrderPrice] = useState(0);
   const [cartPage, setCartPage] = useState(0);
+  const [loading, setLoading] = useState(false);
   const delivery = orderList.length ? 3000 : 0;
   const navigate = useNavigate();
 
@@ -133,6 +135,20 @@ function CartPage({ setCartCount }) {
     }
   };
 
+  const viewDetail = async (product) => {
+    setLoading(true);
+    try {
+      const response = await authApi.get(`/product?model=${product.model}`);
+      const data = response.data.products[0];
+      setProductInfo(data);
+      setDetailBtn(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     parsingCart();
   }, []);
@@ -209,6 +225,11 @@ function CartPage({ setCartCount }) {
 
   return (
     <CartPageStyle>
+      {loading && (
+        <div className="loading_state">
+          <LoadingBox />
+        </div>
+      )}
       <div className="cart_wrapper">
         <ul className="cart_process">
           <li className="process_li process_item first">1. CART</li>
@@ -237,10 +258,16 @@ function CartPage({ setCartCount }) {
                           src={`${PUBLIC}/images/product/${model}/${model}_${model}_primary.jpg`}
                           alt={`${model}이미지`}
                           className="product_img"
+                          onClick={() => viewDetail(product)}
                         />
                         <div className="product_info">
                           <div className="infomation_box">
-                            <p className="product_name">{name}</p>
+                            <p
+                              className="product_name"
+                              onClick={() => viewDetail(product)}
+                            >
+                              {name}
+                            </p>
                             <p className="product_size">Size : {size}</p>
                             <div className="qty_box">
                               <p className="qty">수량</p>
@@ -358,10 +385,18 @@ function CartPage({ setCartCount }) {
 
 const CartPageStyle = styled.div`
   width: 100%;
-  height: 100%;
+  height: 90%;
   display: flex;
   justify-content: center;
   padding-top: 50px;
+  position: relative;
+  .loading_state {
+    border-radius: 0;
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
   .cart_wrapper {
     width: 80%;
     height: 70%;
@@ -413,9 +448,10 @@ const CartPageStyle = styled.div`
             height: 3vw;
             line-height: 3vw;
             color: #fff;
-            border-radius: 15px;
+            border-radius: 0.4vw;
             background-color: var(--color-red);
             cursor: pointer;
+            font-size: 10px 0.8vw 18px;
             &:hover {
               outline: 2px solid #000;
             }
@@ -432,8 +468,10 @@ const CartPageStyle = styled.div`
             border: none;
           }
           .product_img {
-            width: 10%;
-            border-radius: 15px;
+            min-width: 60px;
+            width: 7vw;
+            border-radius: 0.4vw;
+            cursor: pointer;
           }
           .product_info {
             width: 100%;
@@ -445,6 +483,10 @@ const CartPageStyle = styled.div`
               justify-content: space-between;
               .product_name {
                 font-size: 1vw;
+                cursor: pointer;
+                &:hover {
+                  color: var(--color-red);
+                }
               }
               .product_size {
                 display: flex;
@@ -562,9 +604,14 @@ const CartPageStyle = styled.div`
         text-align: center;
         color: #fff;
         .btn {
-          height: 60px;
-          line-height: 60px;
+          height: 5vw;
+          max-height: 70px;
+          min-height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           cursor: pointer;
+          font-size: 12px 0.9vw 24px;
           &.order {
             background-color: #000;
             border: 1px solid #000;
@@ -604,6 +651,14 @@ const CartPageStyle = styled.div`
       &:hover {
         color: #000;
       }
+    }
+  }
+  @media (max-width: 1200px) {
+    height: calc(100% - 180px);
+    box-sizing: border-box;
+    padding-bottom: 5vw;
+    .cart_wrapper {
+      height: 90%;
     }
   }
 `;

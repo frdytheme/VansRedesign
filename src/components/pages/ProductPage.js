@@ -9,7 +9,7 @@ function ProductPage({
   submitBtn,
   setProductInfo,
   setDetailBtn,
-  closeCartAlarm
+  closeCartAlarm,
 }) {
   return (
     <ProductPageStyle>
@@ -34,10 +34,8 @@ const slideUp = keyframes`
 `;
 
 const ProductPageStyle = styled.div`
-  /* position: absolute; */
   width: 100%;
   height: calc(100vh - 80px);
-  /* margin-top: 80px; */
   top: 0;
   left: 0;
   z-index: 998;
@@ -46,6 +44,9 @@ const ProductPageStyle = styled.div`
   opacity: 0;
   animation: ${slideUp} 0.7s forwards;
   z-index: 99999;
+  @media (max-width: 1200px) {
+    height: calc(100vh - 70px);
+  }
 `;
 
 export default ProductPage;
