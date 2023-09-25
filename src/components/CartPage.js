@@ -281,11 +281,7 @@ function CartPage({ setCartCount, setDetailBtn, setProductInfo }) {
                                   -
                                 </span>
                               )}
-                              <input
-                                type="text"
-                                value={sizes[size].qty}
-                                onChange={() => console.log("수량 변경중")}
-                              />
+                              <div className="qty_text">{sizes[size].qty}</div>
                               <span
                                 className="qty_btn up"
                                 onClick={() => countUp(product, size)}
@@ -408,7 +404,7 @@ const CartPageStyle = styled.div`
       display: flex;
       align-items: center;
       gap: 1.2vw;
-      font-size: 1vw;
+      font-size: clamp(13px, 1vw, 19px);
       color: #999;
       font-weight: 500;
       user-select: none;
@@ -418,12 +414,12 @@ const CartPageStyle = styled.div`
           font-weight: 600;
         }
         &.gt {
-          font-size: 0.7vw;
+          font-size: clamp(13px, 1vw, 19px);
         }
       }
     }
     .cart_container {
-      margin-right: 1vw;
+      margin-right: 15px;
       overflow: auto;
       border-top: 1px solid #000;
       border-bottom: 1px solid #000;
@@ -438,20 +434,24 @@ const CartPageStyle = styled.div`
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 1.5vw;
-          font-size: 1vw;
+          gap: 20px;
+          font-size: clamp(15px, 1vw, 24px);
           font-weight: 500;
-          padding-top: 5vw;
+          padding-top: 80px;
           .show_product_btn {
             text-align: center;
             width: 10vw;
+            min-width: 120px;
             height: 3vw;
-            line-height: 3vw;
+            min-height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: #fff;
             border-radius: 0.4vw;
             background-color: var(--color-red);
             cursor: pointer;
-            font-size: 10px 0.8vw 18px;
+            font-size: clamp(15px, 1vw, 24px);
             &:hover {
               outline: 2px solid #000;
             }
@@ -468,8 +468,9 @@ const CartPageStyle = styled.div`
             border: none;
           }
           .product_img {
-            min-width: 60px;
+            min-width: 100px;
             width: 7vw;
+            height: 100%;
             border-radius: 0.4vw;
             cursor: pointer;
           }
@@ -481,8 +482,9 @@ const CartPageStyle = styled.div`
               display: flex;
               flex-direction: column;
               justify-content: space-between;
+              gap: 10px;
               .product_name {
-                font-size: 1vw;
+                font-size: clamp(14px, 1vw, 20px);
                 cursor: pointer;
                 &:hover {
                   color: var(--color-red);
@@ -491,20 +493,21 @@ const CartPageStyle = styled.div`
               .product_size {
                 display: flex;
                 align-items: center;
-                gap: 0.4vw;
-                font-size: 0.7vw;
+                font-size: 15px;
               }
               .qty_box {
                 display: flex;
                 align-items: center;
-                gap: 0.5vw;
-                input {
-                  width: 1vw;
-                  font-size: 0.8vw;
+                gap: 7px;
+                .qty_text {
+                  width: 25px;
+                  height: 25px;
+                  line-height: 25px;
                   text-align: center;
+                  border: 1px solid #777;
                 }
                 .qty_btn {
-                  font-size: 1.3vw;
+                  font-size: 20px;
                   cursor: pointer;
                   user-select: none;
                   &:hover {
@@ -523,21 +526,13 @@ const CartPageStyle = styled.div`
               align-items: flex-end;
               justify-content: space-between;
               .product_price {
-                font-size: 1vw;
+                font-size: clamp(16px, 1vw, 24px);
                 font-weight: 500;
-              }
-              .option_change {
-                color: #a9a9a9;
-                font-size: 0.8vw;
-                cursor: pointer;
-                &:hover {
-                  color: #000;
-                }
+                white-space: nowrap;
               }
               .delete_btn {
                 top: 5px;
                 right: 0;
-                font-size: 1.6vw;
                 font-weight: bold;
                 cursor: pointer;
                 &:hover {
@@ -554,7 +549,6 @@ const CartPageStyle = styled.div`
       background-color: #222;
       padding: 0 1vw;
       color: #fff;
-      font-size: 1vw;
       display: flex;
       align-items: center;
       grid-row: 1 / 2;
@@ -574,23 +568,21 @@ const CartPageStyle = styled.div`
         padding: 1vw;
         box-sizing: border-box;
         .title {
-          font-size: 1.2vw;
+          font-size: clamp(16px, 1.2vw, 20px);
           font-weight: bold;
           border-bottom: 2px solid #000;
         }
       }
       .price_box {
-        font-size: 0.8vw;
         padding: 1vw 2vw;
         .price_list {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin: 0.7vw 0;
+          margin: 15px 0;
           color: #777;
           &:last-child {
             color: #000;
-            font-size: 1vw;
             font-weight: 500;
             border-top: 1px solid #000;
             padding: 1.5vw 0 1vw;
@@ -611,7 +603,7 @@ const CartPageStyle = styled.div`
           justify-content: center;
           align-items: center;
           cursor: pointer;
-          font-size: 12px 0.9vw 24px;
+          font-size: clamp(14px, 0.9vw, 24px);
           &.order {
             background-color: #000;
             border: 1px solid #000;
@@ -643,10 +635,9 @@ const CartPageStyle = styled.div`
     color: #777;
     .option_list {
       display: flex;
-      gap: 1vw;
+      gap: 15px;
     }
     p {
-      font-size: 0.8vw;
       cursor: pointer;
       &:hover {
         color: #000;

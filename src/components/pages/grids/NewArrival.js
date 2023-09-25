@@ -15,7 +15,8 @@ import LoadingBox from "../../LoadingBox";
 function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   const newProduct = JSON.parse(sessionStorage.getItem("NEW_ARRIVAL")) || [];
   const [loading, setLoading] = useState(true);
-  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth:768 });
+  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth: 769 });
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   const getNewArrival = async () => {
     setLoading(false);
@@ -44,7 +45,7 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   return (
     <NewArrivalStyle className="new_container">
       <Swiper
-        slidesPerView={isTablet ? 6 : 5}
+        slidesPerView={isTablet ? 6 : isMobile ? 7 : 5}
         spaceBetween={10}
         navigation={true}
         modules={[Navigation]}
@@ -76,6 +77,9 @@ const NewArrivalStyle = styled.div`
     justify-content: start;
     .img_wrapper {
       height: 80%;
+      &.mobile {
+        height: 100%;
+      }
       .product_img {
         height: 100%;
       }

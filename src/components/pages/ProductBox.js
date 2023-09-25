@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import PUBLIC from "../../assets/module/PUBLIC";
+import { useMediaQuery } from "react-responsive";
 
 function ProductBox({ item, onClick }) {
+  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth: 769 });
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
   return (
     <ProductBoxStyle onClick={onClick}>
-      <div className="img_wrapper">
+      <div className={`img_wrapper${isMobile ? " mobile" : ""}`}>
         <img
           src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
           alt="제품 대표 사진"
@@ -17,18 +21,20 @@ function ProductBox({ item, onClick }) {
           className="product_img hover"
         />
       </div>
-      <figcaption className="product_caption">
-        {item.mainCategory.includes("HOT") && (
-          <p className="new_arrival">HOT</p>
-        )}
-        {item.mainCategory.includes("NEW") && (
-          <p className="new_arrival">NEW ARRIVAL</p>
-        )}
-        <p className="product_name">{item.name}</p>
-        <p className="product_price">
-          {Number(item.price).toLocaleString("ko-KR") + "원"}
-        </p>
-      </figcaption>
+      {isMobile || (
+        <figcaption className="product_caption">
+          {item.mainCategory.includes("HOT") && (
+            <p className="new_arrival">HOT</p>
+          )}
+          {item.mainCategory.includes("NEW") && (
+            <p className="new_arrival">NEW ARRIVAL</p>
+          )}
+          <p className="product_name">{item.name}</p>
+          <p className="product_price">
+            {Number(item.price).toLocaleString("ko-KR") + "원"}
+          </p>
+        </figcaption>
+      )}
     </ProductBoxStyle>
   );
 }
@@ -50,7 +56,7 @@ const ProductBoxStyle = styled.figure`
     left: 0;
     width: 100%;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 1vw;
     cursor: pointer;
     vertical-align: bottom;
     &.hover {

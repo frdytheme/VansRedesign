@@ -95,6 +95,7 @@ const MainGrid = styled.main`
     .event_swiper {
       /* grid-row: 1 / 2; */
       grid-column: 1 / 3;
+      grid-row: 3 / 4;
     }
     .login_grid {
       /* grid-row: 1 / 2;

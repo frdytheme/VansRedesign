@@ -9,8 +9,8 @@ import slipOn from "../assets/images/slip_on.png";
 import era from "../assets/images/era.png";
 import skHi from "../assets/images/sk8_hi.png";
 import LogoFont from "./LogoFont";
-import video from "../assets/videos/vans_official_movie.webm";
 import { useNavigate } from "react-router-dom";
+import PUBLIC from "../assets/module/PUBLIC";
 
 function LogoTransition() {
   const shoesArr = [oldSkool, authentic, slipOn, era, skHi];
@@ -30,13 +30,23 @@ function LogoTransition() {
     <LogoMain>
       <div className="video_wrapper">
         <div className="video_blk"></div>
-        <video src={video} muted autoPlay loop className="main_video"></video>
+        <video
+          src={`${PUBLIC}/videos/vans_official_movie.webm`}
+          muted
+          autoPlay
+          loop
+          className="main_video"
+        ></video>
       </div>
       <div className="logo_wrapper">
         <BoardLogo />
-        <div className="logo_box" onClick={() => navigate('home')}>
+        <div className="logo_box" onClick={() => navigate("home")}>
           <LogoFont />
-          <img src={shoesArr[shoesIdx]} alt="반스 기본 신발" className="shoesImg" />
+          <img
+            src={shoesArr[shoesIdx]}
+            alt="반스 기본 신발"
+            className="shoesImg"
+          />
         </div>
         <img src={offthewall} alt="OFF THE WALL" className="offthewall" />
       </div>

@@ -193,11 +193,11 @@ const LoginPageStyle = styled.form`
       }
     }
     .user_options {
-      margin: 0.5vw 0;
-      font-size: 0.7vw;
+      margin: 15px 0;
+      font-size: 15px;
       display: flex;
       label {
-        margin-right: 0.7vw;
+        margin-right: 10px;
         display: flex;
         align-items: center;
       }
@@ -214,9 +214,9 @@ const LoginPageStyle = styled.form`
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 2vw;
-      margin-top: 2vw;
-      font-size: 0.7vw;
+      gap: 15px;
+      margin-top: 25px;
+      font-size: 15px;
       color: #888;
       .find_id,
       .find_pw,
