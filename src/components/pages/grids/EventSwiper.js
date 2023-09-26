@@ -79,7 +79,7 @@ const EventStyle = styled.div`
       height: 100%;
       display: flex;
       justify-content: center;
-      border-radius: 15px;
+      border-radius: 1vw;
       overflow: hidden;
       position: relative;
       .event_title {

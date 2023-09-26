@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import EventSwiper from "./pages/grids/EventSwiper";
 import MainBanner from "./pages/grids/MainBanner";
@@ -7,7 +7,6 @@ import LoginGrid from "./pages/grids/LoginGrid";
 import UserStatus from "./pages/grids/UserStatus";
 import { useNavigate } from "react-router-dom";
 import PUBLIC from "../assets/module/PUBLIC";
-import { useMediaQuery } from "react-responsive";
 
 function MainPage({
   setListName,
@@ -19,7 +18,6 @@ function MainPage({
 }) {
   const loginState = sessionStorage.getItem("loginState");
   const navigate = useNavigate();
-  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
 
   return (
     <MainGrid>
@@ -54,7 +52,7 @@ const MainGrid = styled.main`
   padding-bottom: 0;
   box-sizing: border-box;
   & > * {
-    border-radius: 15px;
+    border-radius: 1vw;
   }
   .cart_grid {
     width: 100%;
@@ -85,37 +83,32 @@ const MainGrid = styled.main`
   }
   @media (max-width: 1200px) {
     grid-template-columns: 5fr 5fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 20vw 30vw 35vw;
     height: auto;
     padding-right: 0;
     .main_banner {
-      grid-row: 1 / 2;
+      grid-row: 2 / 3;
       grid-column: 1 / 3;
     }
     .event_swiper {
-      /* grid-row: 1 / 2; */
       grid-column: 1 / 3;
-      grid-row: 3 / 4;
+      grid-row: 1 / 2;
     }
     .login_grid {
-      /* grid-row: 1 / 2;
-      grid-column: 2 / 3;
-      height: 9vw; */
       display: none;
     }
     .user_status {
-      /* grid-column: 2 / 3; */
       display: none;
     }
     .cart_grid {
-      /* grid-row: 1 / 2;
-      grid-column: 1 / 2; */
       display: none;
     }
     .new_container {
-      height: 30vw;
-      grid-row: 2 / 3;
+      grid-row: 3 / 4;
     }
+  }
+  @media (max-width: 768px) {
+    grid-template-rows: 75vw 25vw 50vw;
   }
 `;
 

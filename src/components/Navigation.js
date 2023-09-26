@@ -481,17 +481,19 @@ const Nav = styled.header`
     .nav_box {
       justify-content: space-between;
       border-radius: 0;
-
       .tablet_menu {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 15px;
-        margin-right: 15px;
+        gap: 10px;
+        margin-right: 1vw;
         .tablet_li {
-          width: 50px;
-          height: 50px;
-          line-height: 70px;
+          width: 6vw;
+          min-width: 40px;
+          max-width: 50px;
+          height: 6vw;
+          min-height: 40px;
+          max-height: 50px;
           background-color: var(--color-red);
           border-radius: 10px;
           display: flex;
@@ -499,7 +501,7 @@ const Nav = styled.header`
           align-items: center;
           cursor: pointer;
           span {
-            font-size: 32px;
+            font-size: clamp(20px, 3vw, 34px);
             font-weight: bold;
           }
         }
@@ -591,6 +593,16 @@ const Nav = styled.header`
             }
           }
         }
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    .nav_box .logo {
+      margin-left: 20px;
+    }
+    .dropdown_bg {
+      .dropdown_menu {
+        width: 270px;
       }
     }
   }

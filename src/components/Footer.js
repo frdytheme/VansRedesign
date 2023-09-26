@@ -76,7 +76,8 @@ const FooterStyle = styled.footer`
   @media (max-width: 1200px) {
     position: relative;
     .footer_wrapper {
-      height: 100px;
+      height: auto;
+      padding: 15px;
       justify-content: flex-start;
       box-sizing: border-box;
       margin-top: 10px;
@@ -86,6 +87,8 @@ const FooterStyle = styled.footer`
         flex-wrap: wrap;
       }
     }
+  }
+  @media (max-width: 768px) {
   }
 `;
 

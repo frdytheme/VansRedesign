@@ -5,6 +5,8 @@ import ProductBox from "./ProductBox";
 import authApi from "../../assets/api/authApi";
 import Pfunction from "../../assets/module/Pfunction";
 import LoadingBox from "../LoadingBox";
+import { useMediaQuery } from "react-responsive";
+import filterData from "../../assets/DB/filterData";
 
 function ProductList({
   listName,
@@ -16,6 +18,7 @@ function ProductList({
   closeCartAlarm,
 }) {
   const encodeListName = encodeURIComponent(listName);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
   const filteredUrl = useRef("");
@@ -23,6 +26,14 @@ function ProductList({
   const [loading, setLoading] = useState(false);
   const nowPage = useRef(1);
   const search = useRef([]);
+  const [loadedColor, setLoadedColor] = useState([]);
+  const [loadedSize, setLoadedSize] = useState([]);
+  const [loadedPrice, setLoadedPrice] = useState([]);
+  const [loadedCategory, setLoadedCategory] = useState([]);
+  const [colorFilter, setColorFilter] = useState([]);
+  const [sizeFilter, setSizeFilter] = useState([]);
+  const [priceFilter, setPriceFilter] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState([]);
   const [filterList, setFilterList] = useState({
     color: [],
     colorFilter: false,
@@ -34,6 +45,62 @@ function ProductList({
     categoryFilter: false,
   });
   const [filterToggle, setFilterToggle] = useState(false);
+
+  const getColor = () => {
+    setLoadedColor(filterData.colorList);
+  };
+
+  const getSize = () => {
+    setLoadedSize(Object.values(filterData.sizeList).flat());
+  };
+
+  const getPrice = () => {
+    const priceInfo = filterData.priceList.map(
+      (item) =>
+        (item = {
+          ...item,
+          txt:
+            item.min.toLocaleString("kr-KR") +
+            "원~" +
+            item.max.toLocaleString("kr-KR") +
+            "원",
+          checked: false,
+        })
+    );
+    setLoadedPrice(priceInfo);
+  };
+
+  const getCategory = () => {
+    const categoryList = [
+      "클래식플러스",
+      "클래식",
+      "스케이트 슈즈",
+      "키즈",
+      "토들러",
+      "탑&티셔츠",
+      "플리스",
+      "하의",
+      "가방",
+      "모자",
+      "양말",
+      "서프",
+      "아우터",
+      "기타",
+      "원피스&하의",
+      "보이즈",
+    ];
+    const addCheck = categoryList.map((item) => {
+      return { name: item, checked: false };
+    });
+    setLoadedCategory(addCheck);
+  };
+
+  useEffect(() => {
+    getColor();
+    getSize();
+    getPrice();
+    getCategory();
+  }, [product]);
 
   const getProduct = useCallback(async () => {
     setLoading(true);
@@ -198,17 +265,166 @@ function ProductList({
     closeCartAlarm();
   };
 
+  const removeColor = (color) => {
+    const remainingColor = colorFilter.filter((item) => item !== color);
+    const returnColor = [...loadedColor, color].sort((a, b) => a.no - b.no);
+    setLoadedColor(returnColor);
+    setColorFilter(remainingColor);
+    setFilterList((prev) => ({
+      ...prev,
+      color: prev.color.filter((item) => item !== color.name),
+    }));
+  };
+
+  const removePrice = () => {
+    loadedPrice.forEach((item) => (item.checked = false));
+    setPriceFilter([]);
+    setFilterList((prev) => ({
+      ...prev,
+      price: [],
+    }));
+  };
+
+  const removeCategory = (category) => {
+    loadedCategory.forEach(
+      (item) => category.name === item.name && (item.checked = false)
+    );
+
+    setCategoryFilter((prev) => prev.filter((item) => item !== category));
+    setFilterList((prev) => ({
+      ...prev,
+      category: prev.category.filter((item) => item !== category.name),
+    }));
+  };
+
+  const removeSize = (e) => {
+    const sizeSnb = document.querySelectorAll(
+      ".filter_list.size .filter_snb li"
+    );
+    const size = e.target.textContent;
+    const remainingSize = sizeFilter.filter((item) => item !== size);
+    setSizeFilter(remainingSize);
+    setFilterList((prev) => ({
+      ...prev,
+      size: prev.size.filter((item) => item !== size),
+    }));
+    sizeSnb.forEach((item) =>
+      item.textContent === size ? item.classList.remove("disabled") : false
+    );
+  };
+
+  // -----------------Mobile------------------------
+
+  const openFilter = (e) => {
+    const box = document.querySelector(".product_filter");
+    const btn = document.querySelector(".filter_btn");
+
+    if (box.classList.contains("active")) {
+      box.classList.remove("active");
+      btn.classList.remove("active");
+      return;
+    }
+    box.classList.add("active");
+    btn.classList.add("active");
+  };
+
+  const removeFilterItem = (e, list, item) => {
+    const key = Object.keys(filterList)
+      .filter((key) => filterList[key] === list)
+      .join("");
+    if (item) {
+      const removeFilter = filterList[key].filter((value) => value !== item);
+      setFilterList((prev) => ({ ...prev, [key]: removeFilter }));
+      switch (key) {
+        case "color":
+          const color = colorFilter.filter((val) => val.name === item)[0];
+          removeColor(color);
+          break;
+        case "size":
+          removeSize(e);
+          break;
+        case "category":
+          const category = categoryFilter.filter((val) => val.name === item)[0];
+          removeCategory(category);
+          break;
+      }
+    } else {
+      const box = document.querySelector(".product_filter");
+      openFilter();
+      box.scrollTop = box.scrollHeight;
+    }
+  };
+
   return (
     <ProductListStyle onScroll={handleScroll} id="product_container">
       <ProductFilter
-        product={product}
         filterList={filterList}
         setFilterList={setFilterList}
         filterToggle={filterToggle}
         setFilterToggle={setFilterToggle}
         listName={listName}
         submitBtn={submitBtn}
+        loadedColor={loadedColor}
+        loadedSize={loadedSize}
+        loadedPrice={loadedPrice}
+        loadedCategory={loadedCategory}
+        setLoadedColor={setLoadedColor}
+        colorFilter={colorFilter}
+        setColorFilter={setColorFilter}
+        sizeFilter={sizeFilter}
+        setSizeFilter={setSizeFilter}
+        priceFilter={priceFilter}
+        setPriceFilter={setPriceFilter}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        removeColor={removeColor}
+        removeSize={removeSize}
+        removePrice={removePrice}
+        removeCategory={removeCategory}
       />
+      {isMobile && (
+        <ul className="filter_bar">
+          <li>
+            <div className="filtered_list_slide">
+              {Object.values(filterList)
+                .filter((filter) => filter.length)
+                .map((list, idx) => {
+                  return list[0].max ? (
+                    <ul key={`filterPrice`} className="filtered_list">
+                      <li
+                        className="filtered_item"
+                        onClick={(e) => removeFilterItem(e, list)}
+                      >
+                        {Math.min(
+                          ...list.map((price) => price.min)
+                        ).toLocaleString("ko-KR") +
+                          "~" +
+                          Math.max(
+                            ...list.map((price) => price.max)
+                          ).toLocaleString("ko-KR") +
+                          "원"}
+                      </li>
+                    </ul>
+                  ) : (
+                    <ul key={`filter${idx}`} className="filtered_list">
+                      {list.map((item) => (
+                        <li
+                          className="filtered_item"
+                          onClick={(e) => removeFilterItem(e, list, item)}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                })}
+            </div>
+          </li>
+          <li className="filter_icon filter_btn" onClick={openFilter}>
+            <span className="material-symbols-outlined">tune</span>
+          </li>
+        </ul>
+      )}
       <div className="flex_container">
         {loading && (
           <div className="loading_state">
@@ -218,7 +434,7 @@ function ProductList({
         {product.length === 0 || filteredProduct.length === 0 ? (
           <div className="empty_alert">
             <p>찾으시는 상품 정보가 존재하지 않습니다.</p>
-            <div className="viewAll" onClick={() => setListName("")}>
+            <div className="view_all" onClick={() => setListName("")}>
               전체 상품 보기
             </div>
           </div>
@@ -268,33 +484,37 @@ const ProductListStyle = styled.div`
     border: 2px solid transparent;
   }
   .flex_container {
-    width: 79vw;
     margin-left: 17.5vw;
     padding-bottom: 4vw;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, 15vw);
+    grid-auto-rows: 1fr;
     gap: 1vw;
-    figure {
-      margin-top: 2vw;
-    }
+    margin-top: 2vw;
+    position: relative;
     .empty_alert {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       padding-top: 5vw;
-      font-size: 1vw;
+      font-size: clamp(16px, 1vw, 24px);
       color: #444;
       display: flex;
       flex-flow: column;
       align-items: center;
-      .viewAll {
-        margin: 2vw;
+      .view_all {
+        margin: 20px;
         text-align: center;
-        font-size: 1.3vw;
+        font-size: clamp(16px, 1.3vw, 24px);
         border-radius: 0.5vw;
         font-weight: bold;
         color: #fff;
-        width: 10vw;
-        padding: 2vw 0;
+        padding: 1.6vw 1.2vw;
         background-color: var(--color-red);
+        display: flex;
+        justify-content: center;
+        align-items: center;
         &:hover {
           background-color: black;
           cursor: pointer;
@@ -303,6 +523,178 @@ const ProductListStyle = styled.div`
     }
   }
   @media (max-width: 1200px) {
+    .flex_container {
+      grid-template-columns: repeat(4, 19.3vw);
+      .img_wrapper {
+        height: 19vw;
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    .filter_bar {
+      border-bottom: 1px solid #777;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 50px;
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 99;
+      padding: 0 10px;
+      box-sizing: border-box;
+      overflow-x: auto;
+      .filtered_list_slide {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        .filtered_list {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          .filtered_item {
+            border-radius: 7px;
+            padding: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #000;
+            position: relative;
+            &:after {
+              content: "\\2013";
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              position: absolute;
+              top: -7px;
+              right: -7px;
+              width: 15px;
+              height: 15px;
+              border-radius: 50%;
+              background-color: #000;
+              color: #fff;
+            }
+          }
+        }
+      }
+      .filter_icon {
+        border: 1px solid #000;
+        border-radius: 7px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span {
+          font-size: 30px;
+          font-weight: bold;
+        }
+        &.active {
+          color: #fff;
+          background-color: #000;
+        }
+      }
+    }
+    .product_filter {
+      width: 300px;
+      height: calc(100vh - 70px);
+      left: -100%;
+      overflow: auto;
+      padding: 0 5px;
+      border-right: 1px solid #000;
+      transition: 0.5s;
+      &.active {
+        left: 0;
+      }
+      .filter_container {
+        height: auto;
+        margin: 0;
+        z-index: 999;
+        padding: 10px 0;
+        .filter_title {
+          display: none;
+        }
+        .filter_list {
+          width: 100%;
+          overflow: hidden;
+          padding-bottom: 10px;
+          .list_name {
+            height: 40px;
+          }
+          .filter_item {
+            width: 100%;
+            box-sizing: border-box;
+            &.filter_selected {
+              display: none;
+            }
+            &.filter_snb {
+              width: 100%;
+              position: relative;
+              top: 0;
+              left: 0;
+              visibility: visible;
+              display: flex;
+              border: none;
+              flex-direction: row;
+              flex-wrap: wrap;
+              justify-content: start;
+              align-items: center;
+              gap: 1.5vw;
+              li {
+                width: auto;
+                height: auto;
+                font-size: 12px;
+              }
+            }
+          }
+          &.color {
+            li {
+              .color_circle {
+                width: 6vw;
+                height: 6vw;
+              }
+              .color_name {
+                display: none;
+              }
+            }
+          }
+          &.size {
+            .filter_snb {
+              li {
+                min-width: 6vw;
+                max-width: auto;
+                height: 6vw;
+                line-height: 6vw;
+                padding: 0.5vw 1vw;
+              }
+            }
+          }
+        }
+      }
+    }
+    .flex_container {
+      width: 100%;
+      grid-template-columns: repeat(3, 30vw);
+      margin: 0;
+      padding-top: 3vw;
+      place-content: center;
+      .img_wrapper {
+        height: 31vw;
+      }
+      .product_caption {
+        font-size: 13px;
+        gap: 7px;
+        .new_arrival {
+          font-size: 11px;
+        }
+      }
+      .empty_alert {
+        .view_all {
+          padding: 15px 7px;
+        }
+      }
+    }
   }
 `;
 

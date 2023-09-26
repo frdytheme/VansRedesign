@@ -2,161 +2,34 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 function ProductFilter({
-  product,
   setFilterList,
   filterToggle,
   listName,
   submitBtn,
+  loadedColor,
+  loadedSize,
+  loadedPrice,
+  loadedCategory,
+  setLoadedColor,
+  colorFilter,
+  setColorFilter,
+  sizeFilter,
+  setSizeFilter,
+  priceFilter,
+  setPriceFilter,
+  categoryFilter,
+  setCategoryFilter,
+  removeColor,
+  removeSize,
+  removePrice,
+  removeCategory,
 }) {
-  const [loadedColor, setLoadedColor] = useState([]);
-  const [loadedSize, setLoadedSize] = useState([]);
-  const [loadedPrice, setLoadedPrice] = useState([]);
-  const [loadedCategory, setLoadedCategory] = useState([]);
-  const [colorFilter, setColorFilter] = useState([]);
-  const [sizeFilter, setSizeFilter] = useState([]);
-  const [priceFilter, setPriceFilter] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState([]);
-
-  const colorList = [
-    { no: 0, name: "블루", code: "#2F58CD" },
-    { no: 1, name: "화이트", code: "#fff" },
-    { no: 2, name: "블랙", code: "#000" },
-    { no: 3, name: "옐로우", code: "#FFE569" },
-    { no: 4, name: "차콜", code: "#454545" },
-    { no: 5, name: "그레이", code: "#B2B2B2" },
-    { no: 6, name: "샌드", code: "#D8C4B6" },
-    { no: 7, name: "그린", code: "#54B435" },
-    { no: 8, name: "네이비", code: "#0E2954" },
-    { no: 9, name: "브라운", code: "#884A39" },
-    { no: 10, name: "크림화이트", code: "#F9FBE7" },
-    { no: 11, name: "레드", code: "#B31312" },
-    { no: 12, name: "올리브", code: "#898121" },
-    { no: 13, name: "핑크", code: "#FFAAC9" },
-    { no: 14, name: "퍼플", code: "#8B1874" },
-    { no: 15, name: "카키", code: "#83764F" },
-    { no: 16, name: "오렌지", code: "#FF8551" },
-    { no: 17, name: "스카이블루", code: "#9AC5F4" },
-  ];
-
-  const sizeList = {
-    shoes: [
-      210, 215, 220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280,
-      285, 290, 295, 300, 310,
-    ],
-    clothes: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
-    kids: [4, 5, 6, 7],
-    toddler: [105, 110, 115, 120, 130, 135, 140, 145, 150, 155, 160],
-    inches: [
-      "25Inch",
-      "26Inch",
-      "27Inch",
-      "28Inch",
-      "29Inch",
-      "30Inch",
-      "31Inch",
-      "32Inch",
-      "33Inch",
-      "34Inch",
-      "36Inch",
-    ],
-    free: "FREE",
-  };
-
-  const priceList = [
-    { min: 0, max: 50000 },
-    { min: 50000, max: 80000 },
-    { min: 80000, max: 100000 },
-    { min: 100000, max: 150000 },
-    { min: 150000, max: 300000 },
-  ];
-
-  const getColor = () => {
-    setLoadedColor(colorList);
-  };
-
-  const getSize = () => {
-    setLoadedSize(Object.values(sizeList).flat());
-  };
-
-  const getPrice = () => {
-    const priceInfo = priceList.map(
-      (item) =>
-        (item = {
-          ...item,
-          txt:
-            item.min.toLocaleString("kr-KR") +
-            "원~" +
-            item.max.toLocaleString("kr-KR") +
-            "원",
-          checked: false,
-        })
-    );
-    setLoadedPrice(priceInfo);
-  };
-
-  const getCategory = () => {
-    const categoryList = [
-      "클래식플러스",
-      "클래식",
-      "스케이트 슈즈",
-      "키즈",
-      "토들러",
-      "탑&티셔츠",
-      "플리스",
-      "하의",
-      "가방",
-      "모자",
-      "양말",
-      "서프",
-      "아우터",
-      "기타",
-      "원피스&하의",
-      "보이즈",
-    ];
-    const addCheck = categoryList.map((item) => {
-      return { name: item, checked: false };
-    });
-    setLoadedCategory(addCheck);
-  };
-
-  useEffect(() => {
-    getColor();
-    getSize();
-    getPrice();
-    getCategory();
-  }, [product]);
-
   const selectColor = (color) => {
     const newData = [...colorFilter, color];
     const remainingColor = loadedColor.filter((item) => item !== color);
     setColorFilter(newData);
     setLoadedColor(remainingColor);
     setFilterList((prev) => ({ ...prev, color: [...prev.color, color.name] }));
-  };
-  const removeColor = (color) => {
-    const remainingColor = colorFilter.filter((item) => item !== color);
-    const returnColor = [...loadedColor, color].sort((a, b) => a.no - b.no);
-    setLoadedColor(returnColor);
-    setColorFilter(remainingColor);
-    setFilterList((prev) => ({
-      ...prev,
-      color: prev.color.filter((item) => item !== color.name),
-    }));
-  };
-
-  const sizeSnb = document.querySelectorAll(".filter_list.size .filter_snb li");
-
-  const removeSize = (e) => {
-    const size = e.target.textContent;
-    const remainingSize = sizeFilter.filter((item) => item !== size);
-    setSizeFilter(remainingSize);
-    setFilterList((prev) => ({
-      ...prev,
-      size: prev.size.filter((item) => item !== size),
-    }));
-    sizeSnb.forEach((item) =>
-      item.textContent === size ? item.classList.remove("disabled") : false
-    );
   };
 
   const selectSize = (e) => {
@@ -171,15 +44,6 @@ function ProductFilter({
     }
   };
 
-  const removePrice = () => {
-    loadedPrice.forEach((item) => (item.checked = false));
-    setPriceFilter([]);
-    setFilterList((prev) => ({
-      ...prev,
-      price: [],
-    }));
-  };
-
   const handlePrice = (e, price) => {
     price.checked = !price.checked;
     if (e.target.checked) {
@@ -192,17 +56,6 @@ function ProductFilter({
         price: prev.price.filter((item) => item !== price),
       }));
     }
-  };
-
-  const removeCategory = (category) => {
-    loadedCategory.forEach(
-      (item) => category.name === item.name && (item.checked = false)
-    );
-    setCategoryFilter((prev) => prev.filter((item) => item !== category));
-    setFilterList((prev) => ({
-      ...prev,
-      category: prev.category.filter((item) => item !== category.name),
-    }));
   };
 
   const handleCategory = (e, category) => {
@@ -250,7 +103,7 @@ function ProductFilter({
   }, [listName, submitBtn]);
 
   return (
-    <ProductFilterStyle>
+    <ProductFilterStyle className="product_filter">
       <ul className="filter_container">
         <li className="filter_title">FILTER</li>
         <li className="filter_list color">
@@ -368,6 +221,7 @@ function ProductFilter({
           </li>
         )}
       </ul>
+      <div className="mobile_bg"></div>
     </ProductFilterStyle>
   );
 }
@@ -391,7 +245,7 @@ const ProductFilterStyle = styled.div`
     }
     .filter_list {
       width: 100%;
-      font-size: 1vw;
+      font-size: clamp(12px, 1vw, 20px);
       border-bottom: 1px solid #000;
       position: relative;
       cursor: pointer;
@@ -413,7 +267,8 @@ const ProductFilterStyle = styled.div`
         place-content: center;
         background-color: #fff;
         font-weight: 500;
-        font-size: 0.7vw;
+        font-size: clamp(12px, 0.7vw, 16px);
+        gap: 5px;
         &.filter_selected {
           li {
             position: relative;
@@ -443,29 +298,32 @@ const ProductFilterStyle = styled.div`
           li {
             padding: 0;
             width: 3vw;
-            height: 3vw;
+            min-width: 40px;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
           }
         }
         .color_circle {
           width: 1.5vw;
+          min-width: 30px;
           height: 1vw;
+          min-height: 20px;
           border: 1px solid #ddd;
-          margin: 0.2vw;
+          margin: 5px;
         }
         &:hover .color_name {
           display: block;
         }
         .color_name {
+          width: 120%;
           color: #000;
           font-weight: 400;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
       }
       &.size {
@@ -477,8 +335,12 @@ const ProductFilterStyle = styled.div`
             overflow: hidden;
             font-family: "Pretendard", sans-serif;
             width: 3vw;
+            min-width: 40px;
             height: 2vw;
-            line-height: 2vw;
+            min-height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border: 1px solid #d6d6d6;
             margin: 0.2vw;
             &:hover {
@@ -501,6 +363,7 @@ const ProductFilterStyle = styled.div`
           text-align: left;
           li {
             width: 10vw;
+            min-width: 150px;
             padding: 0.4vw;
             label {
               display: flex;
@@ -552,9 +415,20 @@ const ProductFilterStyle = styled.div`
       padding: 1vw 0.5vw;
       margin-top: 1vw;
       cursor: pointer;
+      box-sizing: border-box;
       &:hover {
         background-color: var(--color-red);
         color: #fff;
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    .filter_container {
+      .filter_reset {
+        background-color: var(--color-red);
+        color: #fff;
+        padding: 20px 10px;
+        border: none;
       }
     }
   }

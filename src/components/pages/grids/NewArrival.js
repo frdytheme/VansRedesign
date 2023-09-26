@@ -45,7 +45,7 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
   return (
     <NewArrivalStyle className="new_container">
       <Swiper
-        slidesPerView={isTablet ? 6 : isMobile ? 7 : 5}
+        slidesPerView={isTablet ? 6 : isMobile ? 2 : 5}
         spaceBetween={10}
         navigation={true}
         modules={[Navigation]}
@@ -65,6 +65,7 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
 }
 
 const NewArrivalStyle = styled.div`
+  width: 100%;
   grid-column: span 3;
   grid-row: span 1;
   position: relative;
@@ -76,24 +77,20 @@ const NewArrivalStyle = styled.div`
     display: flex;
     justify-content: start;
     .img_wrapper {
-      height: 80%;
-      &.mobile {
-        height: 100%;
-      }
+      height: 75%;
       .product_img {
         height: 100%;
       }
     }
     .product_caption {
       margin: 0;
-      padding: 0.5vw 0;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       position: relative;
-      height: 20%;
+      height: 25%;
       .product_name {
         overflow: hidden;
         max-width: 100%;
@@ -118,19 +115,25 @@ const NewArrivalStyle = styled.div`
     font-weight: bold;
   }
   @media (max-width: 1200px) {
+    width: calc(100% - 10px);
     .swiper-slide {
       .product_caption {
         .new_arrival {
-          font-size: 1vw;
+          font-size: clamp(10px, 0.7vw, 16px);
         }
         .product_name {
-          font-size: 1.2vw;
+          font-size: clamp(12px, 1.2vw, 16px);
         }
 
         .product_price {
-          font-size: 1vw;
+          font-size: clamp(12px, 1.2vw, 16px);
         }
       }
+    }
+  }
+  @media (max-width: 768px) {
+    .product_caption {
+      /* gap: 1vw; */
     }
   }
 `;
