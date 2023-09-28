@@ -145,24 +145,25 @@ function ProductDetail({
           </li>
           <li className="product_info_li option_box">
             <div className="txt_box">
-              <Swiper
-                className="mySwiper same_product_list"
-                slidesPerView={6}
-                spaceBetween={50}
-              >
-                {sameProduct.map((item) => (
-                  <SwiperSlide key={item.id}>
-                    <img
-                      src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                      alt={`${item.name} 제품 이미지`}
-                      className="same_product"
-                      onClick={() => selectSeries(item)}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <div className="same_product_wrapper">
+                <ul className="same_product_list">
+                  {sameProduct.map((item) => (
+                    <li key={item.id}>
+                      <img
+                        src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                        alt={`${item.name} 제품 이미지`}
+                        className="same_product"
+                        onClick={() => selectSeries(item)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="product_info_li product_DC">
                 상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
+                <br />
+                <br />
+                반스 올드스쿨 / 어센틱 / 볼트 / 스케이트-하이
               </div>
             </div>
             <div className="option_wrapper">
@@ -226,14 +227,14 @@ const ProductDetailStyle = styled.div`
     background-color: rgba(255, 255, 255, 0.5);
   }
   .console_box {
-    width: 100%;
+    /* width: 100%; */
     border-bottom: 1px solid #000;
     height: 50px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     .material-symbols-outlined {
-      font-size: 2vw;
+      font-size: clamp(28px, 2vw, 38px);
       font-weight: bold;
       cursor: pointer;
       user-select: none;
@@ -246,19 +247,20 @@ const ProductDetailStyle = styled.div`
     }
   }
   .info_box {
+    width: 100%;
     display: grid;
-    grid-template-columns: 2fr 8fr;
+    grid-template-columns: 25vw 8fr;
     grid-auto-rows: 1fr;
     padding: 3vw;
+    box-sizing: border-box;
+    gap: 2vw;
     .img_wrapper {
-      width: 25vw;
-      margin-right: 2vw;
       .product_img {
         width: 100%;
       }
     }
     .product_info {
-      width: 100%;
+      width: 55vw;
       .product_info_li {
         margin: 1vw 0;
       }
@@ -266,14 +268,16 @@ const ProductDetailStyle = styled.div`
         color: var(--color-red);
         font-weight: 600;
         margin: 0;
+        font-size: clamp(12px, 0.8vw, 16px);
       }
       .product_name {
-        font-size: 2vw;
+        font-size: clamp(20px, 2vw, 38px);
         font-weight: bold;
       }
       .product_color_model {
         color: #888;
         user-select: none;
+        font-size: clamp(12px, 0.8vw, 16px);
       }
       .product_size {
         .size_list {
@@ -281,10 +285,14 @@ const ProductDetailStyle = styled.div`
           flex-wrap: wrap;
           gap: 0.5vw;
           .size_item {
-            font-size: 1.2vw;
+            font-size: clamp(15px, 1.2vw, 24px);
             width: 4vw;
+            min-width: 50px;
             height: 2.5vw;
-            line-height: 2.5vw;
+            min-height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
             border-radius: 5px;
             border: 1px solid #777;
@@ -301,26 +309,37 @@ const ProductDetailStyle = styled.div`
         }
       }
       .option_box {
+        width: 100%;
         display: grid;
-        grid-template-columns: 6fr 4fr;
+        grid-template-columns: 80% 20%;
         grid-auto-rows: 1fr;
-        font-size: 2vw;
+        font-size: clamp(20px, 2vw, 38px);
         font-weight: 500;
         .txt_box {
           width: 100%;
-          .same_product_list {
-            width: 36vw;
-            .same_product {
-              width: 6vw;
-              cursor: pointer;
-              &:hover {
-                filter: brightness(0.7);
+          .same_product_wrapper {
+            overflow: hidden;
+            width: 95%;
+            .same_product_list {
+              width: 100%;
+              display: flex;
+              overflow: auto;
+              gap: 10px;
+              .same_product {
+                height: 8vw;
+                min-height: 100px;
+                object-fit: cover;
+                cursor: pointer;
+                &:hover {
+                  filter: brightness(0.7);
+                }
               }
             }
           }
           .product_DC {
+            width: 80%;
             margin-top: 15px;
-            font-size: 0.9vw;
+            font-size: clamp(14px, 0.9vw, 20px);
             line-height: 1.4;
           }
         }
@@ -329,6 +348,7 @@ const ProductDetailStyle = styled.div`
           display: flex;
           flex-direction: column;
           gap: 1vw;
+          justify-content: end;
           align-items: end;
           margin-top: 5vw;
           .product_qty {
@@ -340,17 +360,21 @@ const ProductDetailStyle = styled.div`
                 display: flex;
                 align-items: center;
                 gap: 1vw;
-                font-size: 1.5vw;
+                font-size: clamp(24px, 1.5vw, 30px);
                 p {
                   width: 3vw;
+                  min-width: 40px;
                   height: 3vw;
+                  min-height: 40px;
                   text-align: center;
-                  line-height: 3vw;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
                   border: 1px solid #000;
                 }
                 span {
                   font-weight: bold;
-                  font-size: 2vw;
+                  font-size: clamp(30px, 2vw, 36px);
                   cursor: pointer;
                   user-select: none;
                   &:hover {
@@ -370,11 +394,13 @@ const ProductDetailStyle = styled.div`
               background-color: #d9d9d9;
               color: #999;
               width: 9vw;
+              min-width: 100px;
               height: 3vw;
+              min-height: 40px;
               border: none;
               margin-left: 0.5vw;
               user-select: none;
-              font-size: 1.2vw;
+              font-size: clamp(14px, 1.2vw, 23px);
             }
             &.active {
               button {
@@ -390,6 +416,54 @@ const ProductDetailStyle = styled.div`
   }
   .another_product {
     background-color: grey;
+  }
+  @media (max-width: 985px) {
+    border: none;
+    box-sizing: border-box;
+    .info_box {
+      display: block;
+      .img_wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 0 10%;
+        box-sizing: border-box;
+        gap: 10px;
+      }
+      .product_info {
+        width: 100%;
+        margin-top: 15px;
+        .product_new_arrivals {
+          font-size: 14px;
+        }
+        .product_name {
+          font-size: 24px;
+        }
+        .product_color_model {
+          font-size: 14px;
+        }
+        .product_size {
+          margin: 20px 0;
+        }
+        .option_box {
+          .txt_box {
+            .same_product_wrapper {
+              width: 125%;
+              .same_product_list {
+              }
+            }
+          }
+          .option_wrapper {
+            margin-top: 150px;
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    border-radius: 0;
   }
 `;
 

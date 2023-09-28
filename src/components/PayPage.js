@@ -3,7 +3,6 @@ import styled from "styled-components";
 import PUBLIC from "../assets/module/PUBLIC";
 
 function PayPage() {
-
   const selectPay = (e) => {
     const btns = document.querySelectorAll(".pay_item");
     btns.forEach((btn) => {
@@ -74,20 +73,20 @@ const PayPageStyle = styled.div`
           outline: 2px solid #000;
         }
         &.naverpay {
-          background: #fff url("${PUBLIC}/images/pay_logos/naver.png") no-repeat center /
-            40%;
+          background: #fff url("${PUBLIC}/images/pay_logos/naver.png") no-repeat
+            center / 40%;
         }
         &.kakaopay {
-          background: #ffeb00 url("${PUBLIC}/images/pay_logos/kakaopay.png") no-repeat
-            center / 50%;
+          background: #ffeb00 url("${PUBLIC}/images/pay_logos/kakaopay.png")
+            no-repeat center / 50%;
         }
         &.toss {
-          background: #0064ff url("${PUBLIC}/images/pay_logos/toss_white.png") no-repeat
-            center / contain;
+          background: #0064ff url("${PUBLIC}/images/pay_logos/toss_white.png")
+            no-repeat center / contain;
         }
         &.payco {
-          background: #e7181e url("${PUBLIC}/images/pay_logos/payco.png") no-repeat
-            center / 50%;
+          background: #e7181e url("${PUBLIC}/images/pay_logos/payco.png")
+            no-repeat center / 50%;
         }
         img {
           height: 100%;
@@ -98,6 +97,34 @@ const PayPageStyle = styled.div`
           &.toss {
             height: 200%;
           }
+        }
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    grid-row: span 2;
+    .pay_list {
+      box-sizing: border-box;
+      margin-top: 25px;
+      .pay_block {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: 1fr;
+        gap: 10px;
+        place-items: center;
+        &.title {
+          display: block;
+          text-align: center;
+          font-size: 20px;
+          margin-bottom: 20px;
+          &:before {
+            display: none;
+          }
+        }
+        .pay_item {
+          font-size: 16px;
+          width: 200px;
+          height: 70px;
         }
       }
     }

@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import FindUserId from "./FindUserId";
 import FindUserPw from "./FindUserPw";
 import MyPage from "./MyPage";
+import { useMediaQuery } from "react-responsive";
 
 function Home() {
   const [listName, setListName] = useState([]);
@@ -32,7 +33,9 @@ function Home() {
   const showAlarm = Cookies.get("show_cart_alarm")
     ? JSON.parse(Cookies.get("show_cart_alarm"))
     : false;
+  const isMobile = useMediaQuery({ maxWidth: 768 });
   const isProductPage = Boolean(useMatch("/home/product"));
+  const isCartPage = Boolean(useMatch("/home/cart"));
 
   useEffect(() => {
     if (cart) setCartCount(cart.total);
@@ -137,14 +140,15 @@ function Home() {
           onClick={(e) => {
             if (e.target === e.currentTarget) return setDetailBtn(false);
           }}
-        >
-          <ProductDetail
-            productInfo={productInfo}
-            setProductInfo={setProductInfo}
-            setDetailBtn={setDetailBtn}
-            setNavCart={setNavCart}
-          />
-        </div>
+        ></div>
+      )}
+      {detailBtn && (
+        <ProductDetail
+          productInfo={productInfo}
+          setProductInfo={setProductInfo}
+          setDetailBtn={setDetailBtn}
+          setNavCart={setNavCart}
+        />
       )}
       {showAlarm || (
         <div className={`cart_modal_box${navCart ? " active" : ""}`}>
@@ -177,7 +181,7 @@ function Home() {
           </div>
         </div>
       )}
-      {isProductPage || <Footer />}
+      {isProductPage || (isCartPage && isMobile) || <Footer />}
     </HomeSection>
   );
 }
@@ -205,9 +209,9 @@ const HomeSection = styled.div`
   overflow: hidden;
   .detail_box_bg {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 9998;

@@ -5,6 +5,7 @@ import authApi from "../assets/api/authApi";
 import PayPage from "./PayPage";
 import PUBLIC from "../assets/module/PUBLIC";
 import LoadingBox from "./LoadingBox";
+import { useMediaQuery } from "react-responsive";
 
 function CartPage({ setCartCount, setDetailBtn, setProductInfo }) {
   const cart = JSON.parse(sessionStorage.getItem("CART"));
@@ -17,6 +18,7 @@ function CartPage({ setCartCount, setDetailBtn, setProductInfo }) {
   const [loading, setLoading] = useState(false);
   const delivery = orderList.length ? 3000 : 0;
   const navigate = useNavigate();
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   const parsingCart = () => {
     const products = [];
@@ -65,6 +67,8 @@ function CartPage({ setCartCount, setDetailBtn, setProductInfo }) {
   };
 
   const removeItem = (product, size) => {
+    const confirm = window.confirm("상품을 삭제하시겠습니까?");
+    if (!confirm) return;
     const { model } = product;
     const newSizeObj = {};
     const nowObj = product.sizes;
@@ -322,15 +326,19 @@ function CartPage({ setCartCount, setDetailBtn, setProductInfo }) {
         ) : (
           <PayPage />
         )}
-        <div className="total_count">
-          <p>
-            총 {total || 0}개 / {orderList.length}개 선택
-          </p>
-        </div>
-        <div className="order_box">
-          <div className="order_title">
-            <div className="title">결제 상세</div>
+        {isMobile || (
+          <div className="total_count">
+            <p>
+              총 {total || 0}개 / {orderList.length}개 선택
+            </p>
           </div>
+        )}
+        <div className="order_box">
+          {isMobile || (
+            <div className="order_title">
+              <div className="title">결제 상세</div>
+            </div>
+          )}
           <ul className="price_box">
             <li className="price_list">
               <p className="price_info">상품 금액</p>
@@ -424,6 +432,7 @@ const CartPageStyle = styled.div`
       border-top: 1px solid #000;
       border-bottom: 1px solid #000;
       grid-row: 2 / 4;
+      background-color: #fff;
       &::-webkit-scrollbar {
         width: 0;
       }
@@ -650,6 +659,48 @@ const CartPageStyle = styled.div`
     padding-bottom: 5vw;
     .cart_wrapper {
       height: 90%;
+    }
+  }
+  @media (max-width: 768px) {
+    height: calc(100% - 70px);
+    padding: 0;
+    .cart_wrapper {
+      width: 100%;
+      height: 100%;
+      grid-template-columns: 1fr;
+      grid-auto-rows: 0.5fr 0.5fr 8.5fr;
+      .cart_process {
+        padding-left: 10px;
+      }
+      .cart_container {
+        margin: 0;
+        grid-row: auto;
+        height: 100%;
+        .cart_list {
+          .cart_item {
+            padding: 15px 5px;
+            gap: 10px;
+          }
+        }
+      }
+      .order_box {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        width: calc(100% - 2px);
+        background-color: #fff;
+        display: block;
+        grid-area: auto;
+        grid-row: 4 / 5;
+      }
+      .list_option {
+        padding: 0 10px;
+        box-sizing: border-box;
+        position: static;
+        grid-row: 2 / 3;
+        width: 100%;
+        font-size: 14px;
+      }
     }
   }
 `;

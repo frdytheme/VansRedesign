@@ -45,6 +45,7 @@ function ProductList({
     categoryFilter: false,
   });
   const [filterToggle, setFilterToggle] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const getColor = () => {
     setLoadedColor(filterData.colorList);
@@ -315,17 +316,14 @@ function ProductList({
 
   // -----------------Mobile------------------------
 
-  const openFilter = (e) => {
-    const box = document.querySelector(".product_filter");
-    const btn = document.querySelector(".filter_btn");
+  const openFilter = () => {
+    if (filterOpen) return setFilterOpen(false);
 
-    if (box.classList.contains("active")) {
-      box.classList.remove("active");
-      btn.classList.remove("active");
-      return;
-    }
-    box.classList.add("active");
-    btn.classList.add("active");
+    setFilterOpen(true);
+  };
+
+  const closeFilter = () => {
+    setFilterOpen(false);
   };
 
   const removeFilterItem = (e, list, item) => {
@@ -381,7 +379,9 @@ function ProductList({
         removeSize={removeSize}
         removePrice={removePrice}
         removeCategory={removeCategory}
+        filterOpen={filterOpen}
       />
+      {filterOpen && <div className="filter_bg" onClick={closeFilter}></div>}
       {isMobile && (
         <ul className="filter_bar">
           <li>
@@ -407,10 +407,11 @@ function ProductList({
                     </ul>
                   ) : (
                     <ul key={`filter${idx}`} className="filtered_list">
-                      {list.map((item) => (
+                      {list.map((item, index) => (
                         <li
                           className="filtered_item"
                           onClick={(e) => removeFilterItem(e, list, item)}
+                          key={`filteredItem${index}`}
                         >
                           {item}
                         </li>
@@ -420,7 +421,10 @@ function ProductList({
                 })}
             </div>
           </li>
-          <li className="filter_icon filter_btn" onClick={openFilter}>
+          <li
+            className={`filter_icon filter_btn ${filterOpen ? " active" : ""}`}
+            onClick={openFilter}
+          >
             <span className="material-symbols-outlined">tune</span>
           </li>
         </ul>
@@ -531,6 +535,15 @@ const ProductListStyle = styled.div`
     }
   }
   @media (max-width: 768px) {
+    .filter_bg {
+      background-color: rgba(0, 0, 0, 0.5);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+    }
     .filter_bar {
       border-bottom: 1px solid #777;
       background-color: #fff;
@@ -561,20 +574,22 @@ const ProductListStyle = styled.div`
             padding: 7px;
             font-size: 14px;
             font-weight: 600;
-            border: 1px solid #000;
+            background-color: #f0f0f0;
             position: relative;
+            border: 1px solid #d0d0d0;
             &:after {
               content: "\\2013";
-              display: flex;
-              justify-content: center;
-              align-items: center;
               position: absolute;
-              top: -7px;
-              right: -7px;
-              width: 15px;
-              height: 15px;
+              top: -4px;
+              right: -6px;
+              width: 12px;
+              height: 12px;
+              line-height: 10px;
+              text-align: center;
+              font-size: 6px;
               border-radius: 50%;
               background-color: #000;
+              background-color: #c70039;
               color: #fff;
             }
           }

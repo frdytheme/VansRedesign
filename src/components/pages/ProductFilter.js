@@ -23,6 +23,7 @@ function ProductFilter({
   removeSize,
   removePrice,
   removeCategory,
+  filterOpen,
 }) {
   const selectColor = (color) => {
     const newData = [...colorFilter, color];
@@ -103,7 +104,9 @@ function ProductFilter({
   }, [listName, submitBtn]);
 
   return (
-    <ProductFilterStyle className="product_filter">
+    <ProductFilterStyle
+      className={`product_filter ${filterOpen ? " active" : ""}`}
+    >
       <ul className="filter_container">
         <li className="filter_title">FILTER</li>
         <li className="filter_list color">
