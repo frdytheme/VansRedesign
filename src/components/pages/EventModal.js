@@ -96,11 +96,12 @@ const ModalStyle = styled.article`
     background-color: rgba(0, 0, 0, 0);
     animation: ${bgOff} 0.7s forwards;
     .modal_box {
-      position: fixed;
+      position: absolute;
       width: 100%;
       height: 95vh;
       border-radius: 20px 20px 0 0;
-      bottom: 0;
+      left:0;
+      bottom:0;
       border-top: 30px solid #d51920;
       background-color: white;
       transform: translateY(120%);
