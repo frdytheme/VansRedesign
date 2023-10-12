@@ -553,7 +553,7 @@ const ProductListStyle = styled.div`
       justify-content: space-between;
       align-items: center;
       height: 50px;
-      position: sticky;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -694,7 +694,7 @@ const ProductListStyle = styled.div`
       width: 100%;
       grid-template-columns: repeat(3, 30vw);
       margin: 0;
-      padding-top: 3vw;
+      padding-top: 60px;
       place-content: center;
       .img_wrapper {
         height: 31vw;

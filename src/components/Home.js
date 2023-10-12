@@ -219,10 +219,11 @@ const HomeSection = styled.div`
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
       rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     width: 20vw;
-    min-width: 230px;
+    min-width: 280px;
     border-radius: 0 0 15px 15px;
     position: absolute;
     top: -100%;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
     z-index: 9999;
@@ -230,7 +231,7 @@ const HomeSection = styled.div`
     padding: 20px 0 10px;
     display: flex;
     flex-direction: column;
-    gap: 0.7vw;
+    gap: 10px;
     justify-content: center;
     align-items: center;
     transition: 0.7s cubic-bezier(0.49, 0.06, 0.08, 1);
@@ -246,20 +247,20 @@ const HomeSection = styled.div`
       }
     }
     .txt_box {
-      font-size: 0.8vw;
+      padding: 0 10px;
+      font-size: clamp(14px, 0.8vw, 16px);
     }
     .btn_box {
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 0.8vw;
       .move_btn {
         width: 50%;
         height: 20px;
         background-color: #000;
         color: #fff;
-        padding: 0.8vw 1.7vw;
+        padding: 15px 20px;
         border-radius: 15px;
         cursor: pointer;
         position: relative;
@@ -287,7 +288,7 @@ const HomeSection = styled.div`
       width: 90%;
       display: flex;
       justify-content: space-between;
-      font-size: 0.7vw;
+      font-size: clamp(13px, 0.7vw, 15px);
       color: #777;
       font-weight: 500;
       .off_option {
@@ -300,9 +301,6 @@ const HomeSection = styled.div`
         }
       }
     }
-  }
-  @media (max-width: 1200px) {
-    /* overflow: auto; */
   }
 `;
 
