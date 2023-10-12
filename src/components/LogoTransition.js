@@ -31,7 +31,7 @@ function LogoTransition() {
       <div className="video_wrapper">
         <div className="video_blk"></div>
         <video
-          src={`${PUBLIC}/videos/vans_official_movie.webm`}
+          src={`${PUBLIC}/videos/vans_official_movie.mp4`}
           muted
           autoPlay
           loop
