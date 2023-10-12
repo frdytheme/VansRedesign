@@ -29,7 +29,7 @@ function LogoTransition() {
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
-      window.location.replace("/home");
+      window.location.replace("./home");
     }
   }, []);
 
@@ -122,7 +122,6 @@ const LogoMain = styled.div`
     }
     .main_video {
       object-fit: cover;
-      height: 100vh;
     }
   }
 `;
