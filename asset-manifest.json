@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/VansRedesign/static/css/main.83de247e.css",
-    "main.js": "/VansRedesign/static/js/main.0862d2e0.js",
+    "main.js": "/VansRedesign/static/js/main.8c2528c1.js",
     "static/media/PretendardVariable.woff2": "/VansRedesign/static/media/PretendardVariable.36b3a87cd98126711b2b.woff2",
     "static/media/BlackBoard.woff2": "/VansRedesign/static/media/BlackBoard.c5369df0102c4dab3995.woff2",
     "static/media/slip_on.png": "/VansRedesign/static/media/slip_on.a74e784209ad507d031c.png",
@@ -19,10 +19,10 @@
     "static/media/BOREDSB.woff2": "/VansRedesign/static/media/BOREDSB.80be5c84e277729c8723.woff2",
     "index.html": "/VansRedesign/index.html",
     "main.83de247e.css.map": "/VansRedesign/static/css/main.83de247e.css.map",
-    "main.0862d2e0.js.map": "/VansRedesign/static/js/main.0862d2e0.js.map"
+    "main.8c2528c1.js.map": "/VansRedesign/static/js/main.8c2528c1.js.map"
   },
   "entrypoints": [
     "static/css/main.83de247e.css",
-    "static/js/main.0862d2e0.js"
+    "static/js/main.8c2528c1.js"
   ]
 }
