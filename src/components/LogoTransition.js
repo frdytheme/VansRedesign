@@ -26,6 +26,13 @@ function LogoTransition() {
     };
   }, []);
 
+  useEffect(() => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.replace("/home");
+    }
+  }, []);
+
   return (
     <LogoMain>
       <div className="video_wrapper">
@@ -97,7 +104,7 @@ const LogoMain = styled.div`
   }
   .video_wrapper {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: absolute;
     top: 0;
     left: 0;
@@ -106,7 +113,7 @@ const LogoMain = styled.div`
     z-index: -1;
     .video_blk {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       background-color: #000;
       opacity: 0.7;
       position: absolute;
@@ -115,6 +122,7 @@ const LogoMain = styled.div`
     }
     .main_video {
       object-fit: cover;
+      height: 100vh;
     }
   }
 `;
