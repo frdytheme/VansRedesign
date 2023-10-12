@@ -86,6 +86,7 @@ const MainGrid = styled.main`
     grid-template-rows: 30vw 20vw 35vw;
     height: auto;
     padding-right: 0;
+    padding-top: 80px;
     .main_banner {
       grid-row: 2 / 3;
       grid-column: 1 / 3;

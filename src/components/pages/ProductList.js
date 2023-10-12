@@ -537,7 +537,8 @@ const ProductListStyle = styled.div`
     }
   }
   @media (max-width: 768px) {
-    height:100%;
+    height: calc(100% - 70px);
+    padding-top: 130px;
     .filter_bg {
       background-color: rgba(0, 0, 0, 0.5);
       position: fixed;
@@ -555,7 +556,7 @@ const ProductListStyle = styled.div`
       align-items: center;
       height: 50px;
       position: fixed;
-      top: 0;
+      top: 70px;
       left: 0;
       width: 100%;
       z-index: 99;
@@ -693,10 +694,9 @@ const ProductListStyle = styled.div`
     }
     .flex_container {
       width: 100%;
-      background-color:orange;
       grid-template-columns: repeat(3, 30vw);
       margin: 0;
-      padding-top: 60px;
+      /* margin-top: 130px; */
       place-content: center;
       .img_wrapper {
         height: 31vw;

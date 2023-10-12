@@ -26,12 +26,12 @@ function LogoTransition() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  //   if (isMobile) {
-  //     navigate("home");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      navigate("home");
+    }
+  }, []);
 
   return (
     <LogoMain>

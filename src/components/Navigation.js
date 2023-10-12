@@ -473,7 +473,7 @@ const Nav = styled.header`
     }
   }
   @media (max-width: 1200px) {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 99;
