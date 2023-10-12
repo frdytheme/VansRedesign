@@ -83,7 +83,7 @@ const MainGrid = styled.main`
   }
   @media (max-width: 1200px) {
     grid-template-columns: 5fr 5fr;
-    grid-template-rows: 20vw 30vw 35vw;
+    grid-template-rows: 30vw 20vw 35vw;
     height: auto;
     padding-right: 0;
     .main_banner {

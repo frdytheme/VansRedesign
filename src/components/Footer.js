@@ -58,7 +58,7 @@ const FooterStyle = styled.footer`
       padding-left: 20px;
       display: flex;
       align-items: center;
-      font-size: 0.6vw;
+      font-size: clamp(10px, 0.6vw, 17px);
       gap: 2vw;
       margin-left: 30px;
       li {

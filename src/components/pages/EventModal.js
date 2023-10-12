@@ -174,7 +174,7 @@ const ModalStyle = styled.article`
         margin: 20px 0;
       }
       .description {
-        padding: 10px 150px;
+        padding: 0.7vw 15vw;
         font-weight: bold;
       }
       .info_list {

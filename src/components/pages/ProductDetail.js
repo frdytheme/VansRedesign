@@ -144,58 +144,58 @@ function ProductDetail({
             </ul>
           </li>
           <li className="product_info_li option_box">
+            <div className="same_product_wrapper">
+              <ul className="same_product_list">
+                {sameProduct.map((item) => (
+                  <li key={item.id}>
+                    <img
+                      src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                      alt={`${item.name} 제품 이미지`}
+                      className="same_product"
+                      onClick={() => selectSeries(item)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="txt_box">
-              <div className="same_product_wrapper">
-                <ul className="same_product_list">
-                  {sameProduct.map((item) => (
-                    <li key={item.id}>
-                      <img
-                        src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                        alt={`${item.name} 제품 이미지`}
-                        className="same_product"
-                        onClick={() => selectSeries(item)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
               <div className="product_info_li product_DC">
                 상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
                 <br />
                 <br />
                 반스 올드스쿨 / 어센틱 / 볼트 / 스케이트-하이
               </div>
-            </div>
-            <div className="option_wrapper">
-              <div className="product_info_li product_qty">
-                <div className="select_qty">
-                  <div className="btn_box">
-                    <span
-                      className="material-symbols-outlined"
-                      onClick={handleQty}
-                    >
-                      remove
-                    </span>
-                    <p>{qty}</p>
-                    <span
-                      className="material-symbols-outlined"
-                      onClick={handleQty}
-                    >
-                      add
-                    </span>
+              <div className="option_wrapper">
+                <div className="product_info_li product_qty">
+                  <div className="select_qty">
+                    <div className="btn_box">
+                      <span
+                        className="material-symbols-outlined"
+                        onClick={handleQty}
+                      >
+                        remove
+                      </span>
+                      <p>{qty}</p>
+                      <span
+                        className="material-symbols-outlined"
+                        onClick={handleQty}
+                      >
+                        add
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="product_price">
-                {price && price.toLocaleString("ko-KR")}원
-              </div>
-              <div
-                className={`product_info_li product_btns ${
-                  selectedSize && "active"
-                }`}
-              >
-                <button>구매</button>
-                <button onClick={handleCart}>장바구니</button>
+                <div className="product_price">
+                  {price && price.toLocaleString("ko-KR")}원
+                </div>
+                <div
+                  className={`product_info_li product_btns ${
+                    selectedSize && "active"
+                  }`}
+                >
+                  <button>구매</button>
+                  <button onClick={handleCart}>장바구니</button>
+                </div>
               </div>
             </div>
           </li>
@@ -227,7 +227,6 @@ const ProductDetailStyle = styled.div`
     background-color: rgba(255, 255, 255, 0.5);
   }
   .console_box {
-    /* width: 100%; */
     border-bottom: 1px solid #000;
     height: 50px;
     display: flex;
@@ -310,103 +309,102 @@ const ProductDetailStyle = styled.div`
       }
       .option_box {
         width: 100%;
-        display: grid;
+        /* display: grid;
         grid-template-columns: 80% 20%;
-        grid-auto-rows: 1fr;
+        grid-auto-rows: 1fr; */
         font-size: clamp(20px, 2vw, 38px);
         font-weight: 500;
-        .txt_box {
-          width: 100%;
-          .same_product_wrapper {
-            overflow: hidden;
-            width: 95%;
-            .same_product_list {
-              width: 100%;
-              display: flex;
-              overflow: auto;
-              gap: 10px;
-              .same_product {
-                height: 8vw;
-                min-height: 100px;
-                object-fit: cover;
-                cursor: pointer;
-                &:hover {
-                  filter: brightness(0.7);
-                }
+        .same_product_wrapper {
+          overflow: hidden;
+          width: 95%;
+          .same_product_list {
+            width: 100%;
+            display: flex;
+            overflow: auto;
+            gap: 10px;
+            .same_product {
+              height: 8vw;
+              min-height: 100px;
+              object-fit: cover;
+              cursor: pointer;
+              &:hover {
+                filter: brightness(0.7);
               }
             }
           }
+        }
+        .txt_box {
+          width: 100%;
+          display: flex;
           .product_DC {
             width: 80%;
             margin-top: 15px;
             font-size: clamp(14px, 0.9vw, 20px);
             line-height: 1.4;
           }
-        }
-
-        .option_wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 1vw;
-          justify-content: end;
-          align-items: end;
-          margin-top: 5vw;
-          .product_qty {
-            .select_qty {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              .btn_box {
+          .option_wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1vw;
+            justify-content: end;
+            align-items: end;
+            .product_qty {
+              .select_qty {
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 1vw;
-                font-size: clamp(24px, 1.5vw, 30px);
-                p {
-                  width: 3vw;
-                  min-width: 40px;
-                  height: 3vw;
-                  min-height: 40px;
-                  text-align: center;
+                .btn_box {
                   display: flex;
-                  justify-content: center;
                   align-items: center;
-                  border: 1px solid #000;
-                }
-                span {
-                  font-weight: bold;
-                  font-size: clamp(30px, 2vw, 36px);
-                  cursor: pointer;
-                  user-select: none;
-                  &:hover {
-                    color: var(--color-red);
+                  gap: 1vw;
+                  font-size: clamp(24px, 1.5vw, 30px);
+                  p {
+                    width: 3vw;
+                    min-width: 40px;
+                    height: 3vw;
+                    min-height: 40px;
+                    text-align: center;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #000;
+                  }
+                  span {
+                    font-weight: bold;
+                    font-size: clamp(30px, 2vw, 36px);
+                    cursor: pointer;
+                    user-select: none;
+                    &:hover {
+                      color: var(--color-red);
+                    }
                   }
                 }
-              }
-              .max_qty {
-                font-size: 0.8vw;
-                color: #999;
+                .max_qty {
+                  font-size: 0.8vw;
+                  color: #999;
+                }
               }
             }
-          }
-          .product_btns {
-            display: flex;
-            button {
-              background-color: #d9d9d9;
-              color: #999;
-              width: 9vw;
-              min-width: 100px;
-              height: 3vw;
-              min-height: 40px;
-              border: none;
-              margin-left: 0.5vw;
-              user-select: none;
-              font-size: clamp(14px, 1.2vw, 23px);
-            }
-            &.active {
+            .product_btns {
+              display: flex;
               button {
-                background-color: var(--color-red);
-                color: #fff;
-                cursor: pointer;
+                background-color: #d9d9d9;
+                color: #999;
+                width: 9vw;
+                min-width: 100px;
+                height: 3vw;
+                min-height: 40px;
+                border: none;
+                margin-left: 0.5vw;
+                user-select: none;
+                font-size: clamp(14px, 1.2vw, 23px);
+              }
+              &.active {
+                button {
+                  background-color: var(--color-red);
+                  color: #fff;
+                  cursor: pointer;
+                }
               }
             }
           }
@@ -454,9 +452,6 @@ const ProductDetailStyle = styled.div`
               }
             }
           }
-          .option_wrapper {
-            margin-top: 150px;
-          }
         }
       }
     }
@@ -464,6 +459,30 @@ const ProductDetailStyle = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     border-radius: 0;
+    .info_box {
+      .product_info {
+        .option_box {
+
+          .txt_box { 
+            .same_product_wrapper {
+              width: 100%;
+            }
+            .option_wrapper {
+              margin-top: 40px;
+              .product_btns {
+                width: 100%;
+                align-self: flex-start;
+                button {
+                  width: 50%;
+                  height: 60px;
+                  margin-top: 15px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `;
 

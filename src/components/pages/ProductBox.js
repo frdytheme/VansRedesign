@@ -4,11 +4,8 @@ import PUBLIC from "../../assets/module/PUBLIC";
 import { useMediaQuery } from "react-responsive";
 
 function ProductBox({ item, onClick }) {
-  const isTablet = useMediaQuery({ maxWidth: 1200, minWidth: 769 });
-  const isMobile = useMediaQuery({ maxWidth: 768 });
-
   return (
-    <ProductBoxStyle onClick={onClick}>
+    <ProductBoxStyle onClick={onClick} onTouchMove={(e) => e.preventDefault()}>
       <div className="img_wrapper">
         <img
           src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
