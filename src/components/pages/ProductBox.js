@@ -1,11 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import PUBLIC from "../../assets/module/PUBLIC";
-import { useMediaQuery } from "react-responsive";
 
 function ProductBox({ item, onClick }) {
   return (
-    <ProductBoxStyle onClick={onClick} onTouchMove={(e) => e.preventDefault()}>
+    <ProductBoxStyle onClick={onClick}>
       <div className="img_wrapper">
         <img
           src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}

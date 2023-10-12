@@ -107,7 +107,7 @@ function MyPage({ userData }) {
 const MyPageStyle = styled.div`
   width: 100%;
   position: relative;
-  height:calc(100vh - 180px);
+  height: calc(100vh - 180px);
   .loading_state {
     width: 100%;
     height: 83%;
@@ -115,7 +115,7 @@ const MyPageStyle = styled.div`
   }
   .mypage_container {
     width: 100%;
-    height:75%;
+    height: 75%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -132,33 +132,31 @@ const MyPageStyle = styled.div`
         #141e46
       );
       color: #fff;
-      padding: 2vw;
+      padding: 30px;
       border-radius: 15px;
       .mydata_box {
+        min-width: 300px;
+        height: 150px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 1vw;
+        gap: 15px;
         p {
-          font-size: 0.9vw;
           display: flex;
           align-items: center;
           em {
             display: block;
-            margin-right: 1vw;
+            margin-right: 20px;
             font-weight: 700;
-            font-size: 0.7vw;
-            width: 2vw;
           }
         }
       }
       .mydata_edit_box {
         display: flex;
         justify-content: space-between;
-        gap: 1vw;
-        margin-top: 2vw;
+        gap: 15px;
         .btn {
-          padding: 0.5vw;
+          padding: 10px;
           cursor: pointer;
           border: 1px solid #fff;
           color: #fff;
@@ -166,9 +164,11 @@ const MyPageStyle = styled.div`
       }
       img {
         align-self: center;
-        margin-bottom: 2vw;
+        margin-bottom: 35px;
       }
     }
+  }
+  @media (max-width: 768px) {
   }
 `;
 

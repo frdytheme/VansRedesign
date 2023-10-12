@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ImageSlide from "./ImageSlide";
 import Pfunction from "../../assets/module/Pfunction";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import authApi from "../../assets/api/authApi";

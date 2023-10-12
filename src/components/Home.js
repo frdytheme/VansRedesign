@@ -204,9 +204,7 @@ const wiggle = keyframes`
 const HomeSection = styled.div`
   width: 100%;
   height: 100vh;
-  max-height: 100vh;
   position: relative;
-  overflow: hidden;
   .detail_box_bg {
     width: 100%;
     height: 100%;
@@ -304,7 +302,7 @@ const HomeSection = styled.div`
     }
   }
   @media (max-width: 1200px) {
-    overflow: auto;
+    /* overflow: auto; */
   }
 `;
 

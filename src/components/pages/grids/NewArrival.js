@@ -33,7 +33,7 @@ function NewArrival({ setProductInfo, setDetailBtn, closeCartAlarm }) {
 
   useEffect(() => {
     if (newProduct.length === 0) getNewArrival();
-  }, []);
+  }, [newProduct.length]);
 
   const selectProduct = (item) => {
     setDetailBtn(true);

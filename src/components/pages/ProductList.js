@@ -345,6 +345,8 @@ function ProductList({
           const category = categoryFilter.filter((val) => val.name === item)[0];
           removeCategory(category);
           break;
+        default:
+          return;
       }
     } else {
       const box = document.querySelector(".product_filter");

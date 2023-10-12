@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled, { keyframes } from "styled-components";
 import EventBottomSlide from "./EventBottomSlide";
 import PUBLIC from "../../assets/module/PUBLIC";
@@ -8,9 +8,6 @@ function EventModal({ newsDB, setNewsToggle, newsNum, setNewsNum }) {
   const closeModal = (e) => {
     if (e.target !== e.currentTarget) return;
     setNewsToggle(false);
-  };
-  const scrollUp = (e) => {
-    e.target.scrollTo({ top: 0, behavior: "smooth" });
   };
   return (
     <ModalStyle>
