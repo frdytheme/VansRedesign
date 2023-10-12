@@ -223,7 +223,6 @@ const HomeSection = styled.div`
     border-radius: 0 0 15px 15px;
     position: absolute;
     top: -100%;
-    top: 0;
     left: 50%;
     transform: translateX(-50%);
     z-index: 9999;
