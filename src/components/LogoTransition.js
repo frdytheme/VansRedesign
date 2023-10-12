@@ -29,7 +29,7 @@ function LogoTransition() {
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
-      window.location.replace("/VansRedesign#/home");
+      navigate("home");
     }
   }, []);
 
