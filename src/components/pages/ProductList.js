@@ -537,6 +537,7 @@ const ProductListStyle = styled.div`
     }
   }
   @media (max-width: 768px) {
+    height:100%;
     .filter_bg {
       background-color: rgba(0, 0, 0, 0.5);
       position: fixed;
@@ -692,6 +693,7 @@ const ProductListStyle = styled.div`
     }
     .flex_container {
       width: 100%;
+      background-color:orange;
       grid-template-columns: repeat(3, 30vw);
       margin: 0;
       padding-top: 60px;
