@@ -212,34 +212,36 @@ function JoinPage() {
       )}
       <fieldset className="input_field id_field">
         <legend>아이디</legend>
-        <input
-          type="text"
-          id="new_id"
-          name="new_id"
-          placeholder="아이디"
-          value={joinUser.name}
-          minLength={4}
-          maxLength={16}
-          disabled={userOnly}
-          required
-          onChange={handleIdInput}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              checkIsOnly();
-            }
-          }}
-        />
-        {userOnly ? (
-          <div className="id_check user_only">사용가능</div>
-        ) : (
-          <div
-            className={`id_check${idActive ? " active" : ""}`}
-            onClick={checkIsOnly}
-          >
-            중복확인
-          </div>
-        )}
+        <div className="input_container">
+          <input
+            type="text"
+            id="new_id"
+            name="new_id"
+            placeholder="아이디"
+            value={joinUser.name}
+            minLength={4}
+            maxLength={16}
+            disabled={userOnly}
+            required
+            onChange={handleIdInput}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                checkIsOnly();
+              }
+            }}
+          />
+          {userOnly ? (
+            <div className="id_check user_only">사용가능</div>
+          ) : (
+            <div
+              className={`id_check${idActive ? " active" : ""}`}
+              onClick={checkIsOnly}
+            >
+              중복확인
+            </div>
+          )}
+        </div>
         {userOnly ? (
           <p className="red_txt id_red_txt">사용 가능한 아이디입니다.</p>
         ) : (
@@ -313,7 +315,7 @@ function JoinPage() {
             이메일 인증
           </div>
         )}
-        {authBoxShow || (
+        {authBoxShow && (
           <div className="email_auth_box">
             <div className="auth_input_box">
               <input
@@ -377,32 +379,32 @@ const JoinPageStyle = styled.form`
       margin: 15px 0;
     }
   }
-  .id_field {
-    position: relative;
-  }
   .pw_field {
     display: flex;
     flex-direction: column;
     gap: 7px;
   }
-  .id_check {
-    width: 80px;
-    height: 42px;
-    line-height: 40px;
-    text-align: center;
-    background-color: #999;
-    border-radius: 0 10px 10px 0;
-    color: #fff;
-    position: absolute;
-    top: 0;
-    right: -4px;
-    user-select: none;
-    &.active {
-      background-color: var(--color-red);
-      cursor: pointer;
+  .input_container {
+    display: flex;
+    input {
+      border-radius: 10px 0 0 10px;
+      width: 100%;
     }
-    &.user_only {
-      background-color: #96c291;
+    .id_check {
+      width: 95px;
+      line-height: 42px;
+      text-align: center;
+      background-color: #999;
+      border-radius: 0 10px 10px 0;
+      color: #fff;
+      user-select: none;
+      &.active {
+        background-color: var(--color-red);
+        cursor: pointer;
+      }
+      &.user_only {
+        background-color: #96c291;
+      }
     }
   }
   input {
@@ -459,18 +461,14 @@ const JoinPageStyle = styled.form`
   }
   .email_auth_box {
     .auth_input_box {
-      position: relative;
+      display: flex;
       .auth_input {
-        margin-bottom: 7px;
+        border-radius: 10px 0 0 10px;
       }
       .auth_num_btn {
-        position: absolute;
-        top: 0;
-        right: -4px;
         background-color: var(--color-red);
         color: #fff;
-        width: 100px;
-        height: 42px;
+        width: 95px;
         line-height: 42px;
         text-align: center;
         border-radius: 0 10px 10px 0;
@@ -481,7 +479,7 @@ const JoinPageStyle = styled.form`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 7px;
+      margin-top: 10px;
       .auth_timer {
         margin-left: 0.2vw;
         color: #777;
@@ -500,7 +498,6 @@ const JoinPageStyle = styled.form`
   }
   @media (max-width: 1200px) {
     height: calc(100vh - 100px);
-    /* padding-top: 0; */
   }
   @media (max-width: 768px) {
     .input_field {
