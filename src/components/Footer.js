@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import PUBLIC from "../assets/module/PUBLIC";
-import { useMatch } from "react-router-dom";
 
 function Footer() {
   const footerTxt = [

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import authApi from "../assets/api/authApi";
 import PUBLIC from "../assets/module/PUBLIC";
 import LoadingBox from "./LoadingBox";
-import FindUserId from "./FindUserId";
 
 function LoginPage({ userData, setUserData }) {
   const userSaveState = JSON.parse(localStorage.getItem("userSaveState"));
@@ -172,10 +171,10 @@ const LoginPageStyle = styled.form`
     left: 50%;
     transform: translateX(-50%);
     border-radius: 15px;
-    padding: 2vw;
+    padding: 20px;
     .logo_box {
       text-align: center;
-      margin-bottom: 2vw;
+      margin-bottom: 20px;
     }
     .input_box {
       width: 100%;
@@ -188,7 +187,7 @@ const LoginPageStyle = styled.form`
         border: 1px solid #999;
         border-radius: 8px;
         &:first-child {
-          margin-bottom: 1vw;
+          margin-bottom: 10px;
         }
       }
     }
@@ -226,6 +225,20 @@ const LoginPageStyle = styled.form`
       .join_user {
         color: var(--color-red);
         font-weight: bold;
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    height: calc(100vh - 70px);
+    height: 100vh;
+    .login_box {
+      width: 80%;
+      max-width: 500px;
+      .input_box {
+        input {
+          height: 50px;
+          font-size: 16px;
+        }
       }
     }
   }

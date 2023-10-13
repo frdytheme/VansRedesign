@@ -36,6 +36,7 @@ function Home() {
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isProductPage = Boolean(useMatch("/home/product"));
   const isCartPage = Boolean(useMatch("/home/cart"));
+  const isLoginPage = Boolean(useMatch("/home/login"));
 
   useEffect(() => {
     if (cart) setCartCount(cart.total);
@@ -181,7 +182,9 @@ function Home() {
           </div>
         </div>
       )}
-      {isProductPage || (isCartPage && isMobile) || <Footer />}
+      {isProductPage ||
+        (isCartPage && isMobile) ||
+        (isLoginPage && isMobile) || <Footer />}
     </HomeSection>
   );
 }

@@ -313,7 +313,7 @@ function JoinPage() {
             이메일 인증
           </div>
         )}
-        {authBoxShow && (
+        {authBoxShow || (
           <div className="email_auth_box">
             <div className="auth_input_box">
               <input
@@ -368,12 +368,13 @@ const JoinPageStyle = styled.form`
   justify-content: center;
   align-items: center;
   text-align: left;
-  padding-top: 100px;
+  padding-top: 50px;
+  gap: 20px;
   .input_field {
-    width: 18%;
-    margin: 0.5vw 0;
+    width: 80%;
+    max-width: 400px;
     legend {
-      margin: 0.5vw 0;
+      margin: 15px 0;
     }
   }
   .id_field {
@@ -382,7 +383,7 @@ const JoinPageStyle = styled.form`
   .pw_field {
     display: flex;
     flex-direction: column;
-    gap: 0.5vw;
+    gap: 7px;
   }
   .id_check {
     width: 80px;
@@ -415,10 +416,12 @@ const JoinPageStyle = styled.form`
   }
   #join_btn {
     border: none;
-    width: 18%;
-    height: 50px;
+    width: 30%;
+    max-width: 400px;
+    min-width: 300px;
+    height: 60px;
     border-radius: 10px;
-    margin-top: 1vw;
+    margin-top: 15px;
     &.active {
       background-color: var(--color-red);
       color: #fff;
@@ -428,9 +431,9 @@ const JoinPageStyle = styled.form`
   }
   .red_txt {
     color: var(--color-red);
-    font-size: 0.7vw;
+    font-size: 15px;
     margin-left: 0.3vw;
-    margin-top: 0.3vw;
+    margin-top: 15px;
     &.submit {
       color: green;
     }
@@ -438,10 +441,11 @@ const JoinPageStyle = styled.form`
   .email_auth_btn {
     border: 1px solid #000;
     cursor: pointer;
-    padding: 1vw;
+    height: 50px;
+    line-height: 50px;
     text-align: center;
     border-radius: 10px;
-    margin: 0.5vw 0;
+    margin: 10px 0 20px;
     &.pending {
       background-color: #f9f9f9;
       color: var(--color-red);
@@ -457,7 +461,7 @@ const JoinPageStyle = styled.form`
     .auth_input_box {
       position: relative;
       .auth_input {
-        margin-bottom: 0.3vw;
+        margin-bottom: 7px;
       }
       .auth_num_btn {
         position: absolute;
@@ -465,7 +469,7 @@ const JoinPageStyle = styled.form`
         right: -4px;
         background-color: var(--color-red);
         color: #fff;
-        width: 5vw;
+        width: 100px;
         height: 42px;
         line-height: 42px;
         text-align: center;
@@ -477,22 +481,31 @@ const JoinPageStyle = styled.form`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 0.5vw;
+      margin-top: 7px;
       .auth_timer {
         margin-left: 0.2vw;
         color: #777;
-        font-size: 0.8vw;
+        font-size: 16px;
       }
       .resend_auth {
         margin-left: 0.2vw;
         color: var(--color-red);
         cursor: pointer;
-        font-size: 0.8vw;
+        font-size: 16px;
       }
     }
   }
   .loading_state {
     background-color: rgba(255, 255, 255, 0.5);
+  }
+  @media (max-width: 1200px) {
+    height: calc(100vh - 100px);
+    /* padding-top: 0; */
+  }
+  @media (max-width: 768px) {
+    .input_field {
+      width: 80%;
+    }
   }
 `;
 
