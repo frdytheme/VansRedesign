@@ -77,13 +77,18 @@ const FooterStyle = styled.footer`
     .footer_wrapper {
       height: auto;
       padding: 15px;
+      flex-direction: column;
       justify-content: flex-start;
       box-sizing: border-box;
       margin-top: 10px;
       bottom: 0;
+      gap: 15px;
       .footer_txt {
         margin: 0;
         flex-wrap: wrap;
+      }
+      .footer_logo {
+        align-self: flex-end;
       }
     }
   }

@@ -497,7 +497,7 @@ const JoinPageStyle = styled.form`
     background-color: rgba(255, 255, 255, 0.5);
   }
   @media (max-width: 1200px) {
-    height: calc(100vh - 100px);
+    height: 100vh;
   }
   @media (max-width: 768px) {
     .input_field {
