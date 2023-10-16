@@ -7,6 +7,11 @@ import "swiper/css/pagination";
 import authApi from "../../assets/api/authApi";
 import PUBLIC from "../../assets/module/PUBLIC";
 import LoadingBox from "../LoadingBox";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/pagination";
+import { useMediaQuery } from "react-responsive";
 
 function ProductDetail({
   setProductInfo,
@@ -22,6 +27,9 @@ function ProductDetail({
   const [loading, setLoading] = useState(false);
   const [qty, setQty] = useState(1);
   const [maxQty, setMaxQty] = useState(0);
+
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isTab = useMediaQuery({ maxWidth: 1200 });
 
   const fetchSameProduct = async () => {
     setLoading(true);
@@ -143,20 +151,22 @@ function ProductDetail({
             </ul>
           </li>
           <li className="product_info_li option_box">
-            <div className="same_product_wrapper">
-              <ul className="same_product_list">
-                {sameProduct.map((item) => (
-                  <li key={item.id}>
-                    <img
-                      src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
-                      alt={`${item.name} 제품 이미지`}
-                      className="same_product"
-                      onClick={() => selectSeries(item)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Swiper
+              className="mySwiper same_product_list"
+              slidesPerView="auto"
+              spaceBetween={7}
+            >
+              {sameProduct.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <img
+                    src={`${PUBLIC}/images/product/${item.model}/${item.model}_${item.model}_primary.jpg`}
+                    alt={`${item.name} 제품 이미지`}
+                    className="same_product"
+                    onClick={() => selectSeries(item)}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
             <div className="txt_box">
               <div className="product_info_li product_DC">
                 상품 설명란입니다. <br /> 상품에 맞는 설명을 작성해주세요.
@@ -308,27 +318,20 @@ const ProductDetailStyle = styled.div`
       }
       .option_box {
         width: 100%;
-        /* display: grid;
-        grid-template-columns: 80% 20%;
-        grid-auto-rows: 1fr; */
         font-size: clamp(20px, 2vw, 38px);
         font-weight: 500;
-        .same_product_wrapper {
-          overflow: hidden;
-          width: 95%;
-          .same_product_list {
-            width: 100%;
-            display: flex;
-            overflow: auto;
-            gap: 10px;
-            .same_product {
-              height: 8vw;
-              min-height: 100px;
-              object-fit: cover;
-              cursor: pointer;
-              &:hover {
-                filter: brightness(0.7);
-              }
+        .same_product_list {
+          .swiper-slide {
+            width: 15%;
+            min-width: 100px;
+          }
+          .same_product {
+            height: 8vw;
+            min-height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.7);
             }
           }
         }
@@ -461,8 +464,7 @@ const ProductDetailStyle = styled.div`
     .info_box {
       .product_info {
         .option_box {
-
-          .txt_box { 
+          .txt_box {
             .same_product_wrapper {
               width: 100%;
             }
