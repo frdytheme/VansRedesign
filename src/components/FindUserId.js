@@ -168,13 +168,14 @@ const FindUserIdStyle = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  font-size: 0.8vw;
   .loading_box {
     width: 100%;
     height: 83%;
     position: relative;
   }
   .find_box {
+    width: 80%;
+    max-width: 300px;
     background-color: #fff;
     border: 1px solid #000;
     position: absolute;
@@ -185,18 +186,19 @@ const FindUserIdStyle = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 1vw;
-    padding: 1vw;
+    gap: 15px;
+    padding: 15px;
     .input_box {
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5vw;
+      gap: 10px;
       .btn {
         background-color: var(--color-red);
         cursor: pointer;
         color: #fff;
-        padding: 0.74vw;
+        padding: 10px 15px;
         border-radius: 7px;
         &.done {
           background-color: #aaa;
@@ -205,11 +207,12 @@ const FindUserIdStyle = styled.div`
       }
     }
     .verify_box {
+      width:100%;
       .timer_box {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 0.5vw;
+        margin-top: 15px;
         .resend_btn {
           color: var(--color-red);
           cursor: pointer;
@@ -217,8 +220,8 @@ const FindUserIdStyle = styled.div`
       }
     }
     input {
-      width: 12vw;
-      height: 2vw;
+      width: 74%;
+      height: 30px;
       text-indent: 0.3vw;
       outline: none;
     }
@@ -227,9 +230,9 @@ const FindUserIdStyle = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 1vw;
+      gap: 15px;
       .btn {
-        padding: 0.5vw 1vw;
+        padding: 10px 15px;
         display: flex;
         justify-content: center;
         align-items: center;

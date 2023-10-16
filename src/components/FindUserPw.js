@@ -209,13 +209,14 @@ const FindUserPwStyle = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  font-size: 0.8vw;
   .loading_box {
     width: 100%;
     height: 83%;
     position: relative;
   }
   .find_box {
+    width: 80%;
+    max-width: 300px;
     background-color: #fff;
     border: 1px solid #000;
     position: absolute;
@@ -225,16 +226,11 @@ const FindUserPwStyle = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5vw;
-    padding: 1vw;
-    .input_box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5vw;
-    }
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
     .btn {
-      padding: 0.5vw;
+      padding: 10px 15px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -247,14 +243,15 @@ const FindUserPwStyle = styled.div`
       }
     }
     .verify_box {
+      width:100%;
       .verify_btn {
-        margin-top: 0.5vw;
+        margin-top: 10px;
       }
       .timer_box {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 0.5vw;
+        margin-top: 15px;
         .resend_btn {
           color: var(--color-red);
           cursor: pointer;
@@ -262,8 +259,8 @@ const FindUserPwStyle = styled.div`
       }
     }
     input {
-      width: 12vw;
-      height: 2vw;
+      width: 100%;
+      height: 30px;
       text-indent: 0.3vw;
       outline: none;
     }
