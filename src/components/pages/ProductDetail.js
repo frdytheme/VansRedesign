@@ -28,9 +28,6 @@ function ProductDetail({
   const [qty, setQty] = useState(1);
   const [maxQty, setMaxQty] = useState(0);
 
-  const isMobile = useMediaQuery({ maxWidth: 768 });
-  const isTab = useMediaQuery({ maxWidth: 1200 });
-
   const fetchSameProduct = async () => {
     setLoading(true);
     try {
@@ -139,8 +136,9 @@ function ProductDetail({
               {sizeArr.map((item) => (
                 <li
                   key={item}
-                  className="size_item"
+                  className={`size_item${size[item] <= 1 ? " soldout" : ""}`}
                   onClick={(e) => {
+                    if (size[item] <= 1) return;
                     selectSize(e, item);
                     setQty(1);
                   }}
@@ -269,6 +267,8 @@ const ProductDetailStyle = styled.div`
     }
     .product_info {
       width: 55vw;
+      display: flex;
+      flex-direction: column;
       .product_info_li {
         margin: 1vw 0;
       }
@@ -312,6 +312,13 @@ const ProductDetailStyle = styled.div`
             &.selected {
               background-color: var(--color-red);
               color: #fff;
+            }
+            &.soldout {
+              background-color: #d6d6d6;
+              color: #aaa;
+              border: #777;
+              cursor: default;
+              user-select: none;
             }
           }
         }

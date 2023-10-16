@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 function ProductFilter({
@@ -243,6 +243,7 @@ const ProductFilterStyle = styled.div`
     font-weight: 700;
     text-align: center;
     .filter_title {
+      user-select: none;
       font-size: 2vw;
       margin-bottom: 1vw;
     }

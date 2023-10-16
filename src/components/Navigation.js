@@ -108,7 +108,6 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
     {
       id: id++,
       name: "VAULT",
-      lnb: [],
     },
   ];
   const navigate = useNavigate();
