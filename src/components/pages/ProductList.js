@@ -17,7 +17,8 @@ function ProductList({
   setDetailBtn,
   closeCartAlarm,
 }) {
-  const encodeListName = encodeURIComponent(listName);
+  // const encodeListName = encodeURIComponent(listName);
+  const encodeListName = listName.join(",");
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
