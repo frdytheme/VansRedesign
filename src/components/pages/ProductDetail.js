@@ -469,6 +469,7 @@ const ProductDetailStyle = styled.div`
     width: 100%;
     border-radius: 0;
     .info_box {
+      overflow:auto;
       .product_info {
         .option_box {
           .txt_box {

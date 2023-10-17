@@ -35,11 +35,14 @@ const PayPageStyle = styled.div`
   .pay_list {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 2vw;
     padding: 1vw;
     .pay_block {
       display: flex;
+      justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
       gap: 1vw;
       &.title {
         font-size: 1.2vw;
@@ -56,14 +59,16 @@ const PayPageStyle = styled.div`
         justify-content: center;
         align-items: center;
         width: 20%;
+        min-width: 150px;
         height: 4vw;
+        min-height: 50px;
         padding: 1vw 0;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        border-radius: 20px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+          rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        border-radius: 15px;
         box-sizing: border-box;
         cursor: pointer;
         overflow: hidden;
-        font-size: 0.9vw;
         font-weight: 500;
         &:hover {
           box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
@@ -103,15 +108,14 @@ const PayPageStyle = styled.div`
   }
   @media (max-width: 768px) {
     grid-row: span 2;
+    overflow: auto;
     .pay_list {
       box-sizing: border-box;
       margin-top: 25px;
+      gap: 20px;
+      padding-bottom: 50px;
       .pay_block {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-auto-rows: 1fr;
-        gap: 10px;
-        place-items: center;
+        gap: 20px;
         &.title {
           display: block;
           text-align: center;

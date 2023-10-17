@@ -108,6 +108,7 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
     {
       id: id++,
       name: "VAULT",
+      lnb: [],
     },
   ];
   const navigate = useNavigate();
@@ -157,6 +158,9 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
   const openGnb = (e) => {
     e.stopPropagation();
     const name = e.target.dataset.name;
+    if (e.target.textContent === "VAULT") {
+      selectMenu(e, { name: "VAULT" });
+    }
     if (!name) return;
     let menu;
     if (name === "gnb") {
@@ -221,7 +225,7 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
                 }}
               >
                 {li.name}
-                {li.lnb && (
+                {li.lnb.length !== 0 && (
                   <div className="lnb" onClick={(e) => e.stopPropagation()}>
                     {li.name === "NEW" && (
                       <NavBanner setListName={setListName} menu={menu} />
@@ -307,29 +311,33 @@ function Navigation({ setListName, setSearchName, setSubmitBtn, cartCount }) {
                   key={`mobile_gnb${idx}`}
                 >
                   {gnb.name}
-                  <ul className="lnb">
-                    {gnb.lnb.map((lnb, idx) => (
-                      <li
-                        className="lnb_li menu_item"
-                        onClick={openGnb}
-                        data-name="lnb"
-                        key={`mobile_lnb${idx}`}
-                      >
-                        {lnb.title}
-                        <ul className="category">
-                          {lnb.menu.map((category, idx) => (
-                            <li
-                              className="category_li"
-                              key={`mobile_category${idx}`}
-                              onClick={(e) => selectMenu(e, gnb, lnb, category)}
-                            >
-                              {category}
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    ))}
-                  </ul>
+                  {gnb.lnb.length !== 0 && (
+                    <ul className="lnb">
+                      {gnb.lnb.map((lnb, idx) => (
+                        <li
+                          className="lnb_li menu_item"
+                          onClick={openGnb}
+                          data-name="lnb"
+                          key={`mobile_lnb${idx}`}
+                        >
+                          {lnb.title}
+                          <ul className="category">
+                            {lnb.menu.map((category, idx) => (
+                              <li
+                                className="category_li"
+                                key={`mobile_category${idx}`}
+                                onClick={(e) =>
+                                  selectMenu(e, gnb, lnb, category)
+                                }
+                              >
+                                {category}
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>

@@ -17,7 +17,6 @@ function ProductList({
   setDetailBtn,
   closeCartAlarm,
 }) {
-  // const encodeListName = encodeURIComponent(listName);
   const encodeListName = listName.join(",");
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [product, setProduct] = useState([]);
@@ -543,7 +542,7 @@ const ProductListStyle = styled.div`
     .filter_bg {
       background-color: rgba(0, 0, 0, 0.5);
       position: fixed;
-      top: 0;
+      top: 70px;
       left: 0;
       width: 100%;
       height: 100%;
@@ -552,29 +551,35 @@ const ProductListStyle = styled.div`
     .filter_bar {
       border-bottom: 1px solid #777;
       background-color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: grid;
+      grid-template-columns: calc(100% - 40px) 40px;
+      grid-auto-rows: 1fr;
       height: 50px;
       position: fixed;
       top: 70px;
       left: 0;
       width: 100%;
       z-index: 99;
-      padding: 0 10px;
+      padding-right: 10px;
       box-sizing: border-box;
-      overflow-x: auto;
       .filtered_list_slide {
+        padding: 10px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         gap: 10px;
+        overflow-x: auto;
+        margin-right: 10px;
+        &::-webkit-scrollbar {
+          display: none;
+        }
         .filtered_list {
           display: flex;
           justify-content: center;
           align-items: center;
           gap: 10px;
           .filtered_item {
+            white-space: nowrap;
             border-radius: 7px;
             padding: 7px;
             font-size: 14px;
@@ -601,11 +606,15 @@ const ProductListStyle = styled.div`
         }
       }
       .filter_icon {
+        width: 40px;
+        height: 40px;
         border: 1px solid #000;
         border-radius: 7px;
         display: flex;
         justify-content: center;
         align-items: center;
+        place-self: center;
+        background-color: #fff;
         span {
           font-size: 30px;
           font-weight: bold;
@@ -625,6 +634,7 @@ const ProductListStyle = styled.div`
       border-right: 1px solid #000;
       transition: 0.5s;
       &.active {
+        top: 70px;
         left: 0;
       }
       .filter_container {
@@ -697,7 +707,6 @@ const ProductListStyle = styled.div`
       width: 100%;
       grid-template-columns: repeat(3, 30vw);
       margin: 0;
-      /* margin-top: 130px; */
       place-content: center;
       .img_wrapper {
         height: 31vw;

@@ -46,6 +46,10 @@ const ProductPageStyle = styled.div`
   z-index: 99999;
   @media (max-width: 1200px) {
     height: calc(100vh - 70px);
+    margin-top: 70px;
+  }
+  @media (max-width: 768px) {
+    margin-top: 0;
   }
 `;
 

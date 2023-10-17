@@ -255,7 +255,7 @@ const ProductFilterStyle = styled.div`
       cursor: pointer;
       .list_name {
         position: relative;
-        padding: 1vw 1vw;
+        padding: 15px 1vw;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -298,6 +298,15 @@ const ProductFilterStyle = styled.div`
         }
       }
       &.color {
+        .filter_selected {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          margin-left: 1vw;
+          li {
+            margin-bottom: 10px;
+          }
+        }
         .filter_item {
           li {
             padding: 0;

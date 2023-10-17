@@ -392,7 +392,6 @@ const CartPageStyle = styled.div`
   height: 90%;
   display: flex;
   justify-content: center;
-  padding-top: 50px;
   position: relative;
   .loading_state {
     border-radius: 0;
@@ -408,6 +407,7 @@ const CartPageStyle = styled.div`
     grid-template-columns: 7fr 3fr;
     grid-auto-rows: 1fr 9fr;
     position: relative;
+    padding-top: 50px;
     .cart_process {
       display: flex;
       align-items: center;
@@ -594,7 +594,7 @@ const CartPageStyle = styled.div`
             color: #000;
             font-weight: 500;
             border-top: 1px solid #000;
-            padding: 1.5vw 0 1vw;
+            padding: 20px 0 10px;
           }
         }
       }
@@ -607,7 +607,7 @@ const CartPageStyle = styled.div`
         .btn {
           height: 5vw;
           max-height: 70px;
-          min-height: 50px;
+          min-height: 60px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -654,10 +654,11 @@ const CartPageStyle = styled.div`
     }
   }
   @media (max-width: 1200px) {
-    height: calc(100% - 180px);
+    height: calc(100% - 70px);
     box-sizing: border-box;
-    padding-bottom: 5vw;
+    padding: 50px 0;
     .cart_wrapper {
+      width: 90%;
       height: 90%;
     }
   }
@@ -666,7 +667,7 @@ const CartPageStyle = styled.div`
     padding: 0;
     .cart_wrapper {
       width: 100%;
-      height: 100%;
+      height: calc(100vh - 50px);
       grid-template-columns: 1fr;
       grid-auto-rows: 0.5fr 0.5fr 8.5fr;
       .cart_process {

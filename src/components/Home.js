@@ -78,7 +78,9 @@ function Home() {
   }, []);
 
   return (
-    <HomeSection>
+    <HomeSection
+      className={isMobile && !detailBtn && isProductPage ? "noScroll" : ""}
+    >
       <Navigation
         setListName={setListName}
         listName={listName}
@@ -302,6 +304,14 @@ const HomeSection = styled.div`
           color: var(--color-red);
         }
       }
+    }
+  }
+  @media (max-width: 1200px) {
+    
+  }
+  @media (max-width: 768px) {
+    &.noScroll {
+      overflow: hidden;
     }
   }
 `;
