@@ -13,11 +13,12 @@ function ProductList({
   setListName,
   searchName,
   submitBtn,
+  setSubmitBtn,
   setProductInfo,
   setDetailBtn,
   closeCartAlarm,
 }) {
-  const encodeListName = listName.join(",");
+  const encodeListName = encodeURIComponent(listName);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [product, setProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
@@ -440,7 +441,10 @@ function ProductList({
         {product.length === 0 || filteredProduct.length === 0 ? (
           <div className="empty_alert">
             <p>찾으시는 상품 정보가 존재하지 않습니다.</p>
-            <div className="view_all" onClick={() => setListName("")}>
+            <div
+              className="view_all"
+              onClick={() => setSubmitBtn((prev) => !prev)}
+            >
               전체 상품 보기
             </div>
           </div>
@@ -539,6 +543,9 @@ const ProductListStyle = styled.div`
   @media (max-width: 768px) {
     height: calc(100% - 70px);
     padding-top: 130px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     .filter_bg {
       background-color: rgba(0, 0, 0, 0.5);
       position: fixed;
@@ -615,6 +622,7 @@ const ProductListStyle = styled.div`
         align-items: center;
         place-self: center;
         background-color: #fff;
+        cursor: pointer;
         span {
           font-size: 30px;
           font-weight: bold;

@@ -112,6 +112,7 @@ function Home() {
               setListName={setListName}
               searchName={searchName}
               submitBtn={submitBtn}
+              setSubmitBtn={setSubmitBtn}
               setProductInfo={setProductInfo}
               setDetailBtn={setDetailBtn}
               closeCartAlarm={closeCartAlarm}
@@ -210,6 +211,7 @@ const HomeSection = styled.div`
   width: 100%;
   height: 100vh;
   position: relative;
+  overflow: hidden;
   .detail_box_bg {
     width: 100%;
     height: 100%;
@@ -307,9 +309,9 @@ const HomeSection = styled.div`
     }
   }
   @media (max-width: 1200px) {
-    
   }
   @media (max-width: 768px) {
+    height: 100vh;
     &.noScroll {
       overflow: hidden;
     }

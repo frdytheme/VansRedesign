@@ -7,6 +7,7 @@ function ProductPage({
   setListName,
   searchName,
   submitBtn,
+  setSubmitBtn,
   setProductInfo,
   setDetailBtn,
   closeCartAlarm,
@@ -18,6 +19,7 @@ function ProductPage({
         setListName={setListName}
         searchName={searchName}
         submitBtn={submitBtn}
+        setSubmitBtn={setSubmitBtn}
         setProductInfo={setProductInfo}
         setDetailBtn={setDetailBtn}
         closeCartAlarm={closeCartAlarm}
